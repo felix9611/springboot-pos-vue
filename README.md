@@ -1,4 +1,4 @@
-# springboot-fixedasset-vue-2
+# springboot-pos-vue
 
 Springboot X VUE
 
