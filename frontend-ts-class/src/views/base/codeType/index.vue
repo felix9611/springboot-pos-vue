@@ -94,9 +94,6 @@
                 :page-size="size"
                 :total="total">
         </el-pagination>
-
-
-        <!--新增对话框-->
         <el-dialog
                 title="提示"
                 :visible.sync="dialogVisible"
@@ -135,7 +132,7 @@
                         :on-remove="clearFile"
                         >
                         <el-button size="small" type="primary">Upload</el-button>
-                        <!--<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
+                        <!--<div slot="tip" class="el-upload__tip">Only Excel</div>-->
                     </el-upload>
         </el-dialog>
     </div>

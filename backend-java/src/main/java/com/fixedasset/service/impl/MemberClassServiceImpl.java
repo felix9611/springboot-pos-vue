@@ -29,7 +29,6 @@ public class MemberClassServiceImpl extends ServiceImpl<MemberClassMapper, Membe
 
     public void saveData(MemberClass memberClass){
         memberClass.setCreatedAt(LocalDateTime.now());
-        memberClass.setUpdatedAt(LocalDateTime.now());
         memberClass.setStatus(1);
         memberClassMapper.insert(memberClass);
 

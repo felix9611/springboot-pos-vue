@@ -99,10 +99,8 @@
                 :total="total">
         </el-pagination>
 
-
-        <!--新增对话框-->
         <el-dialog
-                title="提示"
+                title="Form"
                 :visible.sync="dialogVisible"
                 width="700px"
                 :before-close="handleClose">
@@ -320,16 +318,9 @@ export default class Department extends Vue {
         
 }
 </script>
-
 <style scoped>
 
     .handle-box {
         margin-bottom: 20px;
     }
-
-    /*.el-pagination {*/
-    /*    float: right;*/
-    /*    margin-top: 5px;*/
-    /*}*/
-
 </style>
