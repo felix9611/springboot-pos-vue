@@ -23,6 +23,7 @@ public class ProductTypeController extends BaseController{
         return Result.succ(productType);
     }
 
+
     @PostMapping("/update")
     public Result update(@RequestBody ProductType productType) {
         productTypeService.updateOne(productType);

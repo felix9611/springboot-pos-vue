@@ -313,6 +313,18 @@ export default class Member extends Vue {
     })
   }
 
+  delItem(id: number) {
+        axios.delete(`base/member/remove/${id}`).then((res: any) => {
+            this.memberAllList()
+            this.$notify({
+                title: '',
+                showClose: true,
+                message: 'Action is successful ',
+                type: 'success'
+            })
+        })
+    }
+
   submitSpecialDaysForm(formName: string) {
     const validData: any = this.$refs[formName]
     validData.validate((valid: any) => {
