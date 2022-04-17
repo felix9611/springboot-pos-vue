@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fixedasset.common.lang.Result;
+import com.fixedasset.dto.ProductListDto;
 import com.fixedasset.entity.ProductList;
 import com.fixedasset.entity.ProductListFile;
 import com.fixedasset.service.ProductListFileService;
@@ -73,7 +74,7 @@ public class ProductListController extends BaseController{
         queryWrapper.eq(ProductList::getStatu, 1);
         queryWrapper.orderByDesc(ProductList::getId);
 
-        Page<ProductList> iPage = productListService.page(page, queryWrapper);
+        Page<ProductListDto> iPage = productListService.newPage(page, queryWrapper);
         return Result.succ(iPage);
     }
 

@@ -1,5 +1,29 @@
 <template>
   <div class="container">
+    <div class="handle-box">
+            <el-form :inline="true">
+                <el-form-item>
+                    <el-input
+                      v-model="searchForm.productCode"
+                      placeholder="Product Code"
+                      clearable
+                    >
+                    </el-input>
+                </el-form-item>
+
+                <!--<el-form-item>
+                    <el-button @click="clickUploadDialog">Upload Excel</el-button>
+                </el-form-item>-->
+
+                <el-form-item>
+                    <el-button @click="productList()">Find</el-button>
+                </el-form-item>
+
+                <el-form-item>
+                    <el-button type="primary" @click="goToCreated()">Create</el-button>
+                </el-form-item>
+            </el-form>
+    </div>
 
     <el-table
       ref="multipleTable"
@@ -15,6 +39,16 @@
           sortable
           prop="productName"
           label="Product Name">
+        </el-table-column>
+        <el-table-column
+          sortable
+          prop="typeCode"
+          label="Type Code">
+        </el-table-column>
+        <el-table-column
+          sortable
+          prop="typeName"
+          label="Type Name">
         </el-table-column>
         <el-table-column
           sortable
@@ -93,7 +127,7 @@
                         </el-col>
                     </el-row>
                     <el-divider ></el-divider>
-                </div>
+      </div>
     </el-dialog>
 
     <el-dialog
@@ -156,6 +190,10 @@ export default class ProductList extends Vue {
     this.productList()
   }
 
+  goToCreated() {
+    this.$router.push('/product/create')
+  }
+
   productList() {
         axios.post(
             '/product/list',
@@ -211,10 +249,10 @@ export default class ProductList extends Vue {
 
   getQRCodeTag(product: any) {
     this.qrCodeTagDialog = true
-    const { productCode, productName, placeName, buyDate, updated } = product
+    const { productCode, productName, typeName, updated } = product
     this.productDetail = product
     const download = moment().format('DD-MM-YYYY HH:MM')
-    this.qrTagContent = `${productCode}|${productName}|${placeName}|Buy Date:${buyDate}|Updated At:${updated}|Download Tag:${download}`
+    this.qrTagContent = `${productCode}|${productName}|${typeName}|Updated At:${updated}|Download Tag:${download}`
   }
 
   viewsPhoto(productId: number) {

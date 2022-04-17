@@ -2,9 +2,13 @@ package com.fixedasset.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fixedasset.dto.ProductListDto;
+import com.fixedasset.dto.ProductLocationListDto;
 import com.fixedasset.entity.ActionRecord;
 import com.fixedasset.entity.ProductList;
+import com.fixedasset.entity.ProductLocation;
 import com.fixedasset.entity.ProductType;
 import com.fixedasset.mapper.ActionRecordMapper;
 import com.fixedasset.mapper.ProductListMapper;
@@ -74,6 +78,10 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
         queryWrapper.eq(ProductList::getProductCode, productList.getProductCode());
         queryWrapper.eq(ProductList::getStatu, 1);
         return productListMapper.selectOne(queryWrapper);
+    }
+
+    public Page<ProductListDto> newPage(Page page, LambdaQueryWrapper<ProductList> queryWrapper) {
+        return productListMapper.page(page, queryWrapper);
     }
 
     public int createdAction(ActionRecord actionRecord) {

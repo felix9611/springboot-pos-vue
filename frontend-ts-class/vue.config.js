@@ -11,7 +11,7 @@ module.exports = {
             'localhost/pos-vue'
         ],
         host: 'localhost',
-        port: 8090,
+        port: 8080,
         proxy: {
             [process.env.VUE_APP_BASE_API]: {
                 //后端服务地址和端口
