@@ -32,6 +32,10 @@
           label="Product Name">
         </el-table-column>
         <el-table-column
+          prop="placeName"
+          label="Place Name">
+        </el-table-column>
+        <el-table-column
           prop="qty"
           label="Qty">
         </el-table-column>

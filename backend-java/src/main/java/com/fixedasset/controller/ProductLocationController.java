@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fixedasset.common.lang.Result;
+import com.fixedasset.dto.ProductLocationChangeDto;
 import com.fixedasset.dto.ProductLocationListDto;
 import com.fixedasset.entity.ProductLocation;
 import com.fixedasset.service.ProductLocationService;
@@ -36,6 +37,62 @@ public class ProductLocationController extends BaseController{
             productLocationService.saveProductLoc(productLocation);
         }
         return Result.succ(productLocation);
+    }
+
+    @PostMapping("/find")
+    public Result findPlace(@RequestBody ProductLocation productLocation) {
+        return Result.succ(productLocationService.findOne(productLocation));
+    }
+
+    @PostMapping("/renew")
+    public Result renewPlace(@RequestBody ProductLocation productLocation) {
+        productLocationService.changeQty(productLocation);
+        return Result.succ(productLocation);
+    }
+
+    @PostMapping("/move")
+    public Result changePlace(@RequestBody ProductLocationChangeDto productLocationChange) {
+        /* check old place record */
+        ProductLocation productOld = new ProductLocation();
+        productOld.setLocationId(productLocationChange.getOldPlace());
+        productOld.setProductId(productLocationChange.getProductId());
+        ProductLocation oldRecord = productLocationService.findOne(productOld);
+        if (productLocationChange.getQty() > oldRecord.getQty()) {
+            return Result.succ("Qty not match of record!");
+        }
+        System.out.println(oldRecord.getQty());
+        /* renew old Record */
+        int newQty = 0;
+        newQty = Integer.valueOf(productOld.getQty() - productLocationChange.getQty());
+        ProductLocation renewRecord = new ProductLocation();
+        renewRecord.setLocationId(productLocationChange.getOldPlace());
+        renewRecord.setProductId(productLocationChange.getProductId());
+        renewRecord.setQty(newQty);
+
+        /* check place is exist or not */
+
+        ProductLocation checkPlace = new ProductLocation();
+        checkPlace.setLocationId(productLocationChange.getNewPlace());
+        checkPlace.setProductId(productLocationChange.getProductId());
+        ProductLocation newPlaceRecord = productLocationService.findOne(productOld);
+        if (newPlaceRecord == null) {
+            ProductLocation newRecord = new ProductLocation();
+            newRecord.setProductId(productLocationChange.getProductId());
+            newRecord.setLocationId(productLocationChange.getNewPlace());
+            newPlaceRecord.setQty(productLocationChange.getQty());
+            productLocationService.saveProductLoc(newPlaceRecord);
+            productLocationService.changeQty(renewRecord);
+        } else {
+
+            ProductLocation newRecord = new ProductLocation();
+            newRecord.setProductId(productLocationChange.getProductId());
+            newRecord.setLocationId(productLocationChange.getNewPlace());
+            int reNewQty = newPlaceRecord.getQty() + productLocationChange.getQty();
+            newPlaceRecord.setQty(reNewQty);
+            productLocationService.changeQty(newPlaceRecord);
+            productLocationService.changeQty(renewRecord);
+        }
+        return Result.succ(productLocationChange);
     }
 
     @PostMapping("/list")
