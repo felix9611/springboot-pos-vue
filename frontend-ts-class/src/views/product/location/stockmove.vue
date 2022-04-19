@@ -153,47 +153,44 @@ export default class StockIn extends Vue {
   }
 
   submitList() {
-
-    this.stockInList.forEach((rs: any) => {
-      axios.post('/product/location/find',
-      {
-        productId: rs.productId,
-        locationId: rs.placeFrom,
-      }).then( (rc: any)=> {
-        const oldData = rc.data.data
-        if (rs.qty > oldData.qty) {
-          this.$notify({
-            title: '',
-            showClose: true,
-            message: 'Out of exist Qty!!',
-            type: 'error',
-          })
-        } else {
-          const renewQty = oldData.qty - rs.qty
-          axios.post('/product/location/renew', {
+    this.stockInList.forEach((rs: any, i: number) => {
+      setTimeout(
+        function(){
+          axios.post('/product/location/find',
+          {
             productId: rs.productId,
             locationId: rs.placeFrom,
-            qty: renewQty
-          })
+          }).then( (rc: any)=> {
+            const oldData = rc.data.data
+            if (rs.qty > oldData.qty) {
+              
+            } else {
+              const renewQty = oldData.qty - rs.qty
+              axios.post('/product/location/renew', {
+                productId: rs.productId,
+                locationId: rs.placeFrom,
+                qty: renewQty
+              })
 
-          axios.post('/product/location/save',{
-            productId: rs.productId,
-            locationId: rs.placeTo,
-            qty: rs.qty
-          }).then((rm: any)=>{
-            this.$notify({
-              title: '',
-              showClose: true,
-              message: 'Success to save',
-              type: 'success'
-            })
-          })
-        }
+              axios.post('/product/location/save',{
+                productId: rs.productId,
+                locationId: rs.placeTo,
+                qty: rs.qty
+              }).then((rm: any)=>{
+                
+              })
+          }
+        })
+      } ,2000 * i)
+      this.stockInList = []
+      this.$notify({
+          title: '',
+          showClose: true,
+          message: 'Success to save',
+          type: 'success'
       })
-      
     })
   }
-
 }
 </script>
 <style>
