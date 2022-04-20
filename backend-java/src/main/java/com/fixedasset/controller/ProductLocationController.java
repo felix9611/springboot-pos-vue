@@ -45,9 +45,17 @@ public class ProductLocationController extends BaseController{
     }
 
     @PostMapping("/renew")
-    public Result renewPlace(@RequestBody ProductLocation productLocation) {
-        productLocationService.changeQty(productLocation);
-        return Result.succ(productLocation);
+    public Result renewPlace(@RequestBody ProductLocationChangeDto productLocationChangeDto) {
+        productLocationService.changePlace(productLocationChangeDto);
+        return Result.succ(productLocationChangeDto);
+    }
+
+    @PostMapping("/stock/out")
+    public Result stockOut(@RequestBody ProductLocation productLocationChangeDto) {
+        int newQty = -productLocationChangeDto.getOtherQty();
+        productLocationChangeDto.setOtherQty(newQty);
+        productLocationService.changeQty(productLocationChangeDto);
+        return Result.succ(productLocationChangeDto);
     }
 
     @PostMapping("/list")

@@ -12,6 +12,9 @@
           <el-form-item label="Qty"  prop="qty" label-width="130px">
             <el-input-number v-model="stockInForm.qty"></el-input-number>
           </el-form-item>
+          <el-form-item label="Cost"  prop="cost" label-width="130px">
+            <el-input-number v-model="stockInForm.cost"></el-input-number>
+          </el-form-item>
           <el-form-item label="Place From" prop="placeFrom" label-width="130px">
             <el-select v-model="stockInForm.placeFrom" placeholder="Select" filterable>
               <el-option
@@ -168,16 +171,18 @@ export default class StockIn extends Vue {
               const renewQty = oldData.qty - rs.qty
               axios.post('/product/location/renew', {
                 productId: rs.productId,
-                locationId: rs.placeFrom,
-                qty: renewQty
+                oldPlace: rs.placeFrom,
+                qty: renewQty,
+                newPlace: rs.placeTo,
+                newPlaceQty: rs.qty,
+                cost: rs.cost
               })
 
               axios.post('/product/location/save',{
                 productId: rs.productId,
                 locationId: rs.placeTo,
-                qty: rs.qty
-              }).then((rm: any)=>{
-                
+                qty: rs.qty,
+                cost: rs.cost
               })
           }
         })

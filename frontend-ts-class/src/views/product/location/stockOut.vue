@@ -123,7 +123,6 @@ export default class StockIn extends Vue {
       this.stockInList.push.apply(this.stockInList, this.stockInForm)
     }
     this.stockInForm = {}
-    console.log(this.stockInList)
   }
 
   resetList() {
@@ -131,34 +130,39 @@ export default class StockIn extends Vue {
   }
 
   submitList() {
-    this.stockInList.forEach(
-      (rs: any, i: number) => {
-        setTimeout(
-          function(){
-            axios.post(
-              '/product/location/save',
-              {
+    this.stockInList.forEach((rs: any, i: number) => {
+      setTimeout(
+        function(){
+          axios.post('/product/location/find',
+          {
+            productId: rs.productId,
+            locationId: rs.placeId,
+          }).then( (rc: any)=> {
+            const oldData = rc.data.data
+            if (rs.qty > oldData.qty) {
+              
+            } else {
+              const renewQty = oldData.qty - rs.qty
+              console.log(renewQty)
+              axios.post('/product/location/stock/out', {
                 productId: rs.productId,
-                locationId: rs.placeId,
-                qty: rs.qty,
-                cost: rs.cost
-              }
-            ).then(
-              (res: any) => {}
-            )
-          } ,2000 * i)
-
-          this.$notify({
-            title: '',
-            showClose: true,
-            message: 'Success to save',
-            type: 'success',
-          })
-          this.stockInList = []
-      }
-    )
+                oldPlace: rs.placeId,
+                qty: renewQty,
+                cost: rs.cost,
+                otherQty: rs.qty
+              })
+          }
+        })
+      } ,2000 * i)
+      // this.stockInList = []
+      this.$notify({
+          title: '',
+          showClose: true,
+          message: 'Success to save',
+          type: 'success'
+      })
+    })
   }
-
 }
 </script>
 <style>
