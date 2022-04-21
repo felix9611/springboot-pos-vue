@@ -213,7 +213,7 @@ export default class ProductList extends Vue {
                     re['updated'] = newUpdated
                     return re
                 
-            })
+                })
         })
   }
 

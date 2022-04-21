@@ -38,6 +38,12 @@ public class InvRecord {
     private LocalDateTime timeAt;
 
     @TableField(exist = false)
+    private LocalDateTime timeAtFrom;
+
+    @TableField(exist = false)
+    private LocalDateTime timeAtTo;
+
+    @TableField(exist = false)
     private int page = 1;
 
     @TableField(exist = false)
