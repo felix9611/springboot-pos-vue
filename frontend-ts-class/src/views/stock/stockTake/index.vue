@@ -28,39 +28,57 @@
                 style="width: 100%"
                 @selection-change="handleSelectionChange">
             <el-table-column
-              prop="actionName"
-              label="Action Name"
+              prop="name"
+              label="Name"
               width="200">
             </el-table-column>
             <el-table-column
                     prop="statu"
                     label="Status">
                 <template slot-scope="scope">
-                    <el-tag size="small" v-if="scope.row.active === 1" type="success">In Progress</el-tag>
-                    <el-tag size="small" v-else-if="scope.row.active === 0" type="danger">Finished</el-tag>
+                    <el-tag size="small" v-if="scope.row.status === 1" type="success">In Progress</el-tag>
+                    <el-tag size="small" v-else-if="scope.row.status=== 2" type="danger">Finished</el-tag>
+                    <el-tag size="small" v-else-if="scope.row.status=== 0" type="danger">Deleted</el-tag>
                 </template>
 
             </el-table-column>
-            
             <el-table-column
-              prop="createdAt"
-              width="200"
-              label="Created At"
+              prop="placeCode"
+              label="Place Code"
             >
             </el-table-column>
             <el-table-column
-              prop="finishTime"
-              width="200"
-              label="Finished At"
+              prop="placeName"
+              label="Place Name"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="startTime"
+              label="Start Time"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="endTime"
+              label="End At"
             >
             </el-table-column>
             <el-table-column
                     prop="icon"
-                    width="200px"
+                    width="320px"
                     label="Action">
 
                 <template slot-scope="scope">
                     <el-button
+                      size="mini"
+                      v-if="scope.row.status === 1"
+                      @click="toDetailPage(scope.row.id)">Detail</el-button>
+                    <el-button
+                      size="mini"
+                      type="danger"
+                      v-if="scope.row.status === 1"
+                      @click="finishItem(scope.row.id)">Finish</el-button>
+                    <el-button
+                      v-if="scope.row.status === 1"
                       size="mini"
                       type="danger"
                       @click="delItem(scope.row.id)">Delete</el-button>
@@ -86,12 +104,12 @@
                 :before-close="handleClose">
 
             <el-form :model="editForm" :rules="editFormRules" ref="editForm">
-                <el-form-item label="Action Name"  prop="actionName" label-width="100px">
-                    <el-input v-model="editForm.actionName" autocomplete="off"></el-input>
+                <el-form-item label="Name"  prop="name" label-width="100px">
+                    <el-input v-model="editForm.name" autocomplete="off"></el-input>
                 </el-form-item>
 
-                <el-form-item label="Place" prop="place" label-width="100px">
-                    <el-select v-model="editForm.actionPlace" placeholder="Select" filterable>
+                <el-form-item label="Place" prop="locationId" label-width="100px">
+                    <el-select v-model="editForm.locationId" placeholder="Select" filterable>
                         <el-option
                         v-for="item in placeItem"
                         :key="item.id"
@@ -159,7 +177,7 @@ export default class Stocktake extends Vue {
 
         stockTakeList() {
                 axios.post(
-                    '/stock/stock_take/listAll',
+                    '/stockTake/list',
                     this.searchForm
                 ).then(
                     (res: any) => {
@@ -169,11 +187,11 @@ export default class Stocktake extends Vue {
                     this.total = res.data.data.total
 
                     this.tableData.forEach((re: any) => {
-                        const newCreated =  re.createdAt ? moment(new Date(re.createdAt)).format('DD-MM-YYYY HH:MM') : null
-                        const newFinishTime =  re.finishTime ? moment(new Date(re.finishTime)).format('DD-MM-YYYY HH:MM') : null
+                        const newEndTime =  re.endTime ? moment(new Date(re.endTime)).format('DD-MM-YYYY HH:MM') : null
+                        const newStartTime =  re.startTime ? moment(new Date(re.startTime)).format('DD-MM-YYYY HH:MM') : null
 
-                        re['createdAt'] = newCreated
-                        re['finishTime'] = newFinishTime
+                        re['endTime'] = newEndTime
+                        re['startTime'] = newStartTime
                         return re
                     })
                 })
@@ -234,7 +252,7 @@ export default class Stocktake extends Vue {
                 refs.validate((valid: any) => {
                     if (valid) {
                       console.log(this.editForm)
-                        axios.post('/stock/stock_take/create', this.editForm)
+                        axios.post('/stockTake/create', this.editForm)
                             .then((res: any) => {
                                 this.stockTakeList()
                                 this.$notify({
@@ -253,8 +271,8 @@ export default class Stocktake extends Vue {
                 });
             }
 
-            delItem(id: number) {
-                axios.delete(`/stock/stock_take/remove/${id}`).then(res => {
+    finishItem(id: number) {
+                axios.delete(`/stockTake/finish/${id}`).then(res => {
                     this.stockTakeList()
                     this.$notify({
                         title: '',
@@ -263,7 +281,23 @@ export default class Stocktake extends Vue {
                         type: 'success'
                     });
                 })
-            }
+    }
+
+    delItem(id: number) {
+        axios.delete(`/stockTake/remove/${id}`).then(res => {
+            this.stockTakeList()
+            this.$notify({
+                title: '',
+                showClose: true,
+                message: 'Action is successful ',
+                type: 'success'
+            })
+        })
+    }
+
+    toDetailPage(id: number) {
+        this.$router.push({ path: `/stock/stocktake/${id}` })
+    }
 }
 </script>
 <style scoped>

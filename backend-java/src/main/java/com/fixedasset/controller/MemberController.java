@@ -8,7 +8,7 @@ import com.fixedasset.entity.MemberSpecialDay;
 import com.fixedasset.service.MemberClassService;
 import com.fixedasset.service.MemberSpecialDaysService;
 import org.apache.ibatis.annotations.Delete;
-import org.springframework.util.StringUtils;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.fixedasset.entity.Member;
 import com.fixedasset.service.MemberService;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +53,7 @@ public class MemberController extends BaseController {
         Page page = new Page(member.getPage(), member.getLimit());
         LambdaQueryWrapper<Member> queryWrapper = Wrappers.lambdaQuery();
 
-        if (!StringUtils.isEmpty(member.getPhone())) {
+        if (StringUtils.isNotBlank(member.getPhone())) {
             queryWrapper.like(Member::getPhone, member.getPhone());
         }
 
@@ -104,6 +104,21 @@ public class MemberController extends BaseController {
     @GetMapping("/specialDay/{id}")
     public Result getOneSpecialDay(@PathVariable("id")Long id) {
         return Result.succ(memberSpecialDaysService.getById(id));
+    }
+
+    @PostMapping("/find")
+    public Result findMember(@RequestBody Member member) {
+        LambdaQueryWrapper<Member> queryWrapper = Wrappers.lambdaQuery();
+        if (StringUtils.isNotBlank(member.getName())) {
+            queryWrapper.like(Member::getName, member.getName());
+        }
+
+        if (StringUtils.isNotBlank(member.getPhone())) {
+            queryWrapper.like(Member::getPhone, member.getPhone());
+        }
+
+        queryWrapper.eq(Member::getStatus, 1);
+        return Result.succ(memberService.list(queryWrapper));
     }
 
 

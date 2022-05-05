@@ -233,4 +233,10 @@ export default class ProductListDetail extends Vue {
     .handle-box {
         margin-bottom: 20px;
     }
+
+    .el-container {
+      width: 100%;
+      height: 100%;
+      background-color: white;
+    }
 </style>
