@@ -1,6 +1,11 @@
 package com.fixedasset.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fixedasset.common.lang.Result;
+import com.fixedasset.dto.InvoiceListDto;
 import com.fixedasset.entity.Invoice;
 import com.fixedasset.entity.InvoiceItem;
 import com.fixedasset.service.InvoiceItemService;
@@ -26,10 +31,38 @@ public class InvoiceController extends  BaseController{
         return Result.succ(invoiceService.findId(number));
     }
 
+    @GetMapping("/detail/{id}")
+    public Result findOneDetail(@PathVariable("id")Long id) {
+        return Result.succ(invoiceService.selectOneItem(id));
+    }
+
     @PostMapping("/saveItem")
     public Result saveItems(@RequestBody InvoiceItem invoiceItem) {
         invoiceItemService.saveItem(invoiceItem);
         return Result.succ(invoiceItem);
+    }
+
+    @GetMapping("/item/{invoiceId}")
+    public Result listItem(@PathVariable("invoiceId")Long invoiceId) {
+        return Result.succ(invoiceItemService.listByInvoiceId(invoiceId));
+    }
+
+    @DeleteMapping("/void/{id}")
+    public Result voidInvoice(@PathVariable("id")Long id) {
+        invoiceService.voidInv(id);
+        return Result.succ("");
+    }
+
+    @PostMapping("/list")
+    public Result listInv(@RequestBody Invoice invoice) {
+        Page<Invoice> page = new Page(invoice.getPage(), invoice.getLimit());
+        LambdaQueryWrapper<Invoice> queryWrapper = Wrappers.lambdaQuery();
+        if (!(invoice.getVoidNum()==0)) {
+            queryWrapper.eq(Invoice::getVoidNum, invoice.getVoidNum());
+        }
+
+        Page<InvoiceListDto> iPage = invoiceService.listAll(page, queryWrapper);
+        return  Result.succ(iPage);
     }
 
 }

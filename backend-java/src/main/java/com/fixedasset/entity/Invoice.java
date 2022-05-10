@@ -40,9 +40,9 @@ public class Invoice {
     @TableField("void_at")
     private LocalDateTime voidAt;
 
-    public Long getId() {
-        return id;
-    }
+    @TableField(exist = false)
+    private int page = 1;
 
-
+    @TableField(exist = false)
+    private int limit = 10;
 }
