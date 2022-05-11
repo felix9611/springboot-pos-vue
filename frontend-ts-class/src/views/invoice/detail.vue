@@ -5,6 +5,12 @@
         <el-button icon="el-icon-back" circle @click="back"></el-button>
       </div>
     </div>
+    <el-button
+      size="mini"
+      type="danger"
+      @click="generatePDF()">
+        Download PDF
+    </el-button>
     <el-form :model="editForm" :disabled="true">
       <el-row :span="24">
         <el-col :span="6">
@@ -76,7 +82,8 @@
       label=""
       ref="multipleTable"
       :data="items"
-      tooltip-effect="dark">
+      tooltip-effect="dark"
+      id="tab1">
       <el-table-column 
           label="Product Code" 
           prop="productCode">
@@ -108,6 +115,10 @@
 import axios from '@/axios'
 import moment from 'moment'
 import { Component, Vue, Watch } from 'vue-property-decorator'
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
+
+import { paymentColumns, itemsColumns } from './pdfColumns'
 
 @Component
 export default class InoviceDetail extends Vue {
@@ -149,9 +160,33 @@ export default class InoviceDetail extends Vue {
     )
   }
 
-
   back() {
     this.$router.push({ path: '/invoice' })
+  }
+
+  generatePDF() {
+    const doc = new jsPDF('p', 'pt', 'a4', true)
+
+    autoTable(doc, {
+            startY: 160,
+            columns: itemsColumns,
+            body: this.items,
+            styles: {
+                font: 'NotoSansCJKtc'
+            }
+    })
+
+    doc.text(`Invoice No. : ${this.detailForm.number}`, 40, 30)
+    doc.text(`Member Name : ${this.detailForm.memberName}`, 280, 30)
+    doc.text(`Phone : ${this.detailForm.memberPhone}`, 280, 55)
+    doc.text(`Member Class : ${this.detailForm.mcName}`, 280, 80)
+
+    doc.text(`Shop Name : ${this.detailForm.placeName}`, 40, 100)
+    doc.text(`Date. : ${this.detailForm.createdAt}`, 40, 120)
+
+    doc.text(`Total : $ ${this.detailForm.totalAmount}`, 40, 150)
+
+    doc.save(`${this.detailForm.number}.pdf`)
   }
 }
 </script>
