@@ -28,6 +28,9 @@ public class Invoice {
     @TableField("discount")
     private Double discount;
 
+    @TableField("discount_type")
+    private String discountType;
+
     @TableField("location_id")
     private int locationId;
 

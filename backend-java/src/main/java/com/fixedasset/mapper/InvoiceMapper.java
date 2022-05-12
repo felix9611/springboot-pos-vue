@@ -26,5 +26,5 @@ public interface InvoiceMapper extends BaseMapper<Invoice> {
     Page<InvoiceListDto> listAll(Page page, @Param("ew") Wrapper queryWrapper);
 
     @Select(selectOne)
-    InvoiceListDto selectOne(@Param("id")Long id);
+    InvoiceListDto selectOneId(@Param("id")Long id);
 }

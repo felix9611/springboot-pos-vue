@@ -48,7 +48,7 @@ public class InvoiceServiceImpl extends ServiceImpl<InvoiceMapper, Invoice> impl
     }
 
     public InvoiceListDto selectOneItem(Long id) {
-        return invoiceMapper.selectOne(id);
+        return invoiceMapper.selectOneId(id);
     }
 
     public String getNewCode() {

@@ -235,7 +235,7 @@
         </el-form-item>
          <el-form-item>
             <el-button type="primary" @click="submitMemberPayment()">Confirm</el-button>
-            <el-button type="primary" @click="CancelMemberPayment()">Confirm</el-button>
+            <el-button type="primary" @click="CancelMemberPayment()">Cancel</el-button>
           </el-form-item>
       </el-form>
     </el-dialog>
@@ -444,7 +444,9 @@ export default class POSpage extends Vue {
     const main = {
       totalAmount: this.payForm.totalPrice,
       memberId: this.selectedMember.id ,
-      locationId: this.placeId
+      locationId: this.placeId,
+      discount: this.totalCalForm.discount,
+      discountType: this.totalCalForm.discountType
     }
 
     console.log(main)
@@ -453,62 +455,75 @@ export default class POSpage extends Vue {
        (res: any) => {
          const invoiceCode = res.data.data.number
 
-         axios.get(`/invoice/${invoiceCode}`).then(
-           (rn: any) => {
-             const invoiceId = res.data.data.id
+         setTimeout(
+          () =>{
+            axios.get(`/invoice/${invoiceCode}`).then(
+            (rn: any) => {
+              const invoiceId = res.data.data.id
+              this.preSellList.forEach((rn: any, i: any) => {
 
-            this.preSellList.forEach((rn: any, i: number) => {
-              const invoiceItem = {
-                invoiceId,
-                productId: rn.id,
-                qty: rn.qty,
-                price: rn.totalPrice,
-                discountType: rn.discountType,
-                discount: rn.discount
-              }
-              axios.post('/invoice/saveItem', invoiceItem)
+                setTimeout(
+                  () =>{
+                    const invoiceItem = {
+                      invoiceId,
+                      productId: rn.id,
+                      qty: rn.qty,
+                      price: rn.totalPrice,
+                      discountType: rn.discountType,
+                      discount: rn.discount
+                    }
+                    axios.post('/invoice/saveItem', invoiceItem)
 
-              this.payList.forEach((rn: any) => {
-                const payItem = {
-                  invoiceId,
-                  method: rn.method,
-                  amount: rn.amount
-                }
+                    setTimeout(
+                      function(){
+                        axios.post('/product/location/find', { 
+                          productId: rn.id,
+                          locationId: rn.placeId
+                        }).then(
+                          (rc: any) => {
+                            const oldData = rc.data.data
+                            if (rn.qty > oldData.qty) {
+                              
+                            } else {
+                                const renewQty = oldData.qty - rn.qty
+                                console.log(renewQty)
+                                axios.post('/product/location/stock/out', {
+                                  productId: rn.id,
+                                  oldPlace: rn.placeId,
+                                  locationId: rn.placeId,
+                                  qty: renewQty,
+                                  otherQty: rn.qty
+                                })
 
-                axios.post('/payment/save', payItem)
+                                
+                            }
+                          }
+                        )
+                      },2000 * i)
+                }, 2000 * i)
+                this.payList.forEach((rn: any) => {
+                        const payItem = {
+                          invoiceId,
+                          method: rn.method,
+                          amount: rn.amount
+                        }
+
+                        axios.post('/payment/save', payItem)
+                      })
+                this.detailHandle(invoiceId) 
               })
 
-              setTimeout(
-                function(){
-                  axios.post('/product/location/find', { 
-                    productId: rn.id,
-                    locationId: rn.placeId
-                  }).then(
-                    (rc: any) => {
-                      const oldData = rc.data.data
-                      if (rn.qty > oldData.qty) {
-                        
-                      } else {
-                          const renewQty = oldData.qty - rn.qty
-                          console.log(renewQty)
-                          axios.post('/product/location/stock/out', {
-                            productId: rn.id,
-                            oldPlace: rn.placeId,
-                            locationId: rn.placeId,
-                            qty: renewQty,
-                            otherQty: rn.qty
-                          })
-                      }
-                    }
-                  )
-              },2000 * i)
-            })       
-         })
-    }) 
+            })
+        }, 2000)
+    })       
   }
 
   CancelMemberPayment() {
     this.dialogVisible = false
+  }
+
+  detailHandle(id: number) {
+    this.$router.push({ path: `/invoice/detail/${id}` })
   }
 
 }
@@ -533,3 +548,7 @@ export default class POSpage extends Vue {
         padding-right: 50px;
     }
 </style>
+
+function i(arg0: (rn: any, i: any) => void, i: any) {
+  throw new Error('Function not implemented.')
+}
