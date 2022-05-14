@@ -71,4 +71,15 @@ public class ProductLocationController extends BaseController{
         return Result.succ(iPage);
     }
 
+    @PostMapping("/list/all")
+    public Result listAll(@RequestBody ProductLocation productLocation) {
+        LambdaQueryWrapper<ProductLocation> queryWrapper = Wrappers.lambdaQuery();
+
+        if(!(productLocation.getLocationId() == 0)) {
+            queryWrapper.eq(ProductLocation::getLocationId, productLocation.getLocationId());
+        }
+
+        return Result.succ(productLocationService.listAll(queryWrapper));
+    }
+
 }

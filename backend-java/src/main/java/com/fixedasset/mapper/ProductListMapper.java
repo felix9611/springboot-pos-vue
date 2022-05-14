@@ -9,6 +9,8 @@ import com.fixedasset.entity.ProductList;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 public interface ProductListMapper extends BaseMapper<ProductList> {
     String listQuery = "Select pl.*, " +
             "type.type_code as typeCode , type.type_name as typeName " +
@@ -17,4 +19,7 @@ public interface ProductListMapper extends BaseMapper<ProductList> {
     String wrapperSql = "SELECT * from ( " + listQuery + " ) AS q ${ew.customSqlSegment}";
     @Select(wrapperSql)
     Page<ProductListDto> page(Page page, @Param("ew") Wrapper queryWrapper);
+
+    @Select(wrapperSql)
+    List<ProductListDto> listAll(@Param("ew") Wrapper queryWrapper);
 }

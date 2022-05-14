@@ -84,6 +84,10 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
         return productListMapper.page(page, queryWrapper);
     }
 
+    public List<ProductListDto> listAll(LambdaQueryWrapper<ProductList> queryWrapper) {
+        return productListMapper.listAll(queryWrapper);
+    }
+
     public int createdAction(ActionRecord actionRecord) {
         return actionRecordMapper.insert(actionRecord);
     }

@@ -56,17 +56,25 @@
           label="Unit">
         </el-table-column>
         <el-table-column
-                    prop="created"
-                    width="200"
-                    label="Created At"
-            >
-            </el-table-column>
-            <el-table-column
-                    prop="updated"
-                    width="200"
-                    label="Update At"
-            >
-            </el-table-column>
+          prop="retailPrice"
+          label="Retail Price"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="itemCode"
+          label="Item Code"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="created"
+          label="Created At"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="updated"
+          label="Update At"
+        >
+        </el-table-column>
     <el-table-column
       prop="icon"
       label="Action"

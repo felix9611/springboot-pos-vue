@@ -51,7 +51,7 @@ public class ProductListController extends BaseController{
     }
 
     @PostMapping("/list")
-    public Result listAll(@RequestBody ProductList productList) {
+    public Result list(@RequestBody ProductList productList) {
         Page page = new Page(productList.getPage(), productList.getLimit());
         LambdaQueryWrapper<ProductList> queryWrapper = Wrappers.lambdaQuery();
 
@@ -76,6 +76,32 @@ public class ProductListController extends BaseController{
 
         Page<ProductListDto> iPage = productListService.newPage(page, queryWrapper);
         return Result.succ(iPage);
+    }
+
+    @PostMapping("/list/all")
+    public Result listAll(@RequestBody ProductList productList) {
+        LambdaQueryWrapper<ProductList> queryWrapper = Wrappers.lambdaQuery();
+
+        if (StringUtils.isNotBlank(productList.getProductCode())) {
+            queryWrapper.like(ProductList::getProductCode, productList.getProductCode());
+        }
+
+        if (StringUtils.isNotBlank(productList.getProductName())) {
+            queryWrapper.like(ProductList::getProductName, productList.getProductName());
+        }
+
+        if (!(productList.getTypeId() == 0)) {
+            queryWrapper.eq(ProductList::getTypeId, productList.getTypeId());
+        }
+
+        if (!(productList.getDeptId() == 0)) {
+            queryWrapper.eq(ProductList::getDeptId, productList.getDeptId());
+        }
+
+        queryWrapper.eq(ProductList::getStatu, 1);
+        queryWrapper.orderByDesc(ProductList::getId);
+
+        return Result.succ(productListService.listAll(queryWrapper));
     }
 
     @DeleteMapping("/file/void/{id}")

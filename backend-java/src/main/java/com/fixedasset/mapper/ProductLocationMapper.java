@@ -9,6 +9,8 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.util.List;
+
 public interface ProductLocationMapper extends BaseMapper<ProductLocation> {
     String listQuery = "Select pl.qty as qty, prl.product_name as  productName, prl.product_code as  productCode, " +
             "loc.place_code as placeCode , loc.place_name as placeName " +
@@ -18,6 +20,9 @@ public interface ProductLocationMapper extends BaseMapper<ProductLocation> {
     String wrapperSql = "SELECT * from ( " + listQuery + " ) AS q ${ew.customSqlSegment}";
     @Select(wrapperSql)
     Page<ProductLocationListDto> page(Page page, @Param("ew") Wrapper queryWrapper);
+
+    @Select(wrapperSql)
+    List<ProductLocationListDto> listAll(@Param("ew") Wrapper queryWrapper);
 
     @Update("Update product_location SET qty = #{qty} where product_id = #{productId} and location_id = #{locationId}")
     void updatePlaceQty(@Param("qty") int qty, @Param("productId") int productId,  @Param("locationId") int locationId);

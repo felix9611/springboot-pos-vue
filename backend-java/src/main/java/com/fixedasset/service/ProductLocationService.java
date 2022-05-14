@@ -7,10 +7,13 @@ import com.fixedasset.dto.ProductLocationChangeDto;
 import com.fixedasset.dto.ProductLocationListDto;
 import com.fixedasset.entity.ProductLocation;
 
+import java.util.List;
+
 public interface ProductLocationService extends IService<ProductLocation> {
     void saveProductLoc(ProductLocation productLocation);
     void changePlace(ProductLocationChangeDto productLocationChangeDto);
     void changeQty(ProductLocation productLocation);
     ProductLocation findOne(ProductLocation productLocation);
     Page<ProductLocationListDto> newPage(Page page, LambdaQueryWrapper<ProductLocation> queryWrapper);
+    List<ProductLocationListDto> listAll(LambdaQueryWrapper<ProductLocation> wrappers);
 }

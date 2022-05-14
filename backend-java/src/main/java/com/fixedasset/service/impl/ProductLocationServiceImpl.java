@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class ProductLocationServiceImpl extends ServiceImpl<ProductLocationMapper, ProductLocation> implements ProductLocationService {
@@ -77,6 +78,10 @@ public class ProductLocationServiceImpl extends ServiceImpl<ProductLocationMappe
 
     public Page<ProductLocationListDto> newPage(Page page, LambdaQueryWrapper<ProductLocation> queryWrapper) {
         return productLocationMapper.page(page, queryWrapper);
+    }
+
+    public List<ProductLocationListDto> listAll(LambdaQueryWrapper<ProductLocation> wrappers) {
+        return productLocationMapper.listAll(wrappers);
     }
 
 }
