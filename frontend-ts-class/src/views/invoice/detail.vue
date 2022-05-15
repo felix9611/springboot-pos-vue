@@ -11,6 +11,10 @@
       @click="generatePDF()">
         Download PDF
     </el-button>
+    <div>
+      <iframe id="myiframe" style="width: 100%; height: 100%; position: fixed; top: 0; left: 0; z-index: 2; border: none;"></iframe>
+    </div>
+    
     <el-form :model="editForm" :disabled="true">
       <el-row :span="24">
         <el-col :span="6">
@@ -133,6 +137,7 @@ export default class InoviceDetail extends Vue {
     this.getDetail()
     this.getPayment()
     this.getItem()
+    // this.generatePDF()
   }
 
   getDetail() {
@@ -140,6 +145,7 @@ export default class InoviceDetail extends Vue {
       (res: any) => {
         this.detailForm = res.data.data
         this.detailForm.createdAt = moment(new Date(this.detailForm.createdAt)).format('DD-MM-YYYY HH:MM')
+        this.detailForm.voidAt = this.detailForm.voidAt ? moment(new Date(this.detailForm.voidAt)).format('DD-MM-YYYY HH:MM') : null
       }
     )
   }
@@ -187,6 +193,10 @@ export default class InoviceDetail extends Vue {
     doc.text(`Total : $ ${this.detailForm.totalAmount}`, 40, 150)
 
     doc.save(`${this.detailForm.number}.pdf`)
+   // const refs: any = this.$refs
+   // refs.myiframe.contentWindow.document = doc.output('datauri')
+
+   //  document.getElementById('main-iframe').setAttribute('src', doc.output('bloburl'));
   }
 }
 </script>
