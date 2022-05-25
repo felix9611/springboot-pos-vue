@@ -6,6 +6,10 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fixedasset.dto.InvoiceListDto;
+import com.fixedasset.dto.charts.QueryCountShop;
+import com.fixedasset.dto.charts.QueryCountYearWeek;
+import com.fixedasset.dto.charts.QueryTotalShop;
+import com.fixedasset.dto.charts.QueryTotalYearWeek;
 import com.fixedasset.entity.Invoice;
 import com.fixedasset.entity.ProductList;
 import com.fixedasset.mapper.InvoiceMapper;
@@ -82,4 +86,21 @@ public class InvoiceServiceImpl extends ServiceImpl<InvoiceMapper, Invoice> impl
         str.append(oriStr);
         return str.toString();
     }
+
+
+    public List<QueryTotalShop> queryTotalShop() {
+        return invoiceMapper.queryTotalShop();
+    }
+    public List<QueryCountShop> queryCountShop() {
+        return invoiceMapper.queryCountShop();
+    }
+    public List<QueryCountYearWeek> queryCountYearWeek() {
+        return invoiceMapper.queryCountYearWeek();
+    }
+    public List<QueryTotalYearWeek> queryTotalYearWeek() {
+        return invoiceMapper.queryTotalYearWeek();
+    }
+
+
+
 }

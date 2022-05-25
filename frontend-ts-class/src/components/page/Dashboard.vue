@@ -25,10 +25,10 @@
                     max-width="1200"
                 >
                     <div class="card-title">
-                        Total Item by Department
+                        Sell Total Per Year & Week
                     </div>
                     <div class="card-content">
-                        <ChartJs v-bind="chartsSetA1" /> 
+                        <ChartJs v-bind="chartsSetA" /> 
                     </div> 
                 </v-card>
             </el-col>
@@ -39,10 +39,10 @@
                     max-width="1000"
                 >
                     <div class="card-title">
-                        Group By Department
+                        Sell Item Total Per Year & Week
                     </div>
                     <div class="card-content">
-                        <ChartJs v-bind="chartsSetD" /> 
+                        <ChartJs v-bind="chartsSetB" /> 
                     </div> 
                 </v-card> 
             </el-col>
@@ -51,66 +51,27 @@
                     max-width="1000"
                 >
                     <div class="card-title">
-                        Group By Location
+                        Sell Total Per Year & Week
                     </div>
                     <div class="card-content">
-                        <ChartJs v-bind="chartsSetE" /> 
+                        <ChartJs v-bind="chartsSetC" /> 
                     </div> 
                 </v-card> 
             </el-col>
         </el-row>
-
         <el-row :gutter="24">
-            <el-col :span="24">
+            <el-col :span="12">
                 <v-card
-                    max-width="1700"
+                    max-width="1000"
                 >
                     <div class="card-title">
-                        Group By Location
+                        Sell Total Per Year & Week
                     </div>
                     <div class="card-content">
-                        <ChartJs v-bind="chartsSetC1" /> 
+                        <ChartJs v-bind="chartsSetD" /> 
                     </div> 
                 </v-card> 
             </el-col>
-        </el-row>
-        <el-row :gutter="24">
-            <el-col :span="24">
-                <v-card
-                    max-width="1700"
-                >
-                    <div class="card-title">
-                        Buy Date & Items (By year-month)
-                    </div>
-                    <div class="card-content">
-                        <chart-js v-bind="chartsSetC2" /> 
-                    </div> 
-                </v-card> 
-            </el-col>
-        </el-row>
-        <el-row :gutter="24">
-            <div v-for="item in getCostWithDeptData" :key="item.deptName">
-                    <template>
-                        <el-col :span="getCostWithDeptData.length - 1">
-                            <v-card
-                                class="mgb20-score"
-                                max-width="500"
-                            >
-                                <div class="card-content-score">
-                                    <div style="text-align: center;font-size: 2rem;color: midnightblue;">
-                                        {{ item.deptName }}
-                                    </div>
-                                    <div style="text-align: center;padding-top: 10%;font-size: 1.6rem;color: midnightblue;">
-                                        Used Cost
-                                    </div>
-                                    <div style="text-align: center;padding-top: 10%;font-size: 1.6rem;color: midnightblue;">
-                                        HKD ${{ item.totalCost }}
-                                    </div>    
-                                </div>
-                            </v-card> 
-                        </el-col>    
-                </template>              
-            </div>
         </el-row>
     </div>
 </template>
@@ -132,216 +93,107 @@ export default class Dashboard extends Vue {
 
     groupByFind: any = {}
 
-    costYearMonthData: any = []
-    itemYearMonthData: any = []
-    getAssetGroupTypeData: any = []
-    getAssetGroupDeptData: any = []
-    getAssetGroupPlaceData: any = []
-    getCostWithDeptData: any = []
+
+    queryTotalYearWeekList: any = []
+    queryCountYearWeekList: any = []
+    queryTotalShopList: any = []
+    queryCountShopList: any = []
 
     get chartsSetA() {
         return {
             width: 1000,
             heigh: 90,
-            datasetKey: 'typeName',
-            value: 'items',
-            label: 'Total Items',
-            type: 'bar',
-            chartOptions: {
-                stroke: {
-                curve: 'smooth'
-                },
-                chart: {
-                    toolbar: {
-                        show: true
-                    },
-                },
-                title: {
-                    text: 'Group By Type',
-                    align: 'left'
-                },
-                yaxis: {
-                    title: {
-                        text: 'Item'
-                    }
-                },
-                dataLabels: {
-                enabled: false
-                }
-            },
-            data: this.getAssetGroupTypeData
-        }
-    }
-
-    get chartsSetA1() {
-        return {
-            width: 1000,
-            heigh: 90,
-            type: 'bar',
-            datasetKey: 'typeName',
-            value: 'items',
-            data: this.getAssetGroupTypeData,
-            label: 'Total Items',
+            type: 'line',
+            datasetKey: 'yearWeek',
+            value: 'total',
+            data: this.queryTotalYearWeekList,
+            label: 'Total($)',
             colors: '#a1d41b'
         }
     }
 
     get chartsSetB() {
         return {
-            width: 1600,
-            heigh: 90,
-            datasetKey: 'yearMonth',
-            value: 'totalCost',
-            label: 'Total Cost(HKD)',
-            type: 'line',
-            chartOptions: {
-                stroke: {
-                    curve: 'smooth'
-                },
-                yaxis: {
-                    title: {
-                        text: 'Cost(HKD)'
-                    }
-                }
-            },
-            data: this.costYearMonthData
-        }
-    }
-
-    get chartsSetC1() {
-        return {
-            width: 1700,
+            width: 1000,
             heigh: 90,
             type: 'line',
-            datasetKey: 'yearMonth',
-            value: 'totalCost',
-            label: 'Total Cost($)',
-            data: this.costYearMonthData,
-            colors: '#00CCCC'
-        }
-    }
-
-    get chartsSetC2() {
-        return {
-            width: 1600,
-            heigh: 90,
-            datasetKey: 'yearMonth',
-            value: 'items',
+            datasetKey: 'yearWeek',
+            value: 'count',
+            data: this.queryCountYearWeekList,
             label: 'Total Items',
-            type: 'line',
-            colors: '#ff4d88',
-            data: this.itemYearMonthData,
-            chartOptions: {
-                stroke: {
-                    curve: 'smooth'
-                },
-                yaxis: {
-                    title: {
-                        text: 'Item Unit'
-                    }
-                }
-            }
-        }      
+            colors: '#a1d41b'
+        }
+    }
+
+    get chartsSetC() {
+        return {
+            width: 1000,
+            heigh: 90,
+            type: 'bar',
+            datasetKey: 'placeName',
+            value: 'total',
+            data: this.queryTotalShopList,
+            label: 'Total($)',
+            colors: '#a1d41b'
+        }
     }
 
     get chartsSetD() {
         return {
-            type: 'bar',
-            datasetKey: 'deptName',
-            value: 'items',
-            data: this.getAssetGroupDeptData,
-            label: 'Total Items',
-            colors: '#66ccff'
-        }
-    }
-
-    get chartsSetE() {
-        return {
+            width: 1000,
+            heigh: 90,
             type: 'bar',
             datasetKey: 'placeName',
-            value: 'items',
-            data: this.getAssetGroupPlaceData,
-            label: 'Total Items',
-            colors: '#ff9966'
-        }
-    }
-
-    get chartsSetF() {
-        return {
-            type: 'bar',
-            datasetKey: 'deptName',
-            value: 'totalCost',
-            data: this.getCostWithDeptData,
-            label: 'Total Cost',
-            colors: '#ff9966'
+            value: 'count',
+            data: this.queryCountShopList,
+            label: 'Total Inov',
+            colors: '#a1d41b'
         }
     }
 
     created() {
-        this.getCostYearMonth()
-        this.groupByTypeWithAsset()
-        this.getAssetGroupDept()
-        this.getAssetGroupPlace()
-        this.getItemYearMonth()
-        this.getCostWithDept()
+        this.queryTotalYearWeek()
+        this.queryCountYearWeek()
+        this.queryTotalShop()
+        this.queryCountShop()
     }
 
-    getCostWithDept() {
+    queryTotalYearWeek() {
         axios.get(
-            '/asset/assetList/getCostWithDept'
+            '/invoice/queryTotalYearWeek'
         ).then(
             (res: any) => {
-                this.getCostWithDeptData = res.data.data
+                this.queryTotalYearWeekList = res.data.data
+            }
+        )
+    } 
+
+    queryCountYearWeek() {
+        axios.get(
+            '/invoice/queryCountYearWeek'
+        ).then(
+            (res: any) => {
+                this.queryCountYearWeekList = res.data.data
             }
         )
     }
 
-    getAssetGroupPlace() {
+    queryTotalShop() {
         axios.get(
-            '/asset/assetList/getAssetGroupPlace'
+            '/invoice/queryTotalShop'
         ).then(
             (res: any) => {
-                this.getAssetGroupPlaceData = res.data.data
+                this.queryTotalShopList = res.data.data
             }
         )
     }
 
-    getAssetGroupDept() {
+    queryCountShop() {
         axios.get(
-            '/asset/assetList/getAssetGroupDept'
+            '/invoice/queryCountShop'
         ).then(
             (res: any) => {
-                this.getAssetGroupDeptData = res.data.data
-            }
-        )
-    }
-
-    groupByTypeWithAsset() {
-         axios.get(
-            '/asset/assetList/groupByType'
-        ).then(
-            (res: any) => {
-                this.getAssetGroupTypeData = res.data.data
-            }
-        )
-    }
-
-    getCostYearMonth() {
-        axios.get(
-            '/asset/assetList/getCostYearMonth'
-        ).then(
-            (res: any) => {
-                this.costYearMonthData = res.data.data
-            }
-        )
-    }
-
-    getItemYearMonth() {
-        axios.get(
-            '/asset/assetList/getItemYearMonth'
-        ).then(
-            (res: any) => {
-                this.itemYearMonthData = res.data.data
+                this.queryCountShopList = res.data.data
             }
         )
     }

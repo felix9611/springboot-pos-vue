@@ -65,4 +65,22 @@ public class InvoiceController extends  BaseController{
         return  Result.succ(iPage);
     }
 
+    // Charts
+    @GetMapping("/queryCountShop")
+    public Result queryCountShop() {
+        return Result.succ(invoiceService.queryCountShop());
+    }
+    @GetMapping("/queryTotalShop")
+    public Result queryTotalShop() {
+        return Result.succ(invoiceService.queryTotalShop());
+    }
+    @GetMapping("/queryTotalYearWeek")
+    public Result queryTotalYearWeek() {
+        return Result.succ(invoiceService.queryTotalYearWeek());
+    }
+    @GetMapping("/queryCountYearWeek")
+    public Result queryCountYearWeek() {
+        return Result.succ(invoiceService.queryCountYearWeek());
+    }
+
 }
