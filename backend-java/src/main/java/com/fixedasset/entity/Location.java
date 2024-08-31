@@ -16,6 +16,15 @@ public class Location extends BaseEntity {
     @TableField("place_other_name")
     private String placeOtherName;
 
+    @TableField("country")
+    private String country;
+
+    @TableField("address")
+    private String address;
+
+    @TableField("zip_code")
+    private String zipCode;
+
     @TableField("remark")
     private String remark;
 

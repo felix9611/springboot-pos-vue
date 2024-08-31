@@ -260,6 +260,8 @@ export default class POSpage extends Vue {
     { key: 'E-payment' },
   ]
 
+  handleSelectionChange: boolean = false
+
 
   placeList: any = []
 

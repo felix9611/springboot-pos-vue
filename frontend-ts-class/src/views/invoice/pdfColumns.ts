@@ -10,4 +10,6 @@ export const itemsColumns = [
   { title : 'Price', dataKey: 'price' },
   { title : 'Discount', dataKey: 'discount' },
   { title : 'Discount Tyoe', dataKey: 'discountType' },
+  { title : 'Tax Type', dataKey: 'taxType' },
+  { title : 'Tax', dataKey: 'taxAmount' },
 ]

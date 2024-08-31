@@ -17,7 +17,8 @@ import java.util.List;
 public interface InvoiceMapper extends BaseMapper<Invoice> {
     String listQuery = "SELECT inv.*, " +
             "m.name as memberName, m.phone as memberPhone, m.address as memberAddress, " +
-            "mc.name as mcName , loc.place_code as placeCode, loc.place_name as placeName" +
+            "mc.name as mcName , loc.place_code as placeCode, loc.place_name as placeName," +
+            "loc.address as address, loc.zip_code as zipCode, loc.country as country" +
             " FROM invoice as inv " +
             "left join `member` as m on inv.member_id = m.id " +
             "left join `member_class` as mc on m.class  = mc.id " +
@@ -26,13 +27,14 @@ public interface InvoiceMapper extends BaseMapper<Invoice> {
 
     String selectOne = listQuery + " where inv.id = ${id}";
 
-    String queryTotalYearWeek = "SELECT concat(year(created_at), '-', week(created_at)) as yearWeek, sum(total_amount) as total FROM invoice group by yearWeek;";
+    String queryTotalYearWeek = "SELECT concat(year(created_at), '-', week(created_at)) as yearWeek, sum(total_amount) as total FROM invoice ${ew.customSqlSegment} group by yearWeek;";
+    // String wrapperSqlTotalYearWeek = "SELECT * from ( " + queryTotalYearWeek + " q ${ew.customSqlSegment}";
     @Select(queryTotalYearWeek)
-    List<QueryTotalYearWeek> queryTotalYearWeek();
+    List<QueryTotalYearWeek> queryTotalYearWeek(@Param("ew") Wrapper queryWrapper);
 
-    String queryCountYearWeek = "SELECT concat(year(created_at), '-', week(created_at)) as yearWeek, count(*) as count FROM invoice group by yearWeek;";
+    String queryCountYearWeek = "SELECT concat(year(created_at), '-', week(created_at)) as yearWeek, count(*) as count FROM invoice ${ew.customSqlSegment} group by yearWeek;";
     @Select(queryCountYearWeek)
-    List<QueryCountYearWeek> queryCountYearWeek();
+    List<QueryCountYearWeek> queryCountYearWeek(@Param("ew") Wrapper queryWrapper);
 
     String queryTotalShop = "SELECT loc.place_name as placeName, sum(total_amount) as total " +
             "FROM invoice as inv left join location as loc on inv.location_id = loc.id  group by location_id;";
