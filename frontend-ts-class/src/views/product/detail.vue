@@ -6,7 +6,7 @@
         <el-button icon="el-icon-circle-plus" circle v-if="readonlyMode === true" @click="startEdit()"></el-button>
       </div>
     </div>
-    <el-form :model="editForm" :disabled="true" class="grid lg:grid-cols-4 gap-3 px-6">
+    <el-form :model="editForm" :disabled="readonlyMode" class="grid lg:grid-cols-4 gap-3 px-6">
       <el-form-item class="lg:col-span-full">
           <el-upload
             class="upload-demo"
@@ -47,6 +47,27 @@
       <el-form-item label="Retail Price"  prop="retailPrice" label-width="120px">
         <el-input-number v-model="editForm.retailPrice" :step="0.01" :precision="2" class="w-full"></el-input-number>
       </el-form-item>
+      <el-form-item label="Tax Information" prop="taxInformation" label-width="120px">
+        <el-checkbox v-model="editForm.tax" />
+      </el-form-item>
+      <el-form-item label="Tax Type"  prop="invoiceNo" label-width="120px" v-if="editForm.tax">
+        <el-select v-model="editForm.taxCode" placeholder="Select" filterable clearable class="w-full">
+          <el-option
+            class="text-black"
+            v-for="items in taxesData"
+            :key="items.taxCode"
+            :label="items.label"
+            :value="items.taxCode">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="Tax Amount"  prop="taxAmount" label-width="120px" v-if="editForm.tax">
+        <el-input-number v-model="editForm.taxAmount" disabled class="w-full"></el-input-number>
+      </el-form-item>
+      <el-form-item label="After Tax"  prop="afterTax" label-width="120px" v-if="editForm.tax">
+        <el-input-number v-model="editForm.afterTax" disabled class="w-full"></el-input-number>
+      </el-form-item>
+      
       <el-form-item label="Description"  prop="description" label-width="120px" class="lg:col-span-full">
         <el-input type="textarea" v-model="editForm.description"></el-input>
       </el-form-item>
@@ -62,7 +83,7 @@ import axios from '@/axios'
 import VueBase64FileUpload from 'vue-base64-file-upload'
 import type { UploadFile } from 'element-plus/es/components/upload/src/upload.type'
 import moment from 'moment'
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import QrcodeVue from 'qrcode.vue'
 import { uploadImgToBase64 } from '@/utils/uploadImgToBase64'
 
@@ -76,15 +97,19 @@ export default class ProductListDetail extends Vue {
   editFormRules: any = []
   readonlyMode: boolean = false
   hideSaveBtn: boolean = false
+  
 
   fileList: any = []
   fileBase64Data: any = []
+  taxesData: any = []
+  taxDataSelected: any = {}
 
   typeItem: any = []
 
    created() {
     // this.getAlldept()
     this.getAllType()
+    this.getAllTaxesData()
     /// this.getAllPlace()
     // this.getAllVendor()
     if (this.$route.params.id) {
@@ -155,9 +180,9 @@ export default class ProductListDetail extends Vue {
   }
 
   submitForm(formName: string) {
-        const refs: any = this.$refs[formName]
-        refs.validate((valid: any) => {
-            if (valid) {
+    //    const refs: any = this.$refs[formName]
+     //   refs.validate((valid: any) => {
+       //     if (valid) {
                 console.log(this.fileBase64Data[0])
                 axios.post('/product/' + (this.editForm.id ? 'update' : 'create'), this.editForm)
                     .then((res: any) => {
@@ -198,14 +223,41 @@ export default class ProductListDetail extends Vue {
                                 this.back()
                             }
                 })
-            } else {
+     //       } else {
                 return false;
-            }
-        })
+     //  //     }
+       // })
   }
 
   back() {
     this.$router.push({ path: '/product/product' })
+  }
+
+  getAllTaxesData() {
+    axios.get(
+            '/system/country/tax/getAll'
+        ).then(
+            (res: any) => {
+
+            let results = res.data.data
+            const updates = results.map( x=> {
+              return {
+                ...x,
+                taxRate: Number(x.taxRate),
+                label: `${x.nationName} - ${x.countryName} ${x.taxCode} (${Number(x.taxRate) * 100}%)`
+              }
+            } )
+            this.taxesData = updates
+        })
+  }
+
+  @Watch('editForm.taxCode')
+  onTaxCodeChanged1(val: string, oldVal: string) {
+    const data = this.taxesData .find(item => item.taxCode === val)
+    
+    this.editForm.taxRate = data.taxRate
+    this.editForm.taxAmount = (this.editForm.retailPrice * data.taxRate).toFixed(2)
+    this.editForm.afterTax = (this.editForm.retailPrice + ( this.editForm.retailPrice * data.taxRate)).toFixed(2)
   }
 }
 </script>
