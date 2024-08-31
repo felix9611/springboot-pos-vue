@@ -9,24 +9,50 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>org.fixedasset</groupId>
-    <artifactId>pos-vue</artifactId>
+    <artifactId>fixedmanager-vue</artifactId>
     <!--<version>1.0-SNAPSHOT</version>-->
     <name>vueadmin-java</name>
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/snapshot</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
     <dependencies>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20230618</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <version>2.4.13</version>
+            <version>3.2.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
-            <version>2.4.10</version>
+            <version>2.7.1</version>
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
@@ -38,7 +64,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>2.4.13</version>
+            <version>3.2.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -48,7 +74,7 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>3.4.1</version>
         </dependency>
-        <!--mp代码生成器-->
+        <!--MP Code-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-generator</artifactId>
@@ -69,12 +95,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
-            <version>2.4.13</version>
+            <version>3.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
-            <version>2.4.13</version>
+            <version>3.2.0</version>
         </dependency>
         <!-- jwt -->
         <dependency>
@@ -102,10 +128,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
-            <version>2.4.13</version>
+            <version>3.2.0</version>
         </dependency>
 
-        <!-- Java图形验证码 -->
+        <!-- Login Verity -->
         <dependency>
             <groupId>com.github.whvcse</groupId>
             <artifactId>easy-captcha</artifactId>
@@ -135,6 +161,20 @@
             <artifactId>mybatis-plus-generator</artifactId>
             <version>3.4.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.12.7</version>
+        </dependency>
+        <dependency>
+            <groupId>ai.optfor</groupId>
+            <artifactId>spring-openai-api</artifactId>
+            <version>0.3.23</version>
+        </dependency>
+
+
+
 
     </dependencies>
 
