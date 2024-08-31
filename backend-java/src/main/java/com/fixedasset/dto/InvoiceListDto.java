@@ -15,4 +15,7 @@ public class InvoiceListDto extends Invoice {
     @Transient private String mcName;
     @Transient private String placeCode;
     @Transient private String placeName;
+    @Transient private String zipCode;
+    @Transient private String address;
+    @Transient private String country;
 }

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
@@ -31,6 +32,7 @@ public class InvoiceServiceImpl extends ServiceImpl<InvoiceMapper, Invoice> impl
         invoice.setNumber("INV" + this.getNewCode());
         invoice.setCreatedAt(LocalDateTime.now());
         invoice.setVoidNum(0);
+        invoice.setTaxRefNo(taxNumberRandom());
         invoiceMapper.insert(invoice);
     }
 
@@ -53,6 +55,13 @@ public class InvoiceServiceImpl extends ServiceImpl<InvoiceMapper, Invoice> impl
 
     public InvoiceListDto selectOneItem(Long id) {
         return invoiceMapper.selectOneId(id);
+    }
+
+    public String taxNumberRandom() {
+        Random random = new Random();
+        Long tenDigitNumber = 1000000000L + (long)(random.nextDouble() * 9000000000L);
+        String numberAsString = String.valueOf(tenDigitNumber);
+        return numberAsString;
     }
 
     public String getNewCode() {
@@ -94,11 +103,21 @@ public class InvoiceServiceImpl extends ServiceImpl<InvoiceMapper, Invoice> impl
     public List<QueryCountShop> queryCountShop() {
         return invoiceMapper.queryCountShop();
     }
-    public List<QueryCountYearWeek> queryCountYearWeek() {
-        return invoiceMapper.queryCountYearWeek();
+    public List<QueryCountYearWeek> queryCountYearWeek(Invoice invoiceData) {
+        LambdaQueryWrapper<Invoice> queryWrapper = Wrappers.lambdaQuery();
+        if (invoiceData.getDateFrom() != null && invoiceData.getDateTo() != null) {
+            queryWrapper.between(Invoice::getCreatedAt, invoiceData.getDateFrom(), invoiceData.getDateTo());
+        }
+        return invoiceMapper.queryCountYearWeek(queryWrapper);
     }
-    public List<QueryTotalYearWeek> queryTotalYearWeek() {
-        return invoiceMapper.queryTotalYearWeek();
+    public List<QueryTotalYearWeek> queryTotalYearWeek(Invoice invoiceData) {
+        LambdaQueryWrapper<Invoice> queryWrapper = Wrappers.lambdaQuery();
+
+        if (invoiceData.getDateFrom() != null && invoiceData.getDateTo() != null) {
+            queryWrapper.between(Invoice::getCreatedAt, invoiceData.getDateFrom(), invoiceData.getDateTo());
+        }
+
+        return invoiceMapper.queryTotalYearWeek(queryWrapper);
     }
 
 

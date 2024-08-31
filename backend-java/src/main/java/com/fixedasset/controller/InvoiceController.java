@@ -74,13 +74,13 @@ public class InvoiceController extends  BaseController{
     public Result queryTotalShop() {
         return Result.succ(invoiceService.queryTotalShop());
     }
-    @GetMapping("/queryTotalYearWeek")
-    public Result queryTotalYearWeek() {
-        return Result.succ(invoiceService.queryTotalYearWeek());
+    @PostMapping("/queryTotalYearWeek")
+    public Result queryTotalYearWeek(@RequestBody Invoice invoice) {
+        return Result.succ(invoiceService.queryTotalYearWeek(invoice));
     }
-    @GetMapping("/queryCountYearWeek")
-    public Result queryCountYearWeek() {
-        return Result.succ(invoiceService.queryCountYearWeek());
+    @PostMapping("/queryCountYearWeek")
+    public Result queryCountYearWeek(@RequestBody Invoice invoice) {
+        return Result.succ(invoiceService.queryCountYearWeek(invoice));
     }
 
 }

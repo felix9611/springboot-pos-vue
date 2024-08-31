@@ -34,6 +34,12 @@ public class Invoice {
     @TableField("location_id")
     private int locationId;
 
+    @TableField("tax_total")
+    private Double taxTotal;
+
+    @TableField("tax_ref_no")
+    private String taxRefNo;
+
     @TableField("void")
     private int voidNum;
 
@@ -48,4 +54,11 @@ public class Invoice {
 
     @TableField(exist = false)
     private int limit = 10;
+
+    @TableField(exist = false)
+    private LocalDateTime dateTo;
+
+    @TableField(exist = false)
+    private LocalDateTime dateFrom;
+
 }

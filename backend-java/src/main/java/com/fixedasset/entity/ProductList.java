@@ -40,6 +40,21 @@ public class ProductList extends BaseEntity{
     @TableField("vendor_id")
     private int vendorId;
 
+    @TableField("tax")
+    private boolean tax;
+
+    @TableField("tax_code")
+    private String taxCode;
+
+    @TableField("tax_rate")
+    private Double taxRate;
+
+    @TableField("after_tax")
+    private Double afterTax;
+
+    @TableField("tax_amount")
+    private Double taxAmount;
+
     @TableField(exist = false)
     private int page = 1;
 

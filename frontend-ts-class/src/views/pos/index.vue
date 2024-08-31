@@ -1,9 +1,9 @@
-<template>
-  <div class="container box-area">
-    <el-col :span="12">
-      <div class="handle-box">
+<template class="bg-white">
+  <div class="bg-white p-4 shadow-lg rounded-lg">
+    <div class="grid lg:grid-cols-2 gap-3">
+      <div> <!-- barcode scan or type-->
         <el-form :inline="true">
-          <el-form-item label="Place" prop="place" label-width="130px">
+          <el-form-item label="Place" prop="place" label-width="120px">
             <el-select v-model="placeId" placeholder="Select" filterable>
               <el-option
                 v-for="placeItems in placeList"
@@ -13,53 +13,50 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="Asset Code"  prop="assetCode" label-width="130px">
+          <el-form-item label="Asset Code"  prop="assetCode" label-width="120px">
             <el-input v-model="productCode" autocomplete="off"></el-input>
           </el-form-item>
-
           <el-form-item>
             <el-button type="primary" @click="submitProductCode()">Add</el-button>
           </el-form-item>
         </el-form>
-      </div>
-      <div class="handle-box">
-        <el-form :model="productDetail">
-          <el-form-item label="Qty"  prop="qty" label-width="130px">
-            <el-input-number v-model="productDetail.qty" :step="1"></el-input-number>
-          </el-form-item>
-          <el-form-item label="Retail Price"  prop="retailPrice" label-width="130px">
-            <el-input v-model="productDetail.retailPrice" readonly></el-input>
-          </el-form-item>
-          <el-row>
-            <el-col :span="2">
-              <el-form-item label="Discount"  prop="discount" label-width="130px">
-                <el-input-number v-model="productDetail.discount" :step="1"></el-input-number>
+        <div>
+          <el-form :model="productDetail" class="grid lg:grid-cols-2 gap-3 px-2">
+            <el-form-item label="Qty"  prop="qty" label-width="120px">
+              <el-input-number v-model="productDetail.qty" :step="1"></el-input-number>
+            </el-form-item>
+            <el-form-item label="Retail Price"  prop="retailPrice" label-width="120px">
+              <el-input v-model="productDetail.retailPrice" readonly  class="w-full"></el-input>
+            </el-form-item>
+            
+            <div class="grid grid-cols-4 gap-3 lg:col-span-full">
+              <el-form-item label="Discount"  prop="discount" label-width="120px" class="col-span-3">
+                <el-input-number v-model="productDetail.discount" :step="1" class="w-full"/>
               </el-form-item>
-            </el-col>
-            <el-col :span="2">
               <el-select v-model="productDetail.discountType" placeholder="Select" filterable>
-                <el-option
-                  v-for="discount in discountList"
-                  :key="discount.type"
-                  :label="discount.type"
-                  :value="discount.type">
-                </el-option>
+                  <el-option
+                    v-for="discount in discountList"
+                    :key="discount.type"
+                    :label="discount.type"
+                    :value="discount.type">
+                  </el-option>
               </el-select>
-            </el-col>
-          </el-row>
-          
-          <el-form-item label="Total"  prop="total" label-width="130px">
-            <el-input v-model="productDetail.totalPrice" readonly></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="submitPreSell()">Add</el-button>
-          </el-form-item>
-        </el-form>
+              
+            </div>
+            <el-form-item label="Total"  prop="total" label-width="120px">
+              <el-input v-model="productDetail.totalPrice" readonly></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button v-if="productDetail.productCode" type="primary" @click="submitPreSell()">Add</el-button>
+            </el-form-item>
+
+          </el-form>
+        </div>
       </div>
-    </el-col>
-    <el-col :span="12">
-      <div class="handle-box">
-        <el-table
+
+      <div class="px-2 gap-3">
+        <!-- List Product -->
+        <el-table 
           ref="multipleTable"
           :data="preSellList"
           tooltip-effect="dark"
@@ -93,10 +90,16 @@
               prop="description"
               label="Description">
             </el-table-column>
+            <el-table-column
+              prop="taxAmount"
+              label="Tax Amount">
+            </el-table-column>
+            <el-table-column
+              prop="afterTax"
+              label="After Tax">
+            </el-table-column>
         </el-table>
-        <br>
-        <br>
-        <el-form :inline="true">
+        <el-form :inline="true" class="py-6">
           <el-form-item label="Member Name"  prop="name" label-width="130px">
             <el-input v-model="memberNameFind" autocomplete="off"></el-input>
           </el-form-item>
@@ -106,7 +109,6 @@
           </el-form-item>
         </el-form>
 
-        <br>
         <el-table
           ref="multipleTable"
           :data="foundMemberList"
@@ -125,63 +127,60 @@
               prop="email"
               label="Email">
             </el-table-column>
-        </el-table>
-        <br>
-        <br>
-        <el-form :model="selectedMember" :disabled="true">
-          <el-form-item label="Name"  prop="namr" label-width="130px">
-            <el-input v-model="selectedMember.name"></el-input>
+          </el-table>
+          <el-form :model="selectedMember" :disabled="true" class="p-3">
+            <el-form-item label="Name"  prop="namr" label-width="130px">
+              <el-input v-model="selectedMember.name"></el-input>
+            </el-form-item>
+            <el-form-item label="Phone"  prop="retailPrice" label-width="130px">
+              <el-input v-model="selectedMember.phone"></el-input>
+            </el-form-item>
+            <el-form-item label="Member Class" prop="classes" label-width="130px">
+            <el-select v-model="selectedMember.classes" placeholder="Select">
+              <el-option
+                v-for="item in allClasses"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="Phone"  prop="retailPrice" label-width="130px">
-            <el-input v-model="selectedMember.phone"></el-input>
+        </el-form>
+        <el-form :model="totalCalForm" class="p-3">
+          <el-form-item label="Total"  prop="total" label-width="130px">
+            <el-input v-model="totalCalForm.totalCal" readonly></el-input>
           </el-form-item>
-          <el-form-item label="Member Class" prop="classes" label-width="130px">
-          <el-select v-model="selectedMember.classes" placeholder="Select">
-            <el-option
-              v-for="item in allClasses"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <br>
-      <br>
-      <el-form :model="totalCalForm">
-        <el-form-item label="Total"  prop="total" label-width="130px">
-          <el-input v-model="totalCalForm.totalCal" readonly></el-input>
-        </el-form-item>
-        <el-row>
-          <el-col :span="2">
-              <el-form-item label="Discount"  prop="discount" label-width="130px">
-                <el-input-number v-model="totalCalForm.discount" :step="1"></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="2">
-              <el-select v-model="totalCalForm.discountType" placeholder="Select" filterable>
-                <el-option
-                  v-for="discount in discountList"
-                  :key="discount.type"
-                  :label="discount.type"
-                  :value="discount.type">
-                </el-option>
-              </el-select>
-            </el-col>
-        </el-row>
-        <el-form-item label="Total"  prop="total" label-width="130px">
-          <el-input v-model="totalCalForm.totalPrice" readonly></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="cancelPO()">Cancel</el-button>
-          <el-button type="primary" @click="payPO()">Pay</el-button>
-        </el-form-item>
-      </el-form>
-      </div>
-    </el-col>
+          <div class="grid grid-cols-3 gap-3">
+            <el-form-item label="Discount"  prop="discount" label-width="130px" class="col-span-2">
+              <el-input-number v-model="totalCalForm.discount" :step="1" class="w-full"></el-input-number>
+            </el-form-item>
+            <el-select v-model="totalCalForm.discountType" placeholder="Select" filterable>
+              <el-option
+                v-for="discount in discountList"
+                :key="discount.type"
+                :label="discount.type"
+                :value="discount.type">
+              </el-option>
+            </el-select>
+          </div>
 
+          <el-form-item label="Total"  prop="total" label-width="130px">
+            <el-input v-model="totalCalForm.totalPrice" readonly></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="cancelPO()">Cancel</el-button>
+            <el-button type="primary" @click="payPO()">Pay</el-button>
+          </el-form-item>
+        </el-form>
+
+      </div>
+
+      
+
+    </div>
 
     <el-dialog
+      class="rounded-lg"
       title="Pay"
       :visible.sync="dialogVisible"
       width="1000px"
@@ -260,6 +259,8 @@ export default class POSpage extends Vue {
     { key: 'E-payment' },
   ]
 
+  handleSelectionChange: boolean = false
+
 
   placeList: any = []
 
@@ -301,7 +302,7 @@ export default class POSpage extends Vue {
 
   @Watch('productDetail.qty', { immediate: true, deep: true }) 
   countAmount() {
-    this.productDetail.totalPrice = this.productDetail.retailPrice * this.productDetail.qty
+    this.productDetail.totalPrice = this.productDetail.afterTax * this.productDetail.qty
   }
 
   @Watch('totalCalForm.discountType', { immediate: true, deep: true })
@@ -359,7 +360,10 @@ export default class POSpage extends Vue {
       description: this.productDetail.description,
       id: this.productDetail.id,
       discountType: this.productDetail.discountType,
-      placeId: this.placeId
+      placeId: this.placeId,
+      afterTax: this.productDetail.afterTax,
+      taxAmount: this.productDetail.taxAmount,
+      taxCode: this.productDetail.taxCode
     }
 
     this.preSellList.push(preSellThing)
@@ -470,7 +474,10 @@ export default class POSpage extends Vue {
                       qty: rn.qty,
                       price: rn.totalPrice,
                       discountType: rn.discountType,
-                      discount: rn.discount
+                      discount: rn.discount,
+                      taxCode: rn.taxCode,
+                      taxRate: rn.taxRate,
+                      taxAmount: rn.taxAmount
                     }
                     axios.post('/invoice/saveItem', invoiceItem)
 
@@ -549,6 +556,3 @@ export default class POSpage extends Vue {
     }
 </style>
 
-function i(arg0: (rn: any, i: any) => void, i: any) {
-  throw new Error('Function not implemented.')
-}

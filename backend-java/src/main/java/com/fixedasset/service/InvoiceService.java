@@ -20,6 +20,6 @@ public interface InvoiceService extends IService<Invoice> {
     InvoiceListDto selectOneItem(Long id);
     List<QueryCountShop> queryCountShop();
     List<QueryTotalShop> queryTotalShop();
-    List<QueryCountYearWeek> queryCountYearWeek();
-    List<QueryTotalYearWeek> queryTotalYearWeek();
+    List<QueryCountYearWeek> queryCountYearWeek(Invoice invoiceData);
+    List<QueryTotalYearWeek> queryTotalYearWeek(Invoice invoiceData);
 }
