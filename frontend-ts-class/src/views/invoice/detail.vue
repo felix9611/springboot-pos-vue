@@ -166,6 +166,7 @@ export default class InoviceDetail extends Vue {
     axios.get(`/invoice/item/${this.invoiceId}`).then(
       (res: any) => {
         this.items = res.data.data
+        console.log(res)
       }
     )
   }

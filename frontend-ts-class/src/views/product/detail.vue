@@ -259,6 +259,14 @@ export default class ProductListDetail extends Vue {
     this.editForm.taxAmount = (this.editForm.retailPrice * data.taxRate).toFixed(2)
     this.editForm.afterTax = (this.editForm.retailPrice + ( this.editForm.retailPrice * data.taxRate)).toFixed(2)
   }
+
+  @Watch('editForm.retailPrice')
+  onRetailPriceChanged1(val: number, oldVal: number) {
+    
+
+    this.editForm.taxAmount = (val * this.editForm.taxRate).toFixed(2)
+    this.editForm.afterTax = (val + ( val * this.editForm.taxRate)).toFixed(2)
+  }
 }
 </script>
 <style scoped>
