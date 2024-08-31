@@ -4,7 +4,7 @@ Springboot X VUE
 Point of sale with member system
 
 Core:
--Spring boot 2.4.13<br/>
+-Spring boot 3.2.0<br/>
 -Mybatis 3.4.1<br/>
 -Vue 2.6.10<br/>
 -moment 2.29.1<br/>
