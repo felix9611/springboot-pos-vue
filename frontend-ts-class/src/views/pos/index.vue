@@ -47,7 +47,7 @@
               <el-input v-model="productDetail.totalPrice" readonly></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitPreSell()">Add</el-button>
+              <el-button v-if="productDetail.productCode" type="primary" @click="submitPreSell()">Add</el-button>
             </el-form-item>
 
           </el-form>
