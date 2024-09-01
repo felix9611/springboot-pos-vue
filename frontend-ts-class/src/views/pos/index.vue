@@ -29,11 +29,11 @@
               <el-input v-model="productDetail.retailPrice" readonly  class="w-full"></el-input>
             </el-form-item>
             
-            <div class="grid grid-cols-4 gap-3 lg:col-span-full">
-              <el-form-item label="Discount"  prop="discount" label-width="120px" class="col-span-3">
-                <el-input-number v-model="productDetail.discount" :step="1" class="w-full" :disabled="!productDetail.discountType"/>
+            <div class="grid grid-cols-6 gap-3 lg:col-span-full">
+              <el-form-item label="Discount"  prop="discount" label-width="120px" class="col-span-4">
+                <el-input-number v-model="productDetail.discount" :step="1" class="w-full" />
               </el-form-item>
-              <el-select v-model="productDetail.discountType" placeholder="Select" filterable>
+              <el-select v-model="productDetail.discountType" placeholder="Select" filterable :disabled="!productDetail.discount">
                   <el-option
                     v-for="discount in discountList"
                     :key="discount.type"
@@ -41,10 +41,14 @@
                     :value="discount.type">
                   </el-option>
               </el-select>
+              <el-form-item>
+                <el-button class="w-full" type="primary" @click="refreshSumTotalPrice()">Refresh</el-button>
+              </el-form-item>
+
               
             </div>
             <el-form-item label="Total"  prop="total" label-width="120px">
-              <el-input v-model="productDetail.totalPrice" readonly></el-input>
+              <el-input v-model="productDetail.totalPriceAll" readonly></el-input>
             </el-form-item>
             <el-form-item>
               <el-button v-if="productDetail.productCode" type="primary" @click="submitPreSell()">Add</el-button>
@@ -147,14 +151,14 @@
           </el-form-item>
         </el-form>
         <el-form :model="totalCalForm" class="p-3">
-          <el-form-item label="Total"  prop="total" label-width="130px">
+          <el-form-item label="Before Discount Total"  prop="total" label-width="130px">
             <el-input v-model="totalCalForm.totalCal" readonly></el-input>
           </el-form-item>
-          <div class="grid grid-cols-3 gap-3">
-            <el-form-item label="Discount"  prop="discount" label-width="130px" class="col-span-2">
-              <el-input-number v-model="totalCalForm.discount" :step="1" class="w-full" :disabled="!totalCalForm.discountType"></el-input-number>
+          <div class="grid grid-cols-6 gap-3">
+            <el-form-item label="Discount"  prop="discount" label-width="130px" class="col-span-4">
+              <el-input-number v-model="totalCalForm.discount" :step="1" class="w-full" ></el-input-number>
             </el-form-item>
-            <el-select v-model="totalCalForm.discountType" placeholder="Select" filterable>
+            <el-select v-model="totalCalForm.discountType" placeholder="Select" filterable :disabled="!totalCalForm.discount">
               <el-option
                 v-for="discount in discountList"
                 :key="discount.type"
@@ -162,10 +166,13 @@
                 :value="discount.type">
               </el-option>
             </el-select>
+            <el-form-item>
+              <el-button class="w-full" type="primary" @click="refershNewTotal()">Refresh</el-button>
+            </el-form-item>
           </div>
 
           <el-form-item label="Total"  prop="total" label-width="130px">
-            <el-input v-model="totalCalForm.totalPrice" readonly></el-input>
+            <el-input-number v-model="totalCalForm.totalCal" readonly></el-input-number>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="cancelPO()">Cancel</el-button>
@@ -284,7 +291,7 @@ export default class POSpage extends Vue {
     totalCal: 0
   }
   dialogVisible: boolean = false
-  handleClose: boolean = false
+   handleClose: boolean = false
   payForm: any = {}
 
   payList: any = []
@@ -292,34 +299,32 @@ export default class POSpage extends Vue {
   payFormMethod: any = {}
 
   @Watch('productDetail.discount', { immediate: true, deep: true })
-
   sumTotalPrice() {
     if (this.productDetail.discountType === '%') {
-      this.productDetail.totalPrice = ( this.productDetail.retailPrice * (1-(this.productDetail.discount/100)) ) * this.productDetail.qty
-      this.productDetail.afterTax = ( this.productDetail.afterTax * (1-(this.productDetail.discount/100)) ) * this.productDetail.qty
+      this.productDetail.totalPriceAll = ( this.productDetail.retailPrice* (1-(this.productDetail.discount/100)) ) * this.productDetail.qty * (1+this.productDetail.taxRate)
+    } else if (this.productDetail.discountType === '$') {
+      this.productDetail.totalPriceAll= ( this.productDetail.retailPrice - this.productDetail.discount ) * this.productDetail.qty * (1+this.productDetail.taxRate)
+    } else {
+      this.productDetail.totalPriceAll = this.productDetail.totalPrice
     }
-    if (this.productDetail.discountType === '$') {
-      this.productDetail.totalPrice = ( this.productDetail.retailPrice - this.productDetail.discount ) * this.productDetail.qty
-      this.productDetail.afterTax = ( this.productDetail.afterTax - this.productDetail.discount ) * this.productDetail.qty
-    }
+  }
 
-    this.productDetail.totalPrice = this.productDetail.totalPrice
+  refreshSumTotalPrice() {
+    if (this.productDetail.discountType === '%') {
+      this.productDetail.totalPriceAll = ( this.productDetail.retailPrice* (1-(this.productDetail.discount/100)) ) * this.productDetail.qty * (1+this.productDetail.taxRate)
+    } else if (this.productDetail.discountType === '$') {
+      this.productDetail.totalPriceAll= ( this.productDetail.retailPrice - this.productDetail.discount ) * this.productDetail.qty * (1+this.productDetail.taxRate)
+    } else {
+      this.productDetail.totalPriceAll = this.productDetail.totalPrice
+    }
   }
 
   @Watch('productDetail.qty', { immediate: true, deep: true }) 
   countAmount() {
-    this.productDetail.totalPrice = this.productDetail.afterTax * this.productDetail.qty
+    this.productDetail.totalPrice = this.productDetail.retailPrice * this.productDetail.qty
   }
 
-  @Watch('totalCalForm.discountType', { immediate: true, deep: true })
-  newTotal() {
-    if (this.totalCalForm.discountType === '%') {
-      this.totalCalForm.totalPrice = ( this.totalCalForm.totalCal * (1-(this.totalCalForm.discount/100)) )
-    }
-    if (this.totalCalForm.discountType === '$') {
-      this.totalCalForm.totalPrice = ( this.totalCalForm.totalCal - this.totalCalForm.discount )
-    }
-  }
+ 
 
   created() {
     this.getAllPlace()
@@ -359,7 +364,7 @@ export default class POSpage extends Vue {
       (res: any) => {
         this.productDetail = res.data.data
         this.productDetail.qty = 1
-        this.productDetail.totalPrice = this.productDetail.retailPrice
+        // this.productDetail.totalPrice = this.productDetail.retailPrice
       }
     )
   }
@@ -369,15 +374,15 @@ export default class POSpage extends Vue {
     const preSellThing = {
       productCode: this.productDetail.productCode,
       qty: this.productDetail.qty,
-      retailPrice: this.productDetail.retailPrice,
+      retailPrice: Number(this.productDetail.retailPrice),
       discount: this.productDetail.discount,
-      totalPrice: this.productDetail.totalPrice,
+      totalPrice: Number(this.productDetail.totalPriceAll),
       description: this.productDetail.description,
       id: this.productDetail.id,
       discountType: this.productDetail.discountType,
       placeId: this.placeId,
-      afterTax: this.productDetail.afterTax,
-      taxAmount: this.productDetail.taxAmount,
+      afterTax: Number(this.productDetail.totalPriceAll),
+      taxAmount: Number(this.productDetail.taxAmount),
       taxCode: this.productDetail.taxCode
     }
 
@@ -422,23 +427,48 @@ export default class POSpage extends Vue {
   calTotalNumber() {
     this.totalCalForm.totalCal = 0
     this.totalCalForm.taxTotal = 0
+    
     this.preSellList.forEach(a => {
-      
+        
         this.totalCalForm.taxTotal += a.taxAmount
         this.totalCalForm.totalCal += a.totalPrice
-        this.totalCalForm.totalPrice = this.totalCalForm.totalCal
+        this.totalCalForm.totalPriceAll += a.afterTax
       }
     )
+  }
 
-  
-    
+  @Watch('totalCalForm.discountType', { immediate: true, deep: true })
+  newTotal() {
+    console.log(this.totalCalForm.totalPriceAll, 'test')
+    if (this.totalCalForm.discountType === '%') {
+      this.totalCalForm.totalPrice = ( this.totalCalForm.retailPrice * (1-(this.totalCalForm.discount/100)) ).toFixed(2)
+      this.totalCalForm.totalPriceAll= ( this.totalCalForm.totalPriceAll* (1-(this.totalCalForm.discount/100)) ).toFixed(2)
+    } else if (this.totalCalForm.discountType === '$') {
+      this.totalCalForm.totalPrice = ( this.totalCalForm.retailPrice - this.totalCalForm.discount ).toFixed(2)
+      this.totalCalForm.totalPriceAll = ( this.totalCalForm.totalPriceAll - this.totalCalForm.discount ).toFixed(2)
+    } else {
+      this.totalCalForm.totalPriceAll = this.totalCalForm.totalPriceAll
+    }
+   
+  }
+
+  refershNewTotal() {
+    if (this.totalCalForm.discountType === '%') {
+      this.totalCalForm.totalPrice = ( this.totalCalForm.retailPrice * (1-(this.totalCalForm.discount/100)) ).toFixed(2)
+      this.totalCalForm.totalPriceAll= ( this.totalCalForm.totalPriceAll* (1-(this.totalCalForm.discount/100)) ).toFixed(2)
+    } else if (this.totalCalForm.discountType === '$') {
+      this.totalCalForm.totalPrice = ( this.totalCalForm.retailPrice - this.totalCalForm.discount ).toFixed(2)
+      this.totalCalForm.totalPriceAll = ( this.totalCalForm.totalPriceAll - this.totalCalForm.discount ).toFixed(2)
+    } else {
+      this.totalCalForm.totalPriceAll = this.totalCalForm.totalPriceAll
+    }
   }
 
   payPO() {
-    if (this.totalCalForm.totalPrice > 0 ) {
+    if (this.totalCalForm.totalCal > 0 ) {
       this.dialogVisible = true
-      this.payForm.totalPrice = this.totalCalForm.totalPrice
-      this.payForm.balance = this.totalCalForm.totalPrice
+      this.payForm.totalPrice = this.totalCalForm.totalCal
+      this.payForm.balance = this.totalCalForm.totalCal
     }
   }
 
