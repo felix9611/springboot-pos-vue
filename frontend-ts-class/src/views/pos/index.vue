@@ -13,7 +13,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="Asset Code"  prop="assetCode" label-width="120px">
+          <el-form-item label="Code"  prop="Code" label-width="120px">
             <el-input v-model="productCode" autocomplete="off"></el-input>
           </el-form-item>
           <!--<el-form-item>
