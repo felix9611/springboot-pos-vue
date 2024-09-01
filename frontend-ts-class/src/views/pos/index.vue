@@ -16,9 +16,9 @@
           <el-form-item label="Asset Code"  prop="assetCode" label-width="120px">
             <el-input v-model="productCode" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item>
+          <!--<el-form-item>
             <el-button type="primary" @click="submitProductCode()">Add</el-button>
-          </el-form-item>
+          </el-form-item>-->
         </el-form>
         <div>
           <el-form :model="productDetail" class="grid lg:grid-cols-2 gap-3 px-2">
@@ -31,7 +31,7 @@
             
             <div class="grid grid-cols-4 gap-3 lg:col-span-full">
               <el-form-item label="Discount"  prop="discount" label-width="120px" class="col-span-3">
-                <el-input-number v-model="productDetail.discount" :step="1" class="w-full"/>
+                <el-input-number v-model="productDetail.discount" :step="1" class="w-full" :disabled="!productDetail.discountType"/>
               </el-form-item>
               <el-select v-model="productDetail.discountType" placeholder="Select" filterable>
                   <el-option
@@ -152,7 +152,7 @@
           </el-form-item>
           <div class="grid grid-cols-3 gap-3">
             <el-form-item label="Discount"  prop="discount" label-width="130px" class="col-span-2">
-              <el-input-number v-model="totalCalForm.discount" :step="1" class="w-full"></el-input-number>
+              <el-input-number v-model="totalCalForm.discount" :step="1" class="w-full" :disabled="!totalCalForm.discountType"></el-input-number>
             </el-form-item>
             <el-select v-model="totalCalForm.discountType" placeholder="Select" filterable>
               <el-option
@@ -291,14 +291,19 @@ export default class POSpage extends Vue {
 
   payFormMethod: any = {}
 
-  @Watch('productDetail.discountType', { immediate: true, deep: true })
+  @Watch('productDetail.discount', { immediate: true, deep: true })
+
   sumTotalPrice() {
     if (this.productDetail.discountType === '%') {
       this.productDetail.totalPrice = ( this.productDetail.retailPrice * (1-(this.productDetail.discount/100)) ) * this.productDetail.qty
+      this.productDetail.afterTax = ( this.productDetail.afterTax * (1-(this.productDetail.discount/100)) ) * this.productDetail.qty
     }
     if (this.productDetail.discountType === '$') {
       this.productDetail.totalPrice = ( this.productDetail.retailPrice - this.productDetail.discount ) * this.productDetail.qty
+      this.productDetail.afterTax = ( this.productDetail.afterTax - this.productDetail.discount ) * this.productDetail.qty
     }
+
+    this.productDetail.totalPrice = this.productDetail.totalPrice
   }
 
   @Watch('productDetail.qty', { immediate: true, deep: true }) 
@@ -337,6 +342,13 @@ export default class POSpage extends Vue {
       (res: any) => {
         this.placeList = res.data.data
     })
+  }
+
+  @Watch('productCode', { immediate: false, deep: true })
+  onProductCodehanged(val: string, oldVal: string) {
+    if (val.length >= 6) {
+      this.submitProductCode()
+    }
   }
 
   async submitProductCode() {
