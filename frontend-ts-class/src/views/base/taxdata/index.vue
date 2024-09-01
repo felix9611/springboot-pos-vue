@@ -141,7 +141,7 @@
                     <el-input v-model="editForm.countryCode" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="Country Name"  prop="countryName" label-width="150px">
-                    <el-input v-model="editForm.countryCode" autocomplete="off"></el-input>
+                    <el-input v-model="editForm.countryName" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="Tax Type"  prop="taxType" label-width="150px">
                     <el-input v-model="editForm.taxType" autocomplete="off"></el-input>
@@ -154,6 +154,13 @@
                     <el-input v-model="editForm.taxName" autocomplete="off"></el-input>
                 </el-form-item>
                 
+                <el-form-item label="Tax Rate"  prop="taxRate" label-width="150px">
+                    <el-input type="number" v-model="editForm.taxRate" autocomplete="off" class="w-full"></el-input>
+                </el-form-item>
+
+                <el-form-item label="Import Tax Rate"  prop="importTax" label-width="150px">
+                    <el-input type="number" v-model="editForm.importTax" autocomplete="off" class="w-full"></el-input>
+                </el-form-item>
 
 
             </el-form>

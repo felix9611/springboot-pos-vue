@@ -41,6 +41,7 @@ public class TaxableCountryServiceImpl extends ServiceImpl<TaxableCountryMapper,
         return  "This data was void" + taxableCountry;
     }
     public TaxableCountry createNew(TaxableCountry taxableCountry) {
+        taxableCountry.setStatu(1);
         taxableCountry.setCreated(LocalDateTime.now());
         taxableCountryMapper.insert(taxableCountry);
 
