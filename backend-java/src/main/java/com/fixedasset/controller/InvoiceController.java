@@ -61,6 +61,10 @@ public class InvoiceController extends  BaseController{
             queryWrapper.eq(Invoice::getVoidNum, invoice.getVoidNum());
         }
 
+        if (invoice.getLocationId() > 0) {
+            queryWrapper.eq(Invoice::getLocationId, invoice.getLocationId());
+        }
+
         Page<InvoiceListDto> iPage = invoiceService.listAll(page, queryWrapper);
         return  Result.succ(iPage);
     }

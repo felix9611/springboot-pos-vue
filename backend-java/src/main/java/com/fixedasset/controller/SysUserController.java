@@ -50,7 +50,7 @@ public class SysUserController extends BaseController {
     public Result info(@PathVariable("id") Long id) {
 
         SysUser sysUser = sysUserService.getById(id);
-        Assert.notNull(sysUser, "找不到该管理员");
+        Assert.notNull(sysUser, "Not found the admin");
 
         List<SysRole> roles = sysRoleService.listRolesByUserId(id);
 

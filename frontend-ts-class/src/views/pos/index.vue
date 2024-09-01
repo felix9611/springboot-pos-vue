@@ -3,7 +3,7 @@
     <div class="grid lg:grid-cols-2 gap-3">
       <div> <!-- barcode scan or type-->
         <el-form :inline="true">
-          <el-form-item label="Place" prop="place" label-width="120px">
+          <el-form-item label="Place" prop="place" label-width="120px" v-if="userPlaceId === 0">
             <el-select v-model="placeId" placeholder="Select" filterable>
               <el-option
                 v-for="placeItems in placeList"
@@ -319,6 +319,7 @@ export default class POSpage extends Vue {
   created() {
     this.getAllPlace()
     this.getAllClass()
+    this.getUserInfo()
   }
 
   getAllClass() {
@@ -541,6 +542,19 @@ export default class POSpage extends Vue {
   detailHandle(id: number) {
     this.$router.push({ path: `/invoice/detail/${id}` })
   }
+
+  userPlaceId:number = 0
+
+  getUserInfo() {
+        axios.get('/sys/userInfo').then(res => {
+          const placeId = res.data.data.placeId
+          this.userPlaceId = placeId
+          if (placeId > 0) {
+            this.placeId = placeId
+          }
+           
+        })
+    }
 
 }
 </script>
