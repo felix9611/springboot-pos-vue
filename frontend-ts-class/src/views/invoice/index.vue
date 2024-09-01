@@ -1,5 +1,28 @@
 <template>
   <div class="container">
+
+    <div class="handle-box">
+            <el-form :inline="true">
+                <el-form-item>
+                    <el-input
+                      v-model="searchForm.number"
+                      placeholder="Invoice Code"
+                      clearable
+                    >
+                    </el-input>
+                </el-form-item>
+
+                <!--<el-form-item>
+                    <el-button @click="clickUploadDialog">Upload Excel</el-button>
+                </el-form-item>-->
+
+                <el-form-item>
+                    <el-button @click="listAll()">Find</el-button>
+                </el-form-item>
+            </el-form>
+    </div>
+
+
     <el-table
       ref="multipleTable"
       :data="tableData"
@@ -90,12 +113,29 @@ export default class InoviceList extends Vue {
   total: number = 0
   size: number|undefined
   current: number = 1
+  placeId: number = 0
+
+  
 
   created() {
+    this.getUserInfo()
     this.listAll()
+    
+  }
+
+  getUserInfo() {
+    axios.get('/sys/userInfo').then(res => {
+      const placeId = res.data.data.placeId
+      this.searchForm = {
+        ...this.searchForm,
+        locationId: placeId,
+      }
+    })
+    
   }
 
   listAll() {
+    console.log(this.searchForm)
     axios.post('/invoice/list', this.searchForm).then(
       (res: any) => {
         this.tableData = res.data.data.records
@@ -138,5 +178,7 @@ export default class InoviceList extends Vue {
   detailHandle(id: number) {
     this.$router.push({ path: `/invoice/detail/${id}` })
   }
+
+  
 }
 </script>
