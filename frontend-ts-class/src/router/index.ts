@@ -9,7 +9,7 @@ const routes = [
 
     {
         path: '/',
-        redirect: '/dashboard'
+        redirect: '/dashboard/new'
     },
     {
         path: '/',
@@ -66,13 +66,13 @@ router.beforeEach((to, from, next) => {
 
 
             console.log(res.data.data)
-            // 拿到menuList
+            // get menuList
             store.commit("setMenuList", res.data.data.nav)
 
-            // 拿到用户权限
+            // get permission
             store.commit("setPermList", res.data.data.authoritys)
 
-            // 动态绑定路由
+        
             let newRoutes = router.options.routes
 
             console.log(res.data.data.nav)
@@ -82,10 +82,10 @@ router.beforeEach((to, from, next) => {
                         if(e.children.length == 0) {
                             delete e.children
                         }
-                        // 转成路由
+                        // reform rt
                         let route = menuToRoute(e)
 
-                        // 把路由添加到路由管理中
+                        // rt add to rt management
                         if (route) {
                             routes[1].children?.push(route)
                         }
@@ -93,10 +93,10 @@ router.beforeEach((to, from, next) => {
                     })
                 } else {
 
-                    // 转成路由
+                    // rt tranrefer
                     let route = menuToRoute(menu)
 
-                    // 吧路由添加到路由管理中
+                    // rt add to rt management
                     if (route) {
                         routes[1].children?.push(route)
                     }
