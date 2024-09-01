@@ -284,6 +284,7 @@ export default class POSpage extends Vue {
     totalCal: 0
   }
   dialogVisible: boolean = false
+  handleClose: boolean = false
   payForm: any = {}
 
   payList: any = []
@@ -351,6 +352,7 @@ export default class POSpage extends Vue {
   }
 
   submitPreSell() {
+    console.log(this.productDetail.taxAmount, 'firest')
     const preSellThing = {
       productCode: this.productDetail.productCode,
       qty: this.productDetail.qty,
@@ -406,11 +408,17 @@ export default class POSpage extends Vue {
 
   calTotalNumber() {
     this.totalCalForm.totalCal = 0
+    this.totalCalForm.taxTotal = 0
     this.preSellList.forEach(a => {
+      
+        this.totalCalForm.taxTotal += a.taxAmount
         this.totalCalForm.totalCal += a.totalPrice
         this.totalCalForm.totalPrice = this.totalCalForm.totalCal
       }
     )
+
+  
+    
   }
 
   payPO() {
@@ -450,7 +458,8 @@ export default class POSpage extends Vue {
       memberId: this.selectedMember.id ,
       locationId: this.placeId,
       discount: this.totalCalForm.discount,
-      discountType: this.totalCalForm.discountType
+      discountType: this.totalCalForm.discountType,
+      taxTotal: this.totalCalForm.taxTotal
     }
 
     console.log(main)
