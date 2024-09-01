@@ -114,6 +114,7 @@ export default class InoviceList extends Vue {
   size: number|undefined
   current: number = 1
   placeId: number = 0
+  handleSelectionChange: boolean = false
 
   
 
