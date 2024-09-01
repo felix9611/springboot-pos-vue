@@ -57,12 +57,17 @@ public class InvoiceController extends  BaseController{
     public Result listInv(@RequestBody Invoice invoice) {
         Page<Invoice> page = new Page(invoice.getPage(), invoice.getLimit());
         LambdaQueryWrapper<Invoice> queryWrapper = Wrappers.lambdaQuery();
+        
         if (!(invoice.getVoidNum()==0)) {
             queryWrapper.eq(Invoice::getVoidNum, invoice.getVoidNum());
         }
 
         if (invoice.getLocationId() > 0) {
             queryWrapper.eq(Invoice::getLocationId, invoice.getLocationId());
+        }
+
+        if (!(invoice.getNumber() == null)) {
+            queryWrapper.like(Invoice::getNumber, invoice.getNumber());
         }
 
         Page<InvoiceListDto> iPage = invoiceService.listAll(page, queryWrapper);
