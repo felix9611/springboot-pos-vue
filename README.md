@@ -16,8 +16,7 @@ Point of sale with member system<br/>
 
 Language:<br />
 ・Java8 (Some dependencies only run on Java8)<br />
-・Node.js 16.20.<br /> (Frontend)
-・Typescript<br />
+・Node.js 16.20 (Frontend).<br />
 ・Vue2<br />
 ・Tailwind<br />
 </div><br />
