@@ -3,7 +3,7 @@ package com.fixedasset.common.exception;
 import org.springframework.security.core.AuthenticationException;
 
 /**
- * 功能描述：验证码异常
+ * Case Captcha Exception
  *
  * @Author WaiterXiaoYY
  * @Date 2022/1/18 19:37
