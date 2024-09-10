@@ -17,20 +17,12 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * <p>
- *  前端控制器
- * </p>
- *
- * @author WaiterXiaoYY
- * @since 2022-01-13
- */
 @RestController
 @RequestMapping("/sys/menu")
 public class SysMenuController extends BaseController {
 
     /**
-     * 获取当前用户菜单
+     * Get the current user menu
      * @param principal
      * @return
      */
@@ -38,11 +30,11 @@ public class SysMenuController extends BaseController {
     public Result nav(Principal principal) {
         SysUser sysUser = sysUserService.getByUsername(principal.getName());
 
-        // 获取权限信息
+        // Get Permission
         String authorityInfo = sysUserService.getUserAuthorityInfo(sysUser.getId());
         String[] authorityInfoArray = StringUtils.tokenizeToStringArray(authorityInfo, ",");
 
-        // 获取菜单
+        // Get menus
         List<SysMenuDto> navs = sysMenuService.getCurrentUserNav();
 
         return Result.succ(MapUtil.builder()

@@ -11,6 +11,6 @@ public class PassDto implements Serializable {
 	@NotBlank(message = "New Password cannot blank")
 	private String password;
 
-	@NotBlank(message = Old Password cannot blank")
+	@NotBlank(message = "Old Password cannot blank")
 	private String currentPass;
 }
