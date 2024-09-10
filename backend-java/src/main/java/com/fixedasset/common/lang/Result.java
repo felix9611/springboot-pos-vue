@@ -5,11 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 功能描述：封装结果数据
- *
- * @Author WaiterXiaoYY
- * @Date 2022/1/13 21:20
- * @Version 1.0
+ * Pack for Response Data
  */
 @Data
 public class Result implements Serializable {

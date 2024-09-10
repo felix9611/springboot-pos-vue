@@ -137,7 +137,7 @@ public class SysUserController extends BaseController {
         sysUserRoleService.remove(new QueryWrapper<SysUserRole>().eq("user_id", userId));
         sysUserRoleService.saveBatch(userRoles);
 
-        // 删除缓存
+        // Delete cache
         SysUser sysUser = sysUserService.getById(userId);
         sysUserService.clearUserAuthorityInfo(sysUser.getUsername());
 
