@@ -60,7 +60,7 @@ export default class vHead extends Vue {
             this.$store.commit('setUserProfile', res.data.data)
         })
     }
-        // 用户名下拉菜单选择事件
+        // Username dropdown menu selection event
     handleCommand(command) {
         if (command == 'loginout') {
             axios.post('/logout').then(res => {
@@ -76,12 +76,12 @@ export default class vHead extends Vue {
             this.$router.push('/userindex')
         }
     }
-        // 侧边栏折叠
+        // sidebar collapse
     collapseChage() {
         this.collapse = !this.collapse;
         bus.$emit('collapse', this.collapse);
     }
-        // 全屏事件
+        // Fullscreen Event
     handleFullScreen() {
         let element = document.documentElement;
         if (this.fullscreen) {
