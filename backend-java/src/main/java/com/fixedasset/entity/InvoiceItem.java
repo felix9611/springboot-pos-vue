@@ -1,6 +1,8 @@
 package com.fixedasset.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import org.springframework.stereotype.Component;
@@ -9,6 +11,8 @@ import org.springframework.stereotype.Component;
 @TableName("invoice_item")
 @Component
 public class InvoiceItem {
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
     @TableField("invoice_id")
     private int invoiceId;
     @TableField("product_id")
