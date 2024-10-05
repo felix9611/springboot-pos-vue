@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import org.springframework.stereotype.Component;
+import java.util.List;
 
 @Data
 @TableName("product_list")
@@ -60,5 +61,11 @@ public class ProductList extends BaseEntity{
 
     @TableField(exist = false)
     private int limit = 10;
+
+    @TableField(exist = false)
+    private List<ProductListFile> productListFiles;
+
+    @TableField(exist = false)
+    private List<ProductListFile> newProductListFiles;
 
 }

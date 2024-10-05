@@ -1,50 +1,45 @@
 <template>
-    <div class="login" :style="'background-image:url('+Background+');'">
-        <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px"
-                 class="login-form">
-            <h3 class="title">Fixed Asset</h3>
-            <el-form-item prop="username">
-                <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="Username">
-                    <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon"/>
-                </el-input>
-            </el-form-item>
-            <el-form-item prop="password">
-                <el-input
-                        v-model="loginForm.password"
-                        type="password"
-                        auto-complete="off"
-                        placeholder="Paasword"
-                >
-                    <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon"/>
-                </el-input>
-            </el-form-item>
-            <el-form-item prop="code">
-                <el-input v-model="loginForm.code" auto-complete="off" placeholder="Captcha Code" style="width: 63%">
-                    <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon"/>
-                </el-input>
-                <div class="login-code">
-                    <el-image :src="captchaImg" class="captchaImg" @click="getCaptcha"></el-image>
-                </div>
-            </el-form-item>
-            <!--
-            <el-form-item style="width: 100%">
-                <el-button :loading="loading" size="medium" type="primary" style="width: 100%" @click="submitForm('loginForm')">
-                    <span v-if="!loading">Login</span>
-                    <span v-else>Now Login...</span>
-                </el-button>
-            </el-form-item>
-            <el-form-item style="width: 100%">
-                <el-button size="medium"  style="width: 100%" @click="resetForm('loginForm')">
-                    <span>Reset</span>
-                </el-button>
-            </el-form-item>
-        </el-form>
-        <!--  底部  -->
-        <!-- <div v-if="$store.state.settings.showFooter" id="el-login-footer">
-      <span v-html="$store.state.settings.footerTxt" />
-      <span> ⋅ </span>
-      <a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">{{ $store.state.settings.caseNumber }}</a>
-    </div> -->
+    <div class="flex w-full h-screen bg-[url('assets/img/background3.jpg')]">
+         <div class="m-auto bg-white w-[400px] p-6 rounded-xl">
+            <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px">
+                    <div class="text-center text-[1.3rem] p-3 font-black">Fixed Asset</div>
+                <el-form-item prop="username">
+                    <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="Username">
+                        <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon"/>
+                    </el-input>
+                </el-form-item>
+                <el-form-item prop="password">
+                    <el-input
+                            v-model="loginForm.password"
+                            type="password"
+                            auto-complete="off"
+                            placeholder="Paasword"
+                    >
+                        <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon"/>
+                    </el-input>
+                </el-form-item>
+                <el-form-item prop="code">
+                    <el-input v-model="loginForm.code" auto-complete="off" placeholder="Captcha Code" class="w-[63%]">
+                        <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon"/>
+                    </el-input>
+                    <div class="login-code">
+                        <el-image :src="captchaImg" class="captchaImg" @click="getCaptcha"></el-image>
+                    </div>
+                </el-form-item>
+
+                <el-form-item class="w-[100%]">
+                    <el-button :loading="loading" size="medium" type="primary"  class="w-[100%]" @click="submitForm('loginForm')">
+                        <span v-if="!loading">Login</span>
+                        <span v-else>Now Login...</span>
+                    </el-button>
+                </el-form-item>
+                <el-form-item class="w-[100%]">
+                    <el-button size="medium"   class="w-[100%]" @click="resetForm('loginForm')">
+                        <span>Reset</span>
+                    </el-button>
+                </el-form-item>
+            </el-form>
+         </div>   
     </div>
 </template>
 
