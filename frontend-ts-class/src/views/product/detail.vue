@@ -212,36 +212,6 @@ export default class ProductListDetail extends Vue {
                           type: 'success',
                         })
                         this.back()
-                        /* if (this.fileBase64Data[0]) {
-                            const productCode = this.editForm.id ? this.editForm.productCode : res.data.data.productCode
-                            axios.post('/product/findByCode', { productCode }).then(
-                                ((res: any) => {
-                                    const  productId = res.data.data.id
-                                    this.fileBase64Data.forEach( (dataFile: any) => {
-                                        console.log(dataFile)
-                                        const { fileName, dataBase64 } = dataFile
-                                        axios.post(
-                                            '/product/file/upload',
-                                            { productId, fileName, base64: dataBase64 }
-                                        ).then(
-                                            res=> {
-                                                this.$notify({
-                                                    title: '',
-                                                    showClose: true,
-                                                    message: 'Success to save',
-                                                    type: 'success',
-                                                })
-
-                                                this.fileList = []
-                                                this.fileBase64Data = []
-                                                this.back()
-                                            })
-                                        })
-                                    })
-                                )
-                            } else {
-                                
-                            } */
                 })
      //       } else {
                 return false;
