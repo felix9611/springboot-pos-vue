@@ -1,6 +1,6 @@
 # POS SYSTEM BY Springboot & VUE
 
-Springboot X VUE
+Springboot X VUE For MySQL
 <div>
 
 <div>
@@ -26,6 +26,7 @@ Core:<br />
 ・Mybatis 3.4.1<br />
 ・Vue 2.6.10<br />
 ・moment 2.29.1<br />
+・MySQL v8.0<br />
 <br />
 Component:<br />
 ・ChartJs 2.9.3<br />
