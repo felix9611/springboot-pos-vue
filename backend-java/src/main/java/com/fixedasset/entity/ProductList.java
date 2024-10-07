@@ -42,7 +42,7 @@ public class ProductList extends BaseEntity{
     private int vendorId;
 
     @TableField("tax")
-    private boolean tax;
+    private int tax;
 
     @TableField("tax_code")
     private String taxCode;
