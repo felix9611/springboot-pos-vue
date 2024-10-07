@@ -17,4 +17,5 @@ public interface DepartmentService extends IService<Department> {
 
     public Department getData(Department department);
 
+    public void batchImport(List<Department> departments);
 }

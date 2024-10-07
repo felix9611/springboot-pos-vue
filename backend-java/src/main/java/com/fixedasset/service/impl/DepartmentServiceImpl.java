@@ -26,40 +26,74 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
     @Resource private ActionRecord actionRecord;
 
     public void createNew(Department department) {
+        LambdaQueryWrapper<Department> queryWrapper = Wrappers.lambdaQuery();
+        if (StringUtils.isNotBlank(department.getDeptCode())) {
+            queryWrapper.eq(Department::getDeptCode, department.getDeptCode());
+        }
+        queryWrapper.eq(Department::getStatu, 1);
+        Department checkOne = departmentMapper.selectOne(queryWrapper);
+        if (checkOne == null) {
+                department.setCreated(LocalDateTime.now());
+                department.setStatu(1);
+                departmentMapper.insert(department);
 
-        actionRecord.setActionName("Save");
-        actionRecord.setActionMethod("POST");
-        actionRecord.setActionFrom("Department Manger");
-        actionRecord.setActionData(department.toString());
-        actionRecord.setActionSuccess("Success");
-        actionRecord.setCreated(LocalDateTime.now());
-        this.createdAction(actionRecord);
+                actionRecord.setActionName("Save");
+                actionRecord.setActionMethod("POST");
+                actionRecord.setActionFrom("Department Manger");
+                actionRecord.setActionData(department.toString());
+                actionRecord.setActionSuccess("Success");
+                actionRecord.setCreated(LocalDateTime.now());
+                this.createdAction(actionRecord);
+        } else {
+            throw new RuntimeException("Exist in records!");
+        }
+    }
 
-        departmentMapper.insert(department);
+    public void batchImport(List<Department> departments) {
+        for (Department department : departments) {
+            createNew(department);
+        }
     }
 
     public void removeOne(Department department) {
-        actionRecord.setActionName("Remove");
-        actionRecord.setActionMethod("DELETE");
-        actionRecord.setActionFrom("Asset Type Manger");
-        actionRecord.setActionData(department.toString());
-        actionRecord.setActionSuccess("Success");
-        actionRecord.setCreated(LocalDateTime.now());
-        this.createdAction(actionRecord);
+        LambdaQueryWrapper<Department> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(Department::getId, department.getId());
+        queryWrapper.eq(Department::getStatu, 1);
+        Department checkOne = departmentMapper.selectOne(queryWrapper);
+        if (checkOne.getId().equals(department.getId())) {
+            actionRecord.setActionName("Remove");
+            actionRecord.setActionMethod("DELETE");
+            actionRecord.setActionFrom("Asset Type Manger");
+            actionRecord.setActionData(department.toString());
+            actionRecord.setActionSuccess("Success");
+            actionRecord.setCreated(LocalDateTime.now());
+            this.createdAction(actionRecord);
 
-        departmentMapper.updateById(department);
+            departmentMapper.updateById(department);
+        } else {
+            throw new RuntimeException("No active data in records!");
+        }
     }
 
     public void update(Department department) {
-        actionRecord.setActionName("Update");
-        actionRecord.setActionMethod("POST");
-        actionRecord.setActionFrom("Asset Type Manger");
-        actionRecord.setActionData(department.toString());
-        actionRecord.setActionSuccess("Success");
-        actionRecord.setCreated(LocalDateTime.now());
-        this.createdAction(actionRecord);
+        LambdaQueryWrapper<Department> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(Department::getId, department.getId());
+        queryWrapper.eq(Department::getStatu, 1);
+        Department checkOne = departmentMapper.selectOne(queryWrapper);
 
-        departmentMapper.updateById(department);
+        if (checkOne.getId().equals(department.getId())) {
+            actionRecord.setActionName("Update");
+            actionRecord.setActionMethod("POST");
+            actionRecord.setActionFrom("Asset Type Manger");
+            actionRecord.setActionData(department.toString());
+            actionRecord.setActionSuccess("Success");
+            actionRecord.setCreated(LocalDateTime.now());
+            this.createdAction(actionRecord);
+
+            departmentMapper.updateById(department);
+        } else {
+            throw new RuntimeException("Not active data in records!");
+        }
     }
 
     public List<Department> getAll() {
