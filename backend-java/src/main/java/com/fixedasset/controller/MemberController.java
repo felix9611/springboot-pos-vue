@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/base/member")
@@ -23,6 +24,12 @@ public class MemberController extends BaseController {
     @Resource private MemberService memberService;
 
     @Resource private MemberSpecialDaysService memberSpecialDaysService;
+
+    @PostMapping("/batch-create")
+    public Result batchCreate(@RequestBody List<Member> members) {
+        memberService.importData(members);
+        return Result.succ(members);
+    }
 
     @PostMapping("/create")
     public Result save(@RequestBody Member member) {
@@ -39,7 +46,7 @@ public class MemberController extends BaseController {
 
     @GetMapping("/{id}")
     public Result getOne(@PathVariable("id") Long id) {
-        return Result.succ(memberService.getById(id));
+        return Result.succ(memberService.getOneMember(id));
     }
 
     @DeleteMapping("/remove/{id}")
@@ -52,6 +59,10 @@ public class MemberController extends BaseController {
     public Result listAll(@RequestBody Member member) {
         Page page = new Page(member.getPage(), member.getLimit());
         LambdaQueryWrapper<Member> queryWrapper = Wrappers.lambdaQuery();
+
+        if (StringUtils.isNotBlank(member.getName())) {
+            queryWrapper.like(Member::getName, member.getName());
+        }
 
         if (StringUtils.isNotBlank(member.getPhone())) {
             queryWrapper.like(Member::getPhone, member.getPhone());

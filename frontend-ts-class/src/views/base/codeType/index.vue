@@ -13,6 +13,13 @@
                 </el-form-item>
 
                 <el-form-item>
+                    <el-button @click="codeTypeAllList">Find</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="dialogVisible = true">Create</el-button>
+                </el-form-item>
+
+                <el-form-item>
                     <el-button @click="exportExcel">Export Excel</el-button>
                 </el-form-item>
 
@@ -22,13 +29,6 @@
 
                 <el-form-item>
                     <el-button @click="clickUploadDialog">Upload Excel</el-button>
-                </el-form-item>
-
-                <el-form-item>
-                    <el-button @click="codeTypeAllList">Find</el-button>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="dialogVisible = true">Create</el-button>
                 </el-form-item>
             </el-form>
         </div>
