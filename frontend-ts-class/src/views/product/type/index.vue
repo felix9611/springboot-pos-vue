@@ -184,6 +184,11 @@ export default class ProductType extends Vue {
         })
     }
 
+  
+  clearFile() {
+    this.fileList = []
+  }
+
   productTypeList() {
     axios.post(
       '/product/type/list',

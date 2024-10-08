@@ -9,6 +9,7 @@ import com.fixedasset.dto.ProductLocationListDto;
 import com.fixedasset.entity.InvRecord;
 import com.fixedasset.entity.ProductList;
 import com.fixedasset.entity.ProductLocation;
+import com.fixedasset.entity.ProductType;
 import com.fixedasset.mapper.ProductLocationMapper;
 import com.fixedasset.service.InvRecordService;
 import com.fixedasset.service.ProductLocationService;

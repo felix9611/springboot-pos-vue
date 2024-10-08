@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/base/location")
@@ -24,12 +25,19 @@ public class LocationController extends BaseController {
     }
 
     @PostMapping("/create")
-    @PreAuthorize("hasAuthority('base:dept:create')")
+  //  @PreAuthorize("hasAuthority('base:dept:create')")
     public Result create(@RequestBody Location location) {
         location.setCreated(LocalDateTime.now());
         location.setStatu(1);
         locationService.createNew(location);
         return Result.succ(location);
+    }
+
+    @PostMapping("/batch-create")
+   // @PreAuthorize("hasAuthority('base:dept:create')")
+    public Result batchCreate(@RequestBody List<Location> locations) {
+        locationService.batchImport(locations);
+        return Result.succ(locations);
     }
 
     @PostMapping("/update")
