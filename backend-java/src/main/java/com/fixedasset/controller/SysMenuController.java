@@ -17,24 +17,20 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/sys/menu")
 public class SysMenuController extends BaseController {
 
-    /**
-     * Get the current user menu
-     * @param principal
-     * @return
-     */
     @GetMapping("/nav")
     public Result nav(Principal principal) {
         SysUser sysUser = sysUserService.getByUsername(principal.getName());
 
-        // Get Permission
+        // Get perm
         String authorityInfo = sysUserService.getUserAuthorityInfo(sysUser.getId());
         String[] authorityInfoArray = StringUtils.tokenizeToStringArray(authorityInfo, ",");
 
-        // Get menus
+        // Get Menus
         List<SysMenuDto> navs = sysMenuService.getCurrentUserNav();
 
         return Result.succ(MapUtil.builder()
@@ -60,23 +56,19 @@ public class SysMenuController extends BaseController {
 
     @PostMapping("/save")
     @PreAuthorize("hasAuthority('sys:menu:save')")
-    public Result save(@Validated @RequestBody SysMenu sysMenu) {
+    public Result save(@RequestBody SysMenu sysMenu) {
 
-        sysMenu.setCreated(LocalDateTime.now());
-        sysMenu.setStatu(1);
-        sysMenuService.save(sysMenu);
+        // sysMenu.setCreated(LocalDateTime.now());
+        // sysMenu.setStatu(1);
+        sysMenuService.createOneMeun(sysMenu);
         return Result.succ(sysMenu);
     }
 
     @PostMapping("/update")
     @PreAuthorize("hasAuthority('sys:menu:update')")
     public Result update(@Validated @RequestBody SysMenu sysMenu) {
-
-        sysMenu.setUpdated(LocalDateTime.now());
-
-        sysMenuService.updateById(sysMenu);
-
-        // 清除所有与该菜单相关的权限缓存
+        sysMenuService.updateOne(sysMenu);
+        // Clear all permission cache related to this menu
         sysUserService.clearUserAuthorityInfoByMenuId(sysMenu.getId());
         return Result.succ(sysMenu);
     }
@@ -87,17 +79,16 @@ public class SysMenuController extends BaseController {
 
         int count = sysMenuService.count(new QueryWrapper<SysMenu>().eq("parent_id", id));
         if (count > 0) {
-            return Result.fail("请先删除子菜单");
+            return Result.fail("Please delete the submenu first");
         }
 
-        // 清除所有与该菜单相关的权限缓存
         sysUserService.clearUserAuthorityInfoByMenuId(id);
 
-        sysMenuService.removeById(id);
+        sysMenuService.voidOne(id);
 
-        // 同步删除中间关联表
         sysRoleMenuService.remove(new QueryWrapper<SysRoleMenu>().eq("menu_id", id));
         return Result.succ("");
     }
 
 }
+

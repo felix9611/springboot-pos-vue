@@ -21,14 +21,17 @@ public class SysMenu extends BaseEntity {
      * Parent menu ID, first-level menu is 0
      */
     @NotNull(message = "The upper-level menu cannot be empty")
+    @TableField("parent_id")
     private Long parentId;
 
     @NotBlank(message = "Menu name cannot be empty")
+    @TableField("name")
     private String name;
 
     /**
      * URL
      */
+    @TableField("path")
     private String path;
 
     /**
@@ -37,17 +40,20 @@ public class SysMenu extends BaseEntity {
     @NotBlank(message = "Menu authorization code cannot be empty")
     private String perms;
 
+    @TableField("component")
     private String component;
 
     /**
      * type     0：main   1：item   2：button
      */
     @NotNull(message = "Menu type cannot be empty")
+    @TableField("type")
     private Integer type;
 
     /**
      * Icon
      */
+    @TableField("icon")
     private String icon;
 
     /**
