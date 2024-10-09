@@ -204,7 +204,7 @@
 import axios from '@/axios'
 import { Component, Vue } from 'vue-property-decorator'
 import moment from 'moment'
-import { excelHeader, valueHeader, formatSpecialDate } from './excelHeader'
+import { excelHeader, formatSpecialDate } from './excelHeader'
 import { formatJson, readExcel, saveJsonToExcel, downloadTempExcelFile } from '@/utils/importExcel'
 import { ElSwitch } from 'element-ui/types/switch'
 
@@ -437,6 +437,8 @@ i
       this.memberSpecialDaysForm = res.data.data
     })
   }
+
+  delSpecialDaysItem(id: number) {}
 
 }
 </script>

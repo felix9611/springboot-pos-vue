@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fixedasset.mapper.ProductTypeMapper">
+    <select id="getSpecialDay" resultType="com.fixedasset.entity.MemberSpecialDay">
+        Select * from member_special_day where member_id = #{memberId} and status = 1
+    </select>
+</mapper>
