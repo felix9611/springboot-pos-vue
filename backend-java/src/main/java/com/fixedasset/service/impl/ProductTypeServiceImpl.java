@@ -72,8 +72,8 @@ public class ProductTypeServiceImpl extends ServiceImpl<ProductTypeMapper, Produ
             actionRecord.setCreated(LocalDateTime.now());
             createdAction(actionRecord);
         } else {
-            throw new RuntimeException("Not active data in records!");
-    }
+            throw new RuntimeException("No active data in records!");
+        }
     }
 
     public void updateOne(ProductType productType) {
@@ -93,7 +93,7 @@ public class ProductTypeServiceImpl extends ServiceImpl<ProductTypeMapper, Produ
             actionRecord.setCreated(LocalDateTime.now());
             createdAction(actionRecord);
         } else {
-            throw new RuntimeException("Not active data in records!");
+            throw new RuntimeException("No active data in records!");
         }
     }
 

@@ -103,6 +103,7 @@ export function downloadTempExcelFile(
       ws['!cols'] = headerColSeetting['!cols']
     }
   }
+ // XLSX.utils.table_to_sheet(ws, { raw: true })
   XLSX.utils.sheet_add_aoa(ws, [], { origin: 'A2' })
   let wb = XLSX.utils.book_new()
   XLSX.utils.book_append_sheet(wb, ws, 'Sheet1')
@@ -133,7 +134,7 @@ export function saveJsonToExcel(
       ws['!cols'] = headerColSeetting['!cols']
     }
   }
-  console.log(ws)
+  XLSX.utils.table_to_sheet(dataSet, { raw: true })
   XLSX.utils.sheet_add_aoa(ws, dataSet, { origin: 'A2' })
   let wb = XLSX.utils.book_new()
   XLSX.utils.book_append_sheet(wb, ws, 'Sheet1')
