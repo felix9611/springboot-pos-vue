@@ -72,12 +72,7 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
 
     public void importDara(List<ProductListUploadDto> productListUploads) {
         for (ProductListUploadDto productListUpload : productListUploads) {
-           /*  LambdaQueryWrapper<ProductList> queryWrapper = Wrappers.lambdaQuery();
-            queryWrapper.eq(ProductList::getProductName, productListUpload.getProductName());
-            queryWrapper.eq(ProductList::getStatu, 1);
-            ProductList checkOne = productListMapper.selectOne(queryWrapper);
 
-            if (checkOne == null) {*/
                 LambdaQueryWrapper<ProductList> queryWrapperCheckCode = Wrappers.lambdaQuery();
                 queryWrapperCheckCode.eq(ProductList::getProductCode, productListUpload.getProductCode());
                 queryWrapperCheckCode.eq(ProductList::getStatu, 1);
@@ -245,7 +240,7 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
 
                                     productLocationService.updateById(productLocation);
 
-                                    invRecord.setQty(productLocationCheck.getQty() +productLocationUpload.getQty());
+                                    invRecord.setQty(productLocationUpload.getQty());
                                 }
 
                                 invRecord.setProductId(Math.toIntExact(productList.getId()));
@@ -262,9 +257,6 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
                 }
 
 
-        /*     } else {
-                throw new RuntimeException("Exist in records!");
-            } */
         }
     }
 
