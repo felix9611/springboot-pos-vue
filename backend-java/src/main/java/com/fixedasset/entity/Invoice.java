@@ -4,10 +4,13 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fixedasset.dto.InvoiceItemListDto;
+
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @TableName("invoice")
@@ -60,5 +63,17 @@ public class Invoice {
 
     @TableField(exist = false)
     private LocalDateTime dateFrom;
+
+    @TableField(exist = false)
+    private List<InvoiceItemListDto> invoiceItems;
+    
+    @TableField(exist = false)
+    private List<InvoiceItem> newInvoiceItems;
+
+    @TableField(exist = false)
+    private List<Payment> paymentItems;
+
+    @TableField(exist = false)
+    private List<Payment> newPaymentItems;
 
 }

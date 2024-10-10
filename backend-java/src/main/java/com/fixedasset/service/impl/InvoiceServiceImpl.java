@@ -5,16 +5,24 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fixedasset.dto.InvoiceItemListDto;
 import com.fixedasset.dto.InvoiceListDto;
 import com.fixedasset.dto.charts.QueryCountShop;
 import com.fixedasset.dto.charts.QueryCountYearWeek;
 import com.fixedasset.dto.charts.QueryTotalShop;
 import com.fixedasset.dto.charts.QueryTotalYearWeek;
 import com.fixedasset.entity.Invoice;
+import com.fixedasset.entity.InvoiceItem;
+import com.fixedasset.entity.Payment;
 import com.fixedasset.entity.ProductList;
+import com.fixedasset.mapper.InvoiceItemMapper;
 import com.fixedasset.mapper.InvoiceMapper;
+import com.fixedasset.service.InvoiceItemService;
 import com.fixedasset.service.InvoiceService;
+import com.fixedasset.service.PaymentService;
+
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -27,6 +35,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public class InvoiceServiceImpl extends ServiceImpl<InvoiceMapper, Invoice> implements InvoiceService {
     @Resource private InvoiceMapper invoiceMapper;
     @Resource private Invoice invoice;
+    @Resource private InvoiceItemService invoiceItemService;
+    @Resource private PaymentService paymentService;
 
     public void saveNew(Invoice invoice) {
         invoice.setNumber("INV" + this.getNewCode());
@@ -39,7 +49,12 @@ public class InvoiceServiceImpl extends ServiceImpl<InvoiceMapper, Invoice> impl
     public Invoice findId(String number) {
         LambdaQueryWrapper<Invoice> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(Invoice::getNumber, number);
-        return invoiceMapper.selectOne(queryWrapper);
+        Invoice invoice = invoiceMapper.selectOne(queryWrapper);
+
+        List<InvoiceItemListDto> invoiceItems = invoiceItemService.listByInvoiceId(invoice.getId());
+        invoice.setInvoiceItems(invoiceItems);
+
+        return invoice;
     }
 
     public Page<InvoiceListDto> listAll(Page page, Wrapper queryWrapper) {
@@ -54,7 +69,15 @@ public class InvoiceServiceImpl extends ServiceImpl<InvoiceMapper, Invoice> impl
     }
 
     public InvoiceListDto selectOneItem(Long id) {
-        return invoiceMapper.selectOneId(id);
+        InvoiceListDto invoice = invoiceMapper.selectOneId(id);
+
+        List<InvoiceItemListDto> invoiceItems = invoiceItemService.listByInvoiceId(id);
+        invoice.setInvoiceItems(invoiceItems);
+
+        List<Payment> payments = paymentService.listByInvId(Math.toIntExact(id));
+        invoice.setPaymentItems(payments);
+
+        return invoice;
     }
 
     public String taxNumberRandom() {
