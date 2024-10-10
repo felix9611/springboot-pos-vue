@@ -195,10 +195,10 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
                         productListMapper.updateById(checkProduct);
                     }
 
-                    List<ProductLocationListDto> productLocationUploads = productListUpload.getProductLocations();
+                    List<ProductLocationUploadDto> productLocationUploads = productListUpload.getProductLocations();
 
                     if (productLocationUploads.size() > 0) {
-                        for (ProductLocationListDto productLocationUpload : productLocationUploads) {
+                        for (ProductLocationUploadDto productLocationUpload : productLocationUploads) {
                             LambdaQueryWrapper<Location> queryWrapperLocation = Wrappers.lambdaQuery();
 
                             if(StringUtils.isNotBlank(productLocationUpload.getPlaceCode()) || StringUtils.isNotBlank(productLocationUpload.getPlaceName())) {
@@ -228,6 +228,7 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
                                     productLocation.setLocationId(Math.toIntExact(location.getId()));
                                     productLocation.setProductId(Math.toIntExact(productList.getId()));
                                     productLocation.setQty(productLocationUpload.getQty());
+                                    productLocation.setTotalPrice(productLocationUpload.getTotalPrice());
 
                                     productLocationMapper.insert(productLocation);
 
@@ -237,6 +238,7 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
                                     productLocation.setLocationId(Math.toIntExact(location.getId()));
                                     productLocation.setProductId(Math.toIntExact(productList.getId()));
                                     productLocation.setQty(productLocationCheck.getQty() +productLocationUpload.getQty());
+                                    productLocation.setTotalPrice(productLocationCheck.getCost() + productLocationUpload.getTotalPrice());
 
                                     productLocationService.updateById(productLocation);
 
@@ -246,7 +248,7 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
                                 invRecord.setProductId(Math.toIntExact(productList.getId()));
                                 invRecord.setLocFrom(0);
                                 invRecord.setLocTo(Math.toIntExact(location.getId()));
-                                
+                                invRecord.setCost(productLocationUpload.getTotalPrice()));
                                 invRecord.setTimeAt(LocalDateTime.now());
                                 
                                 invRecordService.saveRecord(invRecord);

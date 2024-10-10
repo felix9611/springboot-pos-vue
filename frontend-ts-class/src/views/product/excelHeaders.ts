@@ -34,7 +34,17 @@ export const excelHeader = [
 ]
 
 export function formatData(arr: any) {
+
+    
+
+
     return arr.map((obj: any) => {
+        const retailPrice = Number(obj["Retail Price"]) || 0
+        const taxRate = Number(obj['Tax Rate(%)']) / 100 || 0
+        const afterTax = Number(obj['After Tax']) ? Number(obj['After Tax']) : retailPrice * taxRate
+        const taxAmount = Number(obj['Tax Amount']) ? Number(obj['Tax Amount']) : afterTax - retailPrice
+
+
         const productLocations: { placeCode: string; placeName: string; qty: number }[] = []
     
         // Loop through the keys in the object
@@ -47,15 +57,14 @@ export function formatData(arr: any) {
             // Find the corresponding 'Special Date' and 'Special Date Remark' (if available)
             const nameKey = `Location Name ${index}`;
             const qtyKey = `Location Qty ${index}`
+            const qty = Number(obj[qtyKey])
 
-            
-            let timestamp = new Date(obj[nameKey])
-            console.log(timestamp, 'test')
             // Construct the memberSpecialDays entry with optional remark
-            const memberSpecialDay: { placeCode: string; placeName: string; qty: number } = {
+            const memberSpecialDay = {
                 placeCode: obj[key],
                 placeName: obj[nameKey],
-              qty: Number(obj[qtyKey])
+                qty,
+                totalPrice: afterTax ? afterTax : retailPrice * qty
             };
             
     
@@ -76,7 +85,7 @@ export function formatData(arr: any) {
             typeName: obj["Type Name"],
             unit: obj["Unit"],
             description: obj["description"],
-            retailPrice: Number(obj["Retail Price"]),
+            retailPrice,
             departmentCode: obj["Department Code"],
             departmentName: obj["Department Name"],
             vendorCode: obj["Vendor Code"],
@@ -91,9 +100,9 @@ export function formatData(arr: any) {
             vendorRemark: obj['Vendor Remark'],
             tax: obj['Tax'] === 'Yes'? 1 : 0,
             taxCode: obj['Tax Code'],
-            taxRate: Number(obj['Tax Rate(%)']) / 100,
-            afterTax: Number(obj['After Tax']),
-            taxAmount: Number(obj['Tax Amount']),
+            taxRate,
+            afterTax,
+            taxAmount,
             productLocations
         };
     

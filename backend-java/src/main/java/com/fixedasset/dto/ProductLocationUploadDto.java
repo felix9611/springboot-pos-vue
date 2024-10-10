@@ -2,10 +2,17 @@ package com.fixedasset.dto;
 
 import javax.persistence.Transient;
 
-public class ProductLocationUploadDto {
-    @Transient private String locationCode;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-    @Transient private String locationName;
+@EqualsAndHashCode()
+@Data
+public class ProductLocationUploadDto {
+    @Transient private String placeCode;
+
+    @Transient private String placeName;
 
     @Transient private int qty;
+
+    @Transient private int totalPrice;
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.persistence.Transient;
 
-// @EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode()
 @Data
 public class ProductListUploadDto {
     @Transient private String productCode;
@@ -62,5 +62,5 @@ public class ProductListUploadDto {
 
     @Transient private double taxAmount;
 
-    @Transient List<ProductLocationListDto> productLocations;
+    @Transient List<ProductLocationUploadDto> productLocations;
 }
