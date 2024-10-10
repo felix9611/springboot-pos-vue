@@ -66,6 +66,8 @@ public class InvoiceServiceImpl extends ServiceImpl<InvoiceMapper, Invoice> impl
        // if (invoiceItems.size() > 0) {
             for (InvoiceItem invoiceItem : invoiceItems) {
 
+                invoiceItem.setInvoiceId(Math.toIntExact(invoice.getId()));
+
                 productLocation.setProductId(invoiceItem.getProductId());
                 productLocation.setLocationId(invoice.getLocationId());
     
