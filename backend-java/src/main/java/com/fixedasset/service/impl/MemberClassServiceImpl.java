@@ -1,7 +1,10 @@
 package com.fixedasset.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fixedasset.entity.ActionRecord;
+import com.fixedasset.entity.Location;
 import com.fixedasset.entity.MemberClass;
 import com.fixedasset.mapper.ActionRecordMapper;
 import com.fixedasset.mapper.MemberClassMapper;
@@ -24,7 +27,9 @@ public class MemberClassServiceImpl extends ServiceImpl<MemberClassMapper, Membe
     @Resource private ActionRecord actionRecord;
 
     public List<MemberClass> getAll() {
-        return memberClassMapper.getAll();
+        LambdaQueryWrapper<MemberClass> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(MemberClass::getStatus, 1);
+        return memberClassMapper.selectList(queryWrapper);
     }
 
     public void saveData(MemberClass memberClass){

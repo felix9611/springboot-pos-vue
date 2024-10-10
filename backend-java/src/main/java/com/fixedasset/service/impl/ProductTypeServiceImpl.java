@@ -98,7 +98,9 @@ public class ProductTypeServiceImpl extends ServiceImpl<ProductTypeMapper, Produ
     }
 
     public List<ProductType> getAll() {
-        return productTypeMapper.getAll();
+        LambdaQueryWrapper<ProductType> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(ProductType::getStatu, 1);
+        return productTypeMapper.selectList(queryWrapper);
     }
 
     public int createdAction(ActionRecord actionRecord) {

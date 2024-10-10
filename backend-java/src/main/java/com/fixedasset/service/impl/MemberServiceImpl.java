@@ -163,7 +163,11 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
 
         Member member = memberMapper.selectOne(queryWrapper);
 
-        List<MemberSpecialDay> memberSpecialDays = memberSpecialDayMapper.getSpecialDay(Math.toIntExact(member.getId()));
+        LambdaQueryWrapper<MemberSpecialDay> queryWrapperMemberSpecialDay = Wrappers.lambdaQuery();
+        queryWrapperMemberSpecialDay.eq(MemberSpecialDay::getMemberId, Math.toIntExact(1));
+        queryWrapperMemberSpecialDay.eq(MemberSpecialDay::getStatus, 1);
+
+        List<MemberSpecialDay> memberSpecialDays = memberSpecialDayMapper.selectList(queryWrapperMemberSpecialDay);
         member.setMemberSpecialDays(memberSpecialDays);
 
         return member;
