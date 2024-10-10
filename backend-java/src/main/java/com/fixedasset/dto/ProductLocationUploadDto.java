@@ -11,8 +11,16 @@ public class ProductLocationUploadDto {
     @Transient private String placeCode;
 
     @Transient private String placeName;
-
+ 
     @Transient private int qty;
 
-    @Transient private int totalPrice;
+    @Transient private double totalPrice;
+
+    @Transient private String stockMovePlaceToCode;
+
+    @Transient private String stockMovePlaceToName;
+
+    @Transient private int stockMovePlaceToQty;
+
+    @Transient private double stockMovePlaceToTotalPrice;
 }

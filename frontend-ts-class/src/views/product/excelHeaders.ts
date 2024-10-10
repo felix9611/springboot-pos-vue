@@ -28,9 +28,15 @@ export const excelHeader = [
     'Location Code 1',
     'Location Name 1',
     'Location Qty 1',
+ //   'Stock Move to Location Code 1',
+ //   'Stock Move to Location Name 1',
+ //   'Stock Move Qtys 1',
     'Location Code 2',
     'Location Name 2',
-    'Location Qty 2'
+    'Location Qty 2',
+//    'Stock Move to Location Code 2',
+ //   'Stock Move to Location Name 2',
+ //   'Stock Move Qtys 2',
 ]
 
 export function formatData(arr: any) {
@@ -45,7 +51,14 @@ export function formatData(arr: any) {
         const taxAmount = Number(obj['Tax Amount']) ? Number(obj['Tax Amount']) : afterTax - retailPrice
 
 
-        const productLocations: { placeCode: string; placeName: string; qty: number }[] = []
+        const productLocations: { 
+            placeCode: string; 
+            placeName: string; 
+            qty: number, 
+            stockMovePlaceToCode?: string;
+            stockMovePlaceToName?: string;
+            stockMovePlaceToQty?: number;
+        }[] = []
     
         // Loop through the keys in the object
         for (const key in obj) {
@@ -60,7 +73,7 @@ export function formatData(arr: any) {
             const qty = Number(obj[qtyKey])
 
             // Construct the memberSpecialDays entry with optional remark
-            const memberSpecialDay = {
+            const memberSpecialDay: any = {
                 placeCode: obj[key],
                 placeName: obj[nameKey],
                 qty,
@@ -68,7 +81,19 @@ export function formatData(arr: any) {
             };
             
     
-            // Add remark if it exists
+            // Add if it exists
+            if (obj[`Stock Move to Location Code ${index}`]) {
+                memberSpecialDay.stockMovePlaceToCode = obj[`Stock Move to Location Code ${index}`]
+            }
+
+            if (obj[`Stock Move to Location Name ${index}`]) {
+                memberSpecialDay.stockMovePlaceToName = obj[`Stock Move to Location Name ${index}`]
+            }
+            if (obj[`Stock Move Qtys ${index}`]) {
+                memberSpecialDay.stockMovePlaceToQty = obj[`Stock Move Qtys ${index}`]
+                memberSpecialDay.stockMovePlaceToTotalPrice = afterTax ? afterTax : retailPrice * obj[`Stock Move Qtys ${index}`]
+            }
+            
     
             // Push the entry into the array
             productLocations.push(memberSpecialDay)

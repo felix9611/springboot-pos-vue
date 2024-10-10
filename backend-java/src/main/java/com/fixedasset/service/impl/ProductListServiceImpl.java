@@ -70,6 +70,7 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
 
     @Resource private InvRecordService invRecordService;
 
+    @SuppressWarnings("unused")
     public void importDara(List<ProductListUploadDto> productListUploads) {
         for (ProductListUploadDto productListUpload : productListUploads) {
 
@@ -214,15 +215,17 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
                             
                             Location location = locationService.getOne(queryWrapperLocation);
 
+
+                            LambdaQueryWrapper<ProductLocation> queryWrapperProductLocation = Wrappers.lambdaQuery();
+
+                            queryWrapperProductLocation.eq(ProductLocation::getProductId, productList.getId());
+                            queryWrapperProductLocation.eq(ProductLocation::getLocationId, location.getId());
+
+                            ProductLocation productLocationCheck = productLocationService.getOne(queryWrapperProductLocation);
+
                             if (location == null) {
                                 throw new RuntimeException("No this location in active data records!");
                             } else {
-                                LambdaQueryWrapper<ProductLocation> queryWrapperProductLocation = Wrappers.lambdaQuery();
-
-                                queryWrapperProductLocation.eq(ProductLocation::getProductId, productList.getId());
-                                queryWrapperProductLocation.eq(ProductLocation::getLocationId, location.getId());
-
-                                ProductLocation productLocationCheck = productLocationService.getOne(queryWrapperProductLocation);
 
                                 if (productLocationCheck == null) {
                                     productLocation.setLocationId(Math.toIntExact(location.getId()));
@@ -231,8 +234,6 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
                                     productLocation.setTotalPrice(productLocationUpload.getTotalPrice());
 
                                     productLocationMapper.insert(productLocation);
-
-                                    invRecord.setQty(productLocationUpload.getQty());
                                 } else {
                                     productLocation.setId(productLocationCheck.getId());
                                     productLocation.setLocationId(Math.toIntExact(location.getId()));
@@ -242,9 +243,9 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
 
                                     productLocationService.updateById(productLocation);
 
-                                    invRecord.setQty(productLocationUpload.getQty());
+                                    
                                 }
-
+                                invRecord.setQty(productLocationUpload.getQty());
                                 invRecord.setProductId(Math.toIntExact(productList.getId()));
                                 invRecord.setLocFrom(0);
                                 invRecord.setLocTo(Math.toIntExact(location.getId()));
@@ -253,6 +254,59 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
                                 
                                 invRecordService.saveRecord(invRecord);
                             }
+/* 
+                            if(StringUtils.isNotBlank(productLocationUpload.getStockMovePlaceToCode()) || StringUtils.isNotBlank(productLocationUpload.getStockMovePlaceToName())) {
+                                LambdaQueryWrapper<Location> queryWrapperLocationMove = Wrappers.lambdaQuery();
+
+                            
+                                if(StringUtils.isNotBlank(productLocationUpload.getStockMovePlaceToCode())) {
+                                    queryWrapperLocationMove.eq(Location::getPlaceCode, productLocationUpload.getStockMovePlaceToCode());
+                                }
+                                if(StringUtils.isNotBlank(productLocationUpload.getStockMovePlaceToName())) {
+                                    queryWrapperLocationMove.eq(Location::getPlaceName, productLocationUpload.getStockMovePlaceToName());
+                                }
+                             
+                                Location locationMove = locationService.getOne(queryWrapperLocationMove);
+
+                                LambdaQueryWrapper<ProductLocation> queryWrapperProductLocationMove = Wrappers.lambdaQuery();
+
+                                queryWrapperProductLocationMove.eq(ProductLocation::getProductId, productList.getId());
+                                queryWrapperProductLocationMove.eq(ProductLocation::getLocationId, location.getId());
+
+                                ProductLocation productLocationMoveCheck = productLocationService.getOne(queryWrapperProductLocationMove);
+
+                                if (locationMove == null) {
+                                    throw new RuntimeException("No this location in active data records!");
+                                } else {
+                                    if (productLocationMoveCheck == null) {
+                                        productLocation.setLocationId(Math.toIntExact(location.getId()));
+                                        productLocation.setProductId(Math.toIntExact(productList.getId()));
+                                        productLocation.setQty(productLocationUpload.getQty());
+                                        productLocation.setTotalPrice(productLocationUpload.getTotalPrice());
+
+                                        productLocationMapper.insert(productLocation);
+                                    } else {
+                                        productLocation.setId(productLocationCheck.getId());
+                                        productLocation.setLocationId(Math.toIntExact(locationMove.getId()));
+                                        productLocation.setProductId(Math.toIntExact(productList.getId()));
+                                        productLocation.setQty(productLocationCheck.getQty() +productLocationUpload.getStockMovePlaceToQty());
+                                        productLocation.setTotalPrice(productLocationCheck.getCost() + productLocationUpload.getStockMovePlaceToTotalPrice());
+    
+                                        productLocationService.updateById(productLocation);
+                        
+                                    }
+
+                                    invRecord.setQty(productLocationUpload.getStockMovePlaceToQty());
+                                    invRecord.setProductId(Math.toIntExact(productList.getId()));
+                                    invRecord.setLocFrom(Math.toIntExact(location.getId()));
+                                    invRecord.setLocTo(Math.toIntExact(locationMove.getId()));
+                                    invRecord.setCost(productLocationUpload.getStockMovePlaceToTotalPrice());
+                                    invRecord.setTimeAt(LocalDateTime.now());
+                                    
+                                    invRecordService.saveRecord(invRecord);
+                                }
+                            }
+*/                    
                         }
                     }
 
