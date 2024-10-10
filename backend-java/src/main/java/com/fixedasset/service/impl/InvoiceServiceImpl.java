@@ -93,6 +93,7 @@ public class InvoiceServiceImpl extends ServiceImpl<InvoiceMapper, Invoice> impl
                     invRecord.setLocFrom(oldRecord.getLocationId());
                     invRecord.setLocTo(-invoice.getLocationId());
                     invRecord.setCost(invoiceItem.getQty() * invoiceItem.getPrice());
+                    invRecord.setTimeAt(LocalDateTime.now());
 
                     invRecordService.saveRecord(invRecord);
 
