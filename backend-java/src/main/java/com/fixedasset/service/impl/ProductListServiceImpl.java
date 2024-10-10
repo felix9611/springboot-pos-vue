@@ -248,7 +248,7 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
                                 invRecord.setProductId(Math.toIntExact(productList.getId()));
                                 invRecord.setLocFrom(0);
                                 invRecord.setLocTo(Math.toIntExact(location.getId()));
-                                invRecord.setCost(productLocationUpload.getTotalPrice()));
+                                invRecord.setCost(productLocationUpload.getTotalPrice());
                                 invRecord.setTimeAt(LocalDateTime.now());
                                 
                                 invRecordService.saveRecord(invRecord);
