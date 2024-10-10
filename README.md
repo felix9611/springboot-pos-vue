@@ -12,7 +12,7 @@ Springboot X VUE For MySQL
 </div>
 
 Springboot X VUE<br/>
-Point of sale with member system<br/>
+# Point of sale with member system<br/>
 
 Language:<br />
 ・Java8 (Some dependencies only run on Java8)<br />
