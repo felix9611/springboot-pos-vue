@@ -9,14 +9,14 @@ public class ProductLocationChangeDto {
     private int oldPlace;
     private int qty;
     private int newPlaceQty;
-    private int cost;
+    private double cost;
     private int otherQty;
 
     public int getOtherQty() {
         return otherQty;
     }
 
-    public int getCost() {
+    public double getCost() {
         return cost;
     }
 

@@ -35,7 +35,7 @@ public class ProductLocationServiceImpl extends ServiceImpl<ProductLocationMappe
         invRecord.setProductId(productLocation.getProductId());
         invRecord.setLocFrom(0);
         invRecord.setLocTo(productLocation.getLocationId());
-        invRecord.setCost(productLocation.getCost());
+        invRecord.setCost(productLocation.getTotalPrice());
         invRecord.setTimeAt(LocalDateTime.now());
         invRecordService.saveRecord(invRecord);
     }
@@ -64,7 +64,7 @@ public class ProductLocationServiceImpl extends ServiceImpl<ProductLocationMappe
         invRecord.setProductId(productLocation.getProductId());
         invRecord.setLocFrom(-productLocation.getLocationId());
         invRecord.setLocTo(0);
-        invRecord.setCost(productLocation.getCost());
+        invRecord.setCost(productLocation.getTotalPrice());
         invRecord.setTimeAt(LocalDateTime.now());
         invRecordService.saveRecord(invRecord);
 
