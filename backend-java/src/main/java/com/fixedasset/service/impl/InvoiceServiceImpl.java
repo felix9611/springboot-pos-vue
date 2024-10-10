@@ -7,22 +7,27 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fixedasset.dto.InvoiceItemListDto;
 import com.fixedasset.dto.InvoiceListDto;
+import com.fixedasset.dto.ProductLocationChangeDto;
 import com.fixedasset.dto.charts.QueryCountShop;
 import com.fixedasset.dto.charts.QueryCountYearWeek;
 import com.fixedasset.dto.charts.QueryTotalShop;
 import com.fixedasset.dto.charts.QueryTotalYearWeek;
+import com.fixedasset.entity.InvRecord;
 import com.fixedasset.entity.Invoice;
 import com.fixedasset.entity.InvoiceItem;
 import com.fixedasset.entity.Payment;
 import com.fixedasset.entity.ProductList;
+import com.fixedasset.entity.ProductLocation;
 import com.fixedasset.mapper.InvoiceItemMapper;
 import com.fixedasset.mapper.InvoiceMapper;
+import com.fixedasset.service.InvRecordService;
 import com.fixedasset.service.InvoiceItemService;
 import com.fixedasset.service.InvoiceService;
 import com.fixedasset.service.PaymentService;
+import com.fixedasset.service.ProductListService;
+import com.fixedasset.service.ProductLocationService;
 
 import org.apache.ibatis.annotations.Param;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -37,6 +42,10 @@ public class InvoiceServiceImpl extends ServiceImpl<InvoiceMapper, Invoice> impl
     @Resource private Invoice invoice;
     @Resource private InvoiceItemService invoiceItemService;
     @Resource private PaymentService paymentService;
+    @Resource private ProductLocation productLocation;
+    @Resource private ProductLocationService productLocationService;
+    @Resource private InvRecordService invRecordService;
+    @Resource private InvRecord invRecord;
 
     public void saveNew(Invoice invoice) {
         invoice.setNumber("INV" + this.getNewCode());
@@ -44,6 +53,57 @@ public class InvoiceServiceImpl extends ServiceImpl<InvoiceMapper, Invoice> impl
         invoice.setVoidNum(0);
         invoice.setTaxRefNo(taxNumberRandom());
         invoiceMapper.insert(invoice);
+
+        List<InvoiceItem> invoiceItems = invoice.getNewInvoiceItems();
+        List<Payment> payments = invoice.getNewPaymentItems();
+
+        for (Payment payment : payments) {
+            payment.setInvoiceId(Math.toIntExact(invoice.getId()));
+            payment.setPaymentTime(LocalDateTime.now());
+            paymentService.save(payment);
+        }  
+
+       // if (invoiceItems.size() > 0) {
+            for (InvoiceItem invoiceItem : invoiceItems) {
+
+                productLocation.setProductId(invoiceItem.getProductId());
+                productLocation.setLocationId(invoice.getLocationId());
+    
+                ProductLocation oldRecord = productLocationService.findOne(productLocation);
+
+                if (invoiceItem.getQty() > oldRecord.getQty()) {
+                    throw new RuntimeException("No good data in the store!");
+                } else {
+                    int renewQty = oldRecord.getQty() - invoiceItem.getQty();
+                    double newTotalPrice = oldRecord.getTotalPrice() - (invoiceItem.getQty() * invoiceItem.getPrice());
+
+                    productLocation.setId(oldRecord.getId());
+                    productLocation.setProductId(invoiceItem.getProductId());
+                    productLocation.setLocationId(invoice.getLocationId());
+                    productLocation.setQty(renewQty);
+                    productLocation.setTotalPrice(newTotalPrice);
+
+                    productLocationService.updateData(productLocation);
+
+
+                    invRecord.setQty(-invoiceItem.getQty());
+                    invRecord.setProductId(invoiceItem.getProductId());
+                    invRecord.setLocFrom(oldRecord.getLocationId());
+                    invRecord.setLocTo(-invoice.getLocationId());
+                    invRecord.setCost(invoiceItem.getQty() * invoiceItem.getPrice());
+
+                    invRecordService.saveRecord(invRecord);
+
+                    invoiceItemService.saveItem(invoiceItem);
+                }
+            }
+                
+    //    if (payments.size() > 0) {
+             
+     //   }
+        
+
+
     }
 
     public Invoice findId(String number) {
