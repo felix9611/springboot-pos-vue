@@ -56,4 +56,32 @@
         ORDER BY sum(ii.qty) DESC
         LIMIT 10;
     </select>
+
+    <select id="totalSalesByType" resultType="com.fixedasset.dto.charts.InvoiceSalesDataResult">
+        SELECT 
+            pt.type_name as typeName,
+            sum(ii.price) as totalPrice
+        FROM invoice as invoice
+        LEFT JOIN invoice_item as ii on invoice.id  = ii.invoice_id
+        LEFT JOIN product_list as prod on ii.product_id = prod.id
+        LEFT JOIN product_type as pt on prod.type_id = pt.id
+        ${ew.customSqlSegment} AND ii.price IS NOT NULL
+        GROUP BY pt.type_name 
+        ORDER BY sum(ii.price) DESC
+        LIMIT 10;
+    </select>
+
+    <select id="countSalesByType" resultType="com.fixedasset.dto.charts.InvoiceSalesDataResult">
+        SELECT 
+            pt.type_name as typeName,
+            sum(ii.qty) as counts
+        FROM invoice as invoice
+        LEFT JOIN invoice_item as ii on invoice.id  = ii.invoice_id
+        LEFT JOIN product_list as prod on ii.product_id = prod.id
+        LEFT JOIN product_type as pt on prod.type_id = pt.id
+        ${ew.customSqlSegment} AND ii.price IS NOT NULL
+        GROUP BY pt.type_name 
+        ORDER BY sum(ii.qty) DESC
+        LIMIT 10;
+    </select>
 </mapper>

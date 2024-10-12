@@ -53,4 +53,8 @@ public interface InvoiceMapper extends BaseMapper<Invoice> {
     List<InvoiceSalesDataResult> listSalesByPlace(@Param("ew") Wrapper<Invoice> qWrapper);
 
     List<InvoiceSalesDataResult> countSalesByPlace(@Param("ew") Wrapper<Invoice> qWrapper);
+
+    List<InvoiceSalesDataResult> totalSalesByType(@Param("ew") Wrapper<Invoice> qWrapper);
+
+    List<InvoiceSalesDataResult> countSalesByType(@Param("ew") Wrapper<Invoice> qWrapper);
 }
