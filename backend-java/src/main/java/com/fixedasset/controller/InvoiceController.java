@@ -101,4 +101,14 @@ public class InvoiceController extends  BaseController{
     public Result querySalesByProductCounts(@RequestBody Invoice invoice) {
         return Result.succ(invoiceService.querySalesByProductCounts(invoice));
     }
+
+    @PostMapping("/queryTotalSalesByType")
+    public Result queryTotalSalesByType(@RequestBody Invoice invoice) {
+        return Result.succ(invoiceService.queryTotalSalesByType(invoice));
+    }
+
+    @PostMapping("/queryCountSalesByType")
+    public Result queryCountSalesByType(@RequestBody Invoice invoice) {
+        return Result.succ(invoiceService.queryCountSalesByType(invoice));
+    }
 }

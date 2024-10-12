@@ -66,6 +66,22 @@
                 <ChartJs v-bind="chartsSetF" />
             </div>
         </div>
+        <div class="lg:col-span-1 shadow-lg rounded-lg bg-white">
+            <div class="font-bold p-1">
+                Top 10 Sell Total Price Per Product Type
+            </div>
+            <div class="p-1">
+                <ChartJs v-bind="chartsSetG" />
+            </div>
+        </div>
+        <div class="lg:col-span-1 shadow-lg rounded-lg bg-white">
+            <div class="font-bold p-1">
+                Top 10 Sell Qtys Per Product Type
+            </div>
+            <div class="p-1">
+                <ChartJs v-bind="chartsSetH" />
+            </div>
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -94,6 +110,9 @@ export default class Dashboard extends Vue {
     queryCountShopList: any = []
     querySalesByProductList: any = [] 
     querySalesByProductCountList: any = [] 
+
+    queryTotalSalesByTypeList: any = [] 
+    queryCountSalesByTypeList: any = [] 
 
     get chartsSetA() {
         return {
@@ -158,7 +177,7 @@ export default class Dashboard extends Vue {
             datasetKey: 'placeName',
             value: 'count',
             data: this.queryCountShopList,
-            label: 'Total Items',
+            label: 'Total Qtys',
             colors: '#a1d41b'
         }
     }
@@ -189,6 +208,32 @@ export default class Dashboard extends Vue {
         }
     }
 
+    get chartsSetG() {
+        return {
+            width: 1000,
+            heigh: 90,
+            type: 'bar',
+            datasetKey: 'typeName',
+            value: 'totalPrice',
+            data: this.queryTotalSalesByTypeList,
+            label: 'Total Price($)',
+            colors: '#a1d41b'
+        }
+    }
+
+    get chartsSetH() {
+        return {
+            width: 1000,
+            heigh: 90,
+            type: 'bar',
+            datasetKey: 'typeName',
+            value: 'counts',
+            data: this.queryCountSalesByTypeList,
+            label: 'Total Qtys',
+            colors: '#a1d41b'
+        }
+    }
+
     goToFind() {
         const [from, to] = this.dates
         this.groupByFind = {
@@ -203,6 +248,8 @@ export default class Dashboard extends Vue {
         this.queryCountShop()
         this.querySalesByProduct()
         this.querySalesByProductCounts()
+        this.queryTotalSalesByType()
+        this.queryCountSalesByType()
     }
 
     created() {
@@ -212,11 +259,31 @@ export default class Dashboard extends Vue {
         this.queryCountShop()
         this.querySalesByProduct()
         this.querySalesByProductCounts()
+
+        this.queryTotalSalesByType()
+        this.queryCountSalesByType()
+    }
+
+    queryCountSalesByType() {
+        axios.post('/invoice/queryCountSalesByType', this.groupByFind).then(
+            (res: any) => {
+                this.queryCountSalesByTypeList = res.data.data
+            }
+        )
+    }
+
+    queryTotalSalesByType() {
+        axios.post('/invoice/queryTotalSalesByType', this.groupByFind).then(
+            (res: any) => {
+                this.queryTotalSalesByTypeList = res.data.data
+            }
+        )
     }
 
     querySalesByProductCounts() {
         axios.post('/invoice/querySalesByProductCounts', this.groupByFind).then(
             (res: any) => {
+                console.log(res, 'querySalesByProductCounts')
                 this.querySalesByProductCountList = res.data.data
             }
         )

@@ -29,7 +29,7 @@
         GROUP BY  location_id;
     </select>
 
-    <select id="listSalesByPlace" resultType="com.fixedasset.dto.charts.InvoiceSalesDataResult">
+    <select id="listSalesByProduct" resultType="com.fixedasset.dto.charts.InvoiceSalesDataResult">
         SELECT 
             prod.product_name as productName,
             sum(ii.price) as totalPrice
@@ -43,7 +43,7 @@
         LIMIT 10;
     </select>
 
-    <select id="countSalesByPlace" resultType="com.fixedasset.dto.charts.InvoiceSalesDataResult">
+    <select id="countSalesByProduct" resultType="com.fixedasset.dto.charts.InvoiceSalesDataResult">
         SELECT 
             prod.product_name as productName,
             sum(ii.qty) as counts
@@ -65,7 +65,7 @@
         LEFT JOIN invoice_item as ii on invoice.id  = ii.invoice_id
         LEFT JOIN product_list as prod on ii.product_id = prod.id
         LEFT JOIN product_type as pt on prod.type_id = pt.id
-        ${ew.customSqlSegment} AND ii.price IS NOT NULL
+        ${ew.customSqlSegment} AND ii.price IS NOT NULL AND prod.type_id IS NOT NULL
         GROUP BY pt.type_name 
         ORDER BY sum(ii.price) DESC
         LIMIT 10;
@@ -79,7 +79,7 @@
         LEFT JOIN invoice_item as ii on invoice.id  = ii.invoice_id
         LEFT JOIN product_list as prod on ii.product_id = prod.id
         LEFT JOIN product_type as pt on prod.type_id = pt.id
-        ${ew.customSqlSegment} AND ii.price IS NOT NULL
+        ${ew.customSqlSegment} AND ii.price IS NOT NULL AND prod.type_id IS NOT NULL
         GROUP BY pt.type_name 
         ORDER BY sum(ii.qty) DESC
         LIMIT 10;

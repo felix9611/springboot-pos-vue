@@ -209,20 +209,27 @@ public class InvoiceServiceImpl extends ServiceImpl<InvoiceMapper, Invoice> impl
     }
 
     public List<InvoiceSalesDataResult> querySalesByProduct(Invoice invoiceData) {
-        LambdaQueryWrapper<Invoice> queryWrapper = Wrappers.lambdaQuery();
-
-        if (StringUtils.isNotBlank(invoiceData.getDateFrom()) && StringUtils.isNotBlank(invoiceData.getDateTo())) {
-            queryWrapper.between(Invoice::getCreatedAt, invoiceData.getDateFrom(), invoiceData.getDateTo());
-        }
-
-        queryWrapper.eq(Invoice::getVoidNum, 0);
-        queryWrapper.isNotNull(Invoice::getNumber);
-        queryWrapper.notIn(Invoice::getLocationId, 0);
-
-        return invoiceMapper.listSalesByPlace(queryWrapper);
+        LambdaQueryWrapper<Invoice> queryWrapper = saleDataGlobalFilter(invoiceData);
+        return invoiceMapper.listSalesByProduct(queryWrapper);
     }
 
     public List<InvoiceSalesDataResult> querySalesByProductCounts(Invoice invoiceData) {
+        LambdaQueryWrapper<Invoice> queryWrapper = saleDataGlobalFilter(invoiceData);
+        return invoiceMapper.countSalesByProduct(queryWrapper);
+    }
+
+    public List<InvoiceSalesDataResult> queryTotalSalesByType(Invoice invoiceData) {
+        LambdaQueryWrapper<Invoice> queryWrapper = saleDataGlobalFilter(invoiceData);
+        return invoiceMapper.totalSalesByType(queryWrapper);
+    }
+
+    public List<InvoiceSalesDataResult> queryCountSalesByType(Invoice invoiceData) {
+        LambdaQueryWrapper<Invoice> queryWrapper = saleDataGlobalFilter(invoiceData);
+
+        return invoiceMapper.countSalesByType(queryWrapper);
+    }
+
+    public LambdaQueryWrapper<Invoice> saleDataGlobalFilter(Invoice invoiceData) {
         LambdaQueryWrapper<Invoice> queryWrapper = Wrappers.lambdaQuery();
 
         if (StringUtils.isNotBlank(invoiceData.getDateFrom()) && StringUtils.isNotBlank(invoiceData.getDateTo())) {
@@ -233,7 +240,6 @@ public class InvoiceServiceImpl extends ServiceImpl<InvoiceMapper, Invoice> impl
         queryWrapper.isNotNull(Invoice::getNumber);
         queryWrapper.notIn(Invoice::getLocationId, 0);
 
-        return invoiceMapper.countSalesByPlace(queryWrapper);
+        return queryWrapper;
     }
-
 }

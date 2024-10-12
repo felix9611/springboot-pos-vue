@@ -50,9 +50,9 @@ public interface InvoiceMapper extends BaseMapper<Invoice> {
     @Select(selectOne)
     InvoiceListDto selectOneId(@Param("id")Long id);
 
-    List<InvoiceSalesDataResult> listSalesByPlace(@Param("ew") Wrapper<Invoice> qWrapper);
+    List<InvoiceSalesDataResult> listSalesByProduct(@Param("ew") Wrapper<Invoice> qWrapper);
 
-    List<InvoiceSalesDataResult> countSalesByPlace(@Param("ew") Wrapper<Invoice> qWrapper);
+    List<InvoiceSalesDataResult> countSalesByProduct(@Param("ew") Wrapper<Invoice> qWrapper);
 
     List<InvoiceSalesDataResult> totalSalesByType(@Param("ew") Wrapper<Invoice> qWrapper);
 

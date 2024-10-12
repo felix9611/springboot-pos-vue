@@ -25,4 +25,6 @@ public interface InvoiceService extends IService<Invoice> {
     List<QueryTotalYearWeek> queryTotalYearWeek(Invoice invoiceData);
     List<InvoiceSalesDataResult> querySalesByProduct(Invoice invoiceData);
     List<InvoiceSalesDataResult> querySalesByProductCounts(Invoice invoiceData);
+    List<InvoiceSalesDataResult> queryTotalSalesByType(Invoice invoiceData);
+    List<InvoiceSalesDataResult> queryCountSalesByType(Invoice invoiceData);
 }
