@@ -2,12 +2,14 @@ package com.fixedasset.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fixedasset.dto.InvoiceItemListDto;
 import com.fixedasset.dto.InvoiceListDto;
 import com.fixedasset.dto.ProductLocationChangeDto;
+import com.fixedasset.dto.charts.InvoiceSalesDataResult;
 import com.fixedasset.dto.charts.QueryCountShop;
 import com.fixedasset.dto.charts.QueryCountYearWeek;
 import com.fixedasset.dto.charts.QueryTotalShop;
@@ -206,6 +208,32 @@ public class InvoiceServiceImpl extends ServiceImpl<InvoiceMapper, Invoice> impl
         return invoiceMapper.queryTotalYearWeek(queryWrapper);
     }
 
+    public List<InvoiceSalesDataResult> querySalesByProduct(Invoice invoiceData) {
+        LambdaQueryWrapper<Invoice> queryWrapper = Wrappers.lambdaQuery();
 
+        if (StringUtils.isNotBlank(invoiceData.getDateFrom()) && StringUtils.isNotBlank(invoiceData.getDateTo())) {
+            queryWrapper.between(Invoice::getCreatedAt, invoiceData.getDateFrom(), invoiceData.getDateTo());
+        }
+
+        queryWrapper.eq(Invoice::getVoidNum, 0);
+        queryWrapper.isNotNull(Invoice::getNumber);
+        queryWrapper.notIn(Invoice::getLocationId, 0);
+
+        return invoiceMapper.listSalesByPlace(queryWrapper);
+    }
+
+    public List<InvoiceSalesDataResult> querySalesByProductCounts(Invoice invoiceData) {
+        LambdaQueryWrapper<Invoice> queryWrapper = Wrappers.lambdaQuery();
+
+        if (StringUtils.isNotBlank(invoiceData.getDateFrom()) && StringUtils.isNotBlank(invoiceData.getDateTo())) {
+            queryWrapper.between(Invoice::getCreatedAt, invoiceData.getDateFrom(), invoiceData.getDateTo());
+        }
+
+        queryWrapper.eq(Invoice::getVoidNum, 0);
+        queryWrapper.isNotNull(Invoice::getNumber);
+        queryWrapper.notIn(Invoice::getLocationId, 0);
+
+        return invoiceMapper.countSalesByPlace(queryWrapper);
+    }
 
 }

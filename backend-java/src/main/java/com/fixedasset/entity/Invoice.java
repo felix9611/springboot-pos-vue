@@ -59,10 +59,10 @@ public class Invoice {
     private int limit = 10;
 
     @TableField(exist = false)
-    private LocalDateTime dateTo;
+    private String dateTo;
 
     @TableField(exist = false)
-    private LocalDateTime dateFrom;
+    private String dateFrom;
 
     @TableField(exist = false)
     private List<InvoiceItemListDto> invoiceItems;

@@ -50,6 +50,22 @@
                 <ChartJs v-bind="chartsSetD" />
             </div>
         </div>
+        <div class="lg:col-span-1 shadow-lg rounded-lg bg-white">
+            <div class="font-bold p-1">
+                Top 10 Sell Total Price Per Product
+            </div>
+            <div class="p-1">
+                <ChartJs v-bind="chartsSetE" />
+            </div>
+        </div>
+        <div class="lg:col-span-1 shadow-lg rounded-lg bg-white">
+            <div class="font-bold p-1">
+                Top 10 Sell Qtys Per Product
+            </div>
+            <div class="p-1">
+                <ChartJs v-bind="chartsSetF" />
+            </div>
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -76,6 +92,8 @@ export default class Dashboard extends Vue {
     queryCountYearWeekList: any = []
     queryTotalShopList: any = []
     queryCountShopList: any = []
+    querySalesByProductList: any = [] 
+    querySalesByProductCountList: any = [] 
 
     get chartsSetA() {
         return {
@@ -145,6 +163,32 @@ export default class Dashboard extends Vue {
         }
     }
 
+    get chartsSetE() {
+        return {
+            width: 1000,
+            heigh: 90,
+            type: 'bar',
+            datasetKey: 'productName',
+            value: 'totalPrice',
+            data: this.querySalesByProductList,
+            label: 'Total Price($)',
+            colors: '#a1d41b'
+        }
+    }
+
+    get chartsSetF() {
+        return {
+            width: 1000,
+            heigh: 90,
+            type: 'bar',
+            datasetKey: 'productName',
+            value: 'counts',
+            data: this.querySalesByProductCountList,
+            label: 'Total Qtys',
+            colors: '#a1d41b'
+        }
+    }
+
     goToFind() {
         const [from, to] = this.dates
         this.groupByFind = {
@@ -157,6 +201,8 @@ export default class Dashboard extends Vue {
         this.queryCountYearWeek()
         this.queryTotalShop()
         this.queryCountShop()
+        this.querySalesByProduct()
+        this.querySalesByProductCounts()
     }
 
     created() {
@@ -164,6 +210,24 @@ export default class Dashboard extends Vue {
         this.queryCountYearWeek()
         this.queryTotalShop()
         this.queryCountShop()
+        this.querySalesByProduct()
+        this.querySalesByProductCounts()
+    }
+
+    querySalesByProductCounts() {
+        axios.post('/invoice/querySalesByProductCounts', this.groupByFind).then(
+            (res: any) => {
+                this.querySalesByProductCountList = res.data.data
+            }
+        )
+    }
+
+    querySalesByProduct() {
+        axios.post('/invoice/querySalesByProduct', this.groupByFind).then(
+            (res: any) => {
+                this.querySalesByProductList = res.data.data
+            }
+        )
     }
 
     queryTotalYearWeek() {

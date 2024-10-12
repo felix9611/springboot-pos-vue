@@ -92,4 +92,13 @@ public class InvoiceController extends  BaseController{
         return Result.succ(invoiceService.queryCountYearWeek(invoice));
     }
 
+    @PostMapping("/querySalesByProduct")
+    public Result querySalesByProduct(@RequestBody Invoice invoice) {
+        return Result.succ(invoiceService.querySalesByProduct(invoice));
+    }
+
+    @PostMapping("/querySalesByProductCounts")
+    public Result querySalesByProductCounts(@RequestBody Invoice invoice) {
+        return Result.succ(invoiceService.querySalesByProductCounts(invoice));
+    }
 }
