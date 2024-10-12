@@ -172,7 +172,7 @@
           </div>
 
           <el-form-item label="Total"  prop="total" label-width="130px">
-            <el-input-number v-model="totalCalForm.totalCal" readonly></el-input-number>
+            <el-input-number v-model="totalCalForm.totalPriceAll" readonly></el-input-number>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="cancelPO()">Cancel</el-button>
@@ -384,7 +384,7 @@ export default class POSpage extends Vue {
       discountType: this.productDetail.discountType,
       placeId: this.placeId,
       afterTax: Number(this.productDetail.totalPriceAll),
-      taxAmount: Number(this.productDetail.taxAmount),
+      taxAmount: Number(this.productDetail.taxAmount) * this.productDetail.qty,
       taxCode: this.productDetail.taxCode
     }
 

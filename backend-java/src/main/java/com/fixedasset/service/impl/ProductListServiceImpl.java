@@ -161,16 +161,19 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
                     queryWrapperVendor.eq(Vendor::getStatu, 1);
                     Vendor checkOne = vendorService.getOne(queryWrapperVendor);
 
-                    if (checkOne.getVendorName().equals(productListUpload.getVendorName())) {
+                    if (checkOne == null) {
+                        vendor.setCreated(LocalDateTime.now());
+                        vendorService.createOne(vendor);
+                        productList.setVendorId(Math.toIntExact(vendor.getId()));
+
+                        
+                    } else {
+                        
                         productList.setVendorId(Math.toIntExact(checkOne.getId()));
                         vendor.setId(checkOne.getId());
                         vendor.setUpdated(LocalDateTime.now());
                         vendor.setStatu(1);
                         vendorService.updateOne(vendor);
-                    } else {
-                        
-                        vendorService.createOne(vendor);
-                        productList.setVendorId(Math.toIntExact(vendor.getId()));
                     }
 
                     LambdaQueryWrapper<ProductList> queryWrapper = Wrappers.lambdaQuery();
