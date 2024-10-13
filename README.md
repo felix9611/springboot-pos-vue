@@ -1,18 +1,18 @@
 # POS SYSTEM BY Springboot & VUE
 
-Springboot X VUE
+Springboot X VUE For MySQL
 <div>
 
 <div>
 ・Inclubes frontend and backend for POS System<br />
 ・Management purchase orders record ,transaction history, inventory and product records in POS at bussiness<br />
 ・Cloud-based web systems offer ease of use with no installation required, significantly reducing costs.<br />
-・Use JWT tokens for user authentication and authorization, ensuring security and protection of fixed assets data.<br />
+・Use JWT tokens for user authentication and authorization, ensuring security and protection of POS data.<br />
 ・Provide reporting, exporting, monitoring, and tracking capabilities for the status of purchase orders and inventory.<br />
 </div>
 
 Springboot X VUE<br/>
-Point of sale with member system<br/>
+# Point of sale with member system<br/>
 
 Language:<br />
 ・Java8 (Some dependencies only run on Java8)<br />
@@ -26,6 +26,7 @@ Core:<br />
 ・Mybatis 3.4.1<br />
 ・Vue 2.6.10<br />
 ・moment 2.29.1<br />
+・MySQL v8.0<br />
 <br />
 Component:<br />
 ・ChartJs 2.9.3<br />

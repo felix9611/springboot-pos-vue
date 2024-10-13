@@ -23,7 +23,7 @@ public class MemberSpecialDay {
     private String name;
 
     @TableField("date")
-    private LocalDateTime date;
+    private String date;
 
     @TableField("remark")
     private String remark;

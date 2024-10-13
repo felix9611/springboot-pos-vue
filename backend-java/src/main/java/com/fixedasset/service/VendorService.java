@@ -17,4 +17,5 @@ public interface VendorService extends IService<Vendor> {
 
     List<Vendor> getAll();
 
+    void batchImport(List<Vendor> vendors);
 }

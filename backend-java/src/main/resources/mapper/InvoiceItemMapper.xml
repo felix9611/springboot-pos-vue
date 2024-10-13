@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fixedasset.mapper.InvoiceItemMapper">
+     <select id="listByInvoiceId" resultType="com.fixedasset.dto.InvoiceItemListDto">
+        SELECT ini.*, pl.product_code as productCode, pl.product_name as productName 
+            FROM invoice_item as ini 
+            left join product_list as pl on ini.product_id = pl.id where invoice_id = #{invoiceId}
+    </select>
+</mapper>

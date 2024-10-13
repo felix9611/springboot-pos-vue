@@ -10,6 +10,8 @@ import com.fixedasset.service.ProductTypeService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 @RestController
@@ -23,6 +25,11 @@ public class ProductTypeController extends BaseController{
         return Result.succ(productType);
     }
 
+    @PostMapping("/batch-create")
+    public Result batchCreate(@RequestBody List<ProductType> assetTypes) {
+        productTypeService.batchImport(assetTypes);
+        return Result.succ(assetTypes);
+    }
 
     @PostMapping("/update")
     public Result update(@RequestBody ProductType productType) {

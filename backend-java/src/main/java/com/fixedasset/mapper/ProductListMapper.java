@@ -12,14 +12,8 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 public interface ProductListMapper extends BaseMapper<ProductList> {
-    String listQuery = "Select pl.*, " +
-            "type.type_code as typeCode , type.type_name as typeName " +
-            "from product_list as pl " +
-            "left join product_type as type on pl.type_id = type.id";
-    String wrapperSql = "SELECT * from ( " + listQuery + " ) AS q ${ew.customSqlSegment}";
-    @Select(wrapperSql)
+
     Page<ProductListDto> page(Page page, @Param("ew") Wrapper queryWrapper);
 
-    @Select(wrapperSql)
     List<ProductListDto> listAll(@Param("ew") Wrapper queryWrapper);
 }

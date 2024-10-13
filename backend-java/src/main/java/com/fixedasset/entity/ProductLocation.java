@@ -23,6 +23,9 @@ public class ProductLocation {
     @TableField("qty")
     private int qty;
 
+    @TableField("total_price")
+    private double totalPrice;
+
     @TableField(exist = false)
     private int cost;
 

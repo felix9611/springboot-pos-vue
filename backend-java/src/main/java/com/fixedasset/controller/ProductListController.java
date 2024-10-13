@@ -6,11 +6,15 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fixedasset.common.lang.Result;
 import com.fixedasset.dto.ProductListDto;
+import com.fixedasset.dto.ProductListUploadDto;
+import com.fixedasset.entity.Member;
 import com.fixedasset.entity.ProductList;
 import com.fixedasset.entity.ProductListFile;
 import com.fixedasset.service.ProductListFileService;
 import com.fixedasset.service.ProductListService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -21,6 +25,12 @@ public class ProductListController extends BaseController{
     @Resource private ProductListService productListService;
 
     @Resource private ProductListFileService productListFileService;
+
+    @PostMapping("/batch-create")
+    public Result batchCreate(@RequestBody List<ProductListUploadDto> productListUploads) {
+        productListService.importDara(productListUploads);;
+        return Result.succ(productListUploads);
+    }
 
     @PostMapping("/create")
     public Result createOne(@RequestBody ProductList productList) {
@@ -36,7 +46,7 @@ public class ProductListController extends BaseController{
 
     @GetMapping("/{id}")
     public Result getOne(@PathVariable("id")Long id) {
-        return Result.succ(productListService.getById(id));
+        return Result.succ(productListService.findOneById(id));
     }
 
     @PostMapping("/findByCode")

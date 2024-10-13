@@ -29,7 +29,7 @@ public class InvRecord {
     private int locTo;
 
     @TableField("cost")
-    private int cost;
+    private double cost;
 
     @TableField("staff")
     private String staff;

@@ -8,6 +8,7 @@ import lombok.Data;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @TableName("member")
@@ -48,4 +49,10 @@ public class Member {
 
     @TableField(exist = false)
     private int limit = 10;
+
+    @TableField(exist = false)
+    private List<MemberSpecialDay> memberSpecialDays;
+
+    @TableField(exist = false)
+    private String className;
 }
