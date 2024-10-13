@@ -229,6 +229,18 @@ public class InvoiceServiceImpl extends ServiceImpl<InvoiceMapper, Invoice> impl
         return invoiceMapper.countSalesByType(queryWrapper);
     }
 
+    public List<InvoiceSalesDataResult> queryCountSalesByDept(Invoice invoiceData) {
+        LambdaQueryWrapper<Invoice> queryWrapper = saleDataGlobalFilter(invoiceData);
+
+        return invoiceMapper.countSalesByDept(queryWrapper);
+    }
+
+    public List<InvoiceSalesDataResult> queryTotalSalesByDept(Invoice invoiceData) {
+        LambdaQueryWrapper<Invoice> queryWrapper = saleDataGlobalFilter(invoiceData);
+
+        return invoiceMapper.totalSalesByDept(queryWrapper);
+    }
+
     public LambdaQueryWrapper<Invoice> saleDataGlobalFilter(Invoice invoiceData) {
         LambdaQueryWrapper<Invoice> queryWrapper = Wrappers.lambdaQuery();
 

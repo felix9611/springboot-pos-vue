@@ -82,6 +82,22 @@
                 <ChartJs v-bind="chartsSetH" />
             </div>
         </div>
+        <div class="lg:col-span-1 shadow-lg rounded-lg bg-white">
+            <div class="font-bold p-1">
+                Top 10 Sell Total Price Per Department
+            </div>
+            <div class="p-1">
+                <ChartJs v-bind="chartsSetI" />
+            </div>
+        </div>
+        <div class="lg:col-span-1 shadow-lg rounded-lg bg-white">
+            <div class="font-bold p-1">
+                Top 10 Sell Qtys Per Department
+            </div>
+            <div class="p-1">
+                <ChartJs v-bind="chartsSetJ" />
+            </div>
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -113,6 +129,8 @@ export default class Dashboard extends Vue {
 
     queryTotalSalesByTypeList: any = [] 
     queryCountSalesByTypeList: any = [] 
+    queryCountSalesByDeptList: any = [] 
+    queryTotalSalesByDeptList: any = [] 
 
     get chartsSetA() {
         return {
@@ -234,6 +252,32 @@ export default class Dashboard extends Vue {
         }
     }
 
+    get chartsSetI() {
+        return {
+            width: 1000,
+            heigh: 90,
+            type: 'bar',
+            datasetKey: 'deptName',
+            value: 'counts',
+            data: this.queryCountSalesByDeptList,
+            label: 'Total Qtys',
+            colors: '#a1d41b'
+        }
+    }
+
+    get chartsSetJ() {
+        return {
+            width: 1000,
+            heigh: 90,
+            type: 'bar',
+            datasetKey: 'deptName',
+            value: 'totalPrice',
+            data: this.queryTotalSalesByDeptList,
+            label: 'Total Price($)',
+            colors: '#a1d41b'
+        }
+    }
+
     goToFind() {
         const [from, to] = this.dates
         this.groupByFind = {
@@ -250,6 +294,8 @@ export default class Dashboard extends Vue {
         this.querySalesByProductCounts()
         this.queryTotalSalesByType()
         this.queryCountSalesByType()
+        this.queryCountSalesByDept()
+        this.queryTotalSalesByDept()
     }
 
     created() {
@@ -262,6 +308,24 @@ export default class Dashboard extends Vue {
 
         this.queryTotalSalesByType()
         this.queryCountSalesByType()
+        this.queryCountSalesByDept()
+        this.queryTotalSalesByDept()
+    }
+
+    queryTotalSalesByDept() {
+        axios.post('/invoice/queryTotalSalesByDept', this.groupByFind).then(
+            (res: any) => {
+                this.queryTotalSalesByDeptList = res.data.data
+            }
+        )
+    }
+
+    queryCountSalesByDept() {
+        axios.post('/invoice/queryCountSalesByDept', this.groupByFind).then(
+            (res: any) => {
+                this.queryCountSalesByDeptList = res.data.data
+            }
+        )
     }
 
     queryCountSalesByType() {

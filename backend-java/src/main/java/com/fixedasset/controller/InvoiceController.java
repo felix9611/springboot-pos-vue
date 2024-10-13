@@ -91,24 +91,31 @@ public class InvoiceController extends  BaseController{
     public Result queryCountYearWeek(@RequestBody Invoice invoice) {
         return Result.succ(invoiceService.queryCountYearWeek(invoice));
     }
-
     @PostMapping("/querySalesByProduct")
     public Result querySalesByProduct(@RequestBody Invoice invoice) {
         return Result.succ(invoiceService.querySalesByProduct(invoice));
     }
-
     @PostMapping("/querySalesByProductCounts")
     public Result querySalesByProductCounts(@RequestBody Invoice invoice) {
         return Result.succ(invoiceService.querySalesByProductCounts(invoice));
     }
-
     @PostMapping("/queryTotalSalesByType")
     public Result queryTotalSalesByType(@RequestBody Invoice invoice) {
         return Result.succ(invoiceService.queryTotalSalesByType(invoice));
     }
-
     @PostMapping("/queryCountSalesByType")
     public Result queryCountSalesByType(@RequestBody Invoice invoice) {
         return Result.succ(invoiceService.queryCountSalesByType(invoice));
     }
+
+    @PostMapping("/queryCountSalesByDept")
+    public Result queryCountSalesByDept(@RequestBody Invoice invoice) {
+        return Result.succ(invoiceService.queryCountSalesByDept(invoice));
+    }
+
+    @PostMapping("/queryTotalSalesByDept")
+    public Result queryTotalSalesByDept(@RequestBody Invoice invoice) {
+        return Result.succ(invoiceService.queryTotalSalesByDept(invoice));
+    }
+    
 }

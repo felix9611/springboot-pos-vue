@@ -11,6 +11,7 @@ public class InvoiceSalesDataResult {
     @Transient private String placeName;
     @Transient private String productName;
     @Transient private String typeName;
+    @Transient private String deptName;
     @Transient private double totalPrice;
     @Transient private int counts;
 }
