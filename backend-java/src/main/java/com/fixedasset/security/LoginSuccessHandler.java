@@ -3,6 +3,8 @@ package com.fixedasset.security;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.fixedasset.common.lang.Result;
+import com.fixedasset.entity.SysUser;
+import com.fixedasset.service.SysUserService;
 import com.fixedasset.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -21,12 +23,17 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 	@Autowired
 	JwtUtils jwtUtils;
 
+	@Autowired
+    SysUserService sysUserService;
+
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 		response.setContentType("application/json;charset=UTF-8");
 		ServletOutputStream outputStream = response.getOutputStream();
 
-		String jwt = jwtUtils.generateToken(authentication.getName());
+		SysUser sysUser = sysUserService.getByUsername(authentication.getName());
+
+		String jwt = jwtUtils.generateToken(sysUser);
 		// response.setHeader(jwtUtils.getHeader(), jwt);
 		JSONObject loginResult = new JSONObject();
 		loginResult.putOnce("token", jwt);
