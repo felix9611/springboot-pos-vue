@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "fixedasset.jwt")
+@ConfigurationProperties(prefix = "possystem.jwt")
 public class JwtUtils {
 
 	private long expire;
