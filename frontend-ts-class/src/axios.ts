@@ -14,7 +14,7 @@ const request = axios.create({
 })
 
 request.interceptors.request.use((config: any) => {
-    config.headers['Authorization'] = localStorage.getItem("token")
+    config.headers['Authorization'] = localStorage.getItem("token") ?`Bearer ${localStorage.getItem("token")}` : null
     return config
 })
 
