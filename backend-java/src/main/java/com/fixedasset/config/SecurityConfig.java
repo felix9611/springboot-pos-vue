@@ -57,10 +57,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     private static final String[] URL_WHITELIST = {
-            "/login",
-            "/logout",
-            "/captcha",
-            "/favicon.ico",
+        "/login",
+        "/logout",
+        "/captcha",
+        "/favicon.ico",
+        "/swagger-ui.html","/swagger-ui/**",
+                "/v3/api-docs/**"
     };
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
