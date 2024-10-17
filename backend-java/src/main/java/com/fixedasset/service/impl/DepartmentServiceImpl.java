@@ -8,6 +8,7 @@ import com.fixedasset.entity.ActionRecord;
 import com.fixedasset.entity.Department;
 import com.fixedasset.mapper.ActionRecordMapper;
 import com.fixedasset.mapper.DepartmentMapper;
+import com.fixedasset.service.ActionRecordService;
 import com.fixedasset.service.DepartmentService;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +21,9 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
 
     @Resource DepartmentMapper departmentMapper;
 
-    @Resource
-    ActionRecordMapper actionRecordMapper;
+    @Resource ActionRecordMapper actionRecordMapper;
+
+    @Resource private ActionRecordService actionRecordService;
 
     @Resource private ActionRecord actionRecord;
 
@@ -37,13 +39,14 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
                 department.setStatu(1);
                 departmentMapper.insert(department);
 
-                actionRecord.setActionName("Save");
-                actionRecord.setActionMethod("POST");
-                actionRecord.setActionFrom("Department Manger");
-                actionRecord.setActionData(department.toString());
-                actionRecord.setActionSuccess("Success");
-                actionRecord.setCreated(LocalDateTime.now());
-                this.createdAction(actionRecord);
+                actionRecordService.createdAction(
+                    "Save", 
+                    "POST", 
+                    "Department Manger", 
+                    department.toString(), 
+                    "Success"
+                );
+
         } else {
             throw new RuntimeException("Exist in records!");
         }
@@ -61,15 +64,17 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
         queryWrapper.eq(Department::getStatu, 1);
         Department checkOne = departmentMapper.selectOne(queryWrapper);
         if (checkOne.getId().equals(department.getId())) {
-            actionRecord.setActionName("Remove");
-            actionRecord.setActionMethod("DELETE");
-            actionRecord.setActionFrom("Asset Type Manger");
-            actionRecord.setActionData(department.toString());
-            actionRecord.setActionSuccess("Success");
-            actionRecord.setCreated(LocalDateTime.now());
-            this.createdAction(actionRecord);
+
+            actionRecordService.createdAction(
+                    "Void", 
+                    "DELETE", 
+                    "Department Manger", 
+                    department.toString(), 
+                    "Success"
+            );
 
             departmentMapper.updateById(department);
+
         } else {
             throw new RuntimeException("No active data in records!");
         }
@@ -82,15 +87,16 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
         Department checkOne = departmentMapper.selectOne(queryWrapper);
 
         if (checkOne.getId().equals(department.getId())) {
-            actionRecord.setActionName("Update");
-            actionRecord.setActionMethod("POST");
-            actionRecord.setActionFrom("Asset Type Manger");
-            actionRecord.setActionData(department.toString());
-            actionRecord.setActionSuccess("Success");
-            actionRecord.setCreated(LocalDateTime.now());
-            this.createdAction(actionRecord);
 
             departmentMapper.updateById(department);
+
+            actionRecordService.createdAction(
+                    "Update", 
+                    "POST", 
+                    "Department Manger", 
+                    department.toString(), 
+                    "Success"
+            );
         } else {
             throw new RuntimeException("Not active data in records!");
         }
@@ -112,9 +118,5 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
         }
         queryWrapper.eq(Department::getStatu, 1);
         return departmentMapper.selectOne(queryWrapper);
-    }
-
-    public int createdAction(ActionRecord actionRecord) {
-        return actionRecordMapper.insert(actionRecord);
     }
 }
