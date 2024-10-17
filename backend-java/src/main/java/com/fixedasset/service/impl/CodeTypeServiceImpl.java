@@ -7,6 +7,7 @@ import com.fixedasset.entity.ActionRecord;
 import com.fixedasset.entity.CodeType;
 import com.fixedasset.mapper.ActionRecordMapper;
 import com.fixedasset.mapper.CodeTypeMapper;
+import com.fixedasset.service.ActionRecordService;
 import com.fixedasset.service.CodeTypeService;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,8 @@ public class CodeTypeServiceImpl extends ServiceImpl<CodeTypeMapper, CodeType> i
     @Resource private ActionRecordMapper actionRecordMapper;
 
     @Resource private ActionRecord actionRecord;
+
+    @Resource private ActionRecordService actionRecordService;
 
     @Resource private CodeTypeMapper codeTypeMapper;
 
@@ -54,14 +57,22 @@ public class CodeTypeServiceImpl extends ServiceImpl<CodeTypeMapper, CodeType> i
             codeType.setCreated(LocalDateTime.now());
             codeTypeMapper.insert(codeType);
 
-            actionRecord.setActionName("Save");
-            actionRecord.setActionMethod("POST");
-            actionRecord.setActionFrom("Code Type Manger");
-            actionRecord.setActionData(codeType.toString());
-            actionRecord.setActionSuccess("Success");
-            actionRecord.setCreated(LocalDateTime.now());
-            this.createdAction(actionRecord);
+            actionRecordService.createdAction(
+                "Save", 
+                "POST", 
+                "Code Type Manger", 
+                codeType.toString(), 
+                "Success"
+            );
+
         } else {
+            actionRecordService.createdAction(
+                "Save", 
+                "POST", 
+                "Code Type Manger", 
+                codeType.toString(), 
+                "Failure"
+            );
             throw new RuntimeException("Exist in records! Please check again!");
         }
     }
@@ -75,14 +86,21 @@ public class CodeTypeServiceImpl extends ServiceImpl<CodeTypeMapper, CodeType> i
             codeType.setUpdated(LocalDateTime.now());
             codeTypeMapper.updateById(codeType);
 
-            actionRecord.setActionName("Update");
-            actionRecord.setActionMethod("POST");
-            actionRecord.setActionFrom("Code Type Manger");
-            actionRecord.setActionData(codeType.toString());
-            actionRecord.setActionSuccess("Success");
-            actionRecord.setCreated(LocalDateTime.now());
-            this.createdAction(actionRecord);
+            actionRecordService.createdAction(
+                "Update", 
+                "POST", 
+                "Code Type Manger", 
+                codeType.toString(), 
+                "Success"
+            );
         } else {
+            actionRecordService.createdAction(
+                "Update", 
+                "POST", 
+                "Code Type Manger", 
+                codeType.toString(), 
+                "Failure"
+            );
             throw new RuntimeException("Not active data in records!");
         }
     }
@@ -98,19 +116,22 @@ public class CodeTypeServiceImpl extends ServiceImpl<CodeTypeMapper, CodeType> i
             codeType.setStatu(0);
             codeTypeMapper.updateById(codeType);
 
-            actionRecord.setActionName("Remove");
-            actionRecord.setActionMethod("Delete");
-            actionRecord.setActionFrom("Code Type Manger");
-            actionRecord.setActionData(codeType.toString());
-            actionRecord.setActionSuccess("Success");
-            actionRecord.setCreated(LocalDateTime.now());
-            this.createdAction(actionRecord);
+            actionRecordService.createdAction(
+                "Remove", 
+                "Delete", 
+                "Code Type Manger", 
+                codeType.toString(), 
+                "Success"
+            );
         } else {
+            actionRecordService.createdAction(
+                "Remove", 
+                "Delete", 
+                "Code Type Manger", 
+                codeType.toString(), 
+                "Failure"
+            );
             throw new RuntimeException("Not active data in records!");
         }   
-    }
-
-    public int createdAction(ActionRecord actionRecord) {
-        return actionRecordMapper.insert(actionRecord);
     }
 }

@@ -25,8 +25,6 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
 
     @Resource private ActionRecordService actionRecordService;
 
-    @Resource private ActionRecord actionRecord;
-
     public void createNew(Department department) {
         LambdaQueryWrapper<Department> queryWrapper = Wrappers.lambdaQuery();
         if (StringUtils.isNotBlank(department.getDeptCode())) {
@@ -48,7 +46,15 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
                 );
 
         } else {
-            throw new RuntimeException("Exist in records!");
+            actionRecordService.createdAction(
+                "Save", 
+                "POST", 
+                "Department Manger", 
+                department.toString(), 
+                "Failure"
+            );
+
+            throw new RuntimeException("Exist in records!");         
         }
     }
 
@@ -76,6 +82,13 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
             departmentMapper.updateById(department);
 
         } else {
+            actionRecordService.createdAction(
+                "Void", 
+                "DELETE",
+                "Department Manger", 
+                department.toString(), 
+                "Failure"
+            );
             throw new RuntimeException("No active data in records!");
         }
     }
@@ -98,6 +111,13 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
                     "Success"
             );
         } else {
+            actionRecordService.createdAction(
+                "Update", 
+                "POST",
+                "Department Manger", 
+                department.toString(), 
+                "Failure"
+            );
             throw new RuntimeException("Not active data in records!");
         }
     }
