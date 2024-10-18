@@ -12,6 +12,7 @@ import com.fixedasset.mapper.ActionRecordMapper;
 import com.fixedasset.mapper.MemberClassMapper;
 import com.fixedasset.mapper.MemberMapper;
 import com.fixedasset.mapper.MemberSpecialDayMapper;
+import com.fixedasset.service.ActionRecordService;
 import com.fixedasset.service.MemberService;
 
 import cn.hutool.core.date.DateTime;
@@ -36,11 +37,9 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
 
     @Resource private MemberSpecialDay memberSpecialDay;
 
-    @Resource private ActionRecord actionRecord;
-
-    @Resource private ActionRecordMapper actionRecordMapper;
-
     @Resource private MemberClassMapper memberClassMapper;
+
+    @Resource private ActionRecordService actionRecordService;
 
     public void importData(List<Member> members) {
         for (Member member : members) {
@@ -184,8 +183,5 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
         return memberSpecialDayMapper.selectPage(page, queryWrapper);
     }
 
-    public int createdAction(ActionRecord actionRecord) {
-        return actionRecordMapper.insert(actionRecord);
-    }
 
 }

@@ -21,8 +21,6 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
 
     @Resource DepartmentMapper departmentMapper;
 
-    @Resource ActionRecordMapper actionRecordMapper;
-
     @Resource private ActionRecordService actionRecordService;
 
     public void createNew(Department department) {

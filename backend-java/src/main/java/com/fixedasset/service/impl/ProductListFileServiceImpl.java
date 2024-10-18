@@ -7,6 +7,7 @@ import com.fixedasset.entity.ActionRecord;
 import com.fixedasset.entity.ProductListFile;
 import com.fixedasset.mapper.ActionRecordMapper;
 import com.fixedasset.mapper.ProductListFileMapper;
+import com.fixedasset.service.ActionRecordService;
 import com.fixedasset.service.ProductListFileService;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +22,9 @@ public class ProductListFileServiceImpl extends ServiceImpl<ProductListFileMappe
 
     @Resource private ActionRecordMapper actionRecordMapper;
 
-    @Resource private ActionRecord actionRecord;
-
     @Resource private ProductListFile productListFile;
+
+    @Resource private ActionRecordService actionRecordService;
 
     public void saveListPicture(ProductListFile productListFile){
 
@@ -31,13 +32,13 @@ public class ProductListFileServiceImpl extends ServiceImpl<ProductListFileMappe
         productListFile.setCreated(LocalDateTime.now());
         productListFileMapper.insert(productListFile);
 
-        actionRecord.setActionName("Add");
-        actionRecord.setActionMethod("POST");
-        actionRecord.setActionFrom("Product List - Photo");
-        actionRecord.setActionData("Any Data");
-        actionRecord.setActionSuccess("Success");
-        actionRecord.setCreated(LocalDateTime.now());
-        this.createdAction(actionRecord);
+        actionRecordService.createdAction(
+            "Save", 
+            "POST", 
+            "Department Manger", 
+            "Any Data", 
+            "Success"
+        );
     }
 
     public List<ProductListFile> getByAssetId(ProductListFile productListFile) {
@@ -52,18 +53,13 @@ public class ProductListFileServiceImpl extends ServiceImpl<ProductListFileMappe
         productListFile.setStatu(0);
         productListFileMapper.updateById(productListFile);
 
-        actionRecord.setActionName("REMOVE");
-        actionRecord.setActionMethod("DELETE");
-        actionRecord.setActionFrom("Product List - Photo");
-        actionRecord.setActionData("Any Data");
-        actionRecord.setActionSuccess("Success");
-        actionRecord.setCreated(LocalDateTime.now());
-        this.createdAction(actionRecord);
-
-    }
-
-    public int createdAction(ActionRecord actionRecord) {
-        return actionRecordMapper.insert(actionRecord);
+        actionRecordService.createdAction(
+            "REMOVE", 
+            "DELETE", 
+            "Department Manger", 
+            "Any Data", 
+            "Success"
+        );
     }
 
 }
