@@ -21,6 +21,7 @@ import com.fixedasset.entity.Vendor;
 import com.fixedasset.mapper.ActionRecordMapper;
 import com.fixedasset.mapper.ProductListMapper;
 import com.fixedasset.mapper.ProductLocationMapper;
+import com.fixedasset.service.ActionRecordService;
 import com.fixedasset.service.DepartmentService;
 import com.fixedasset.service.InvRecordService;
 import com.fixedasset.service.LocationService;
@@ -42,9 +43,7 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
 
     @Resource private ProductListMapper productListMapper;
 
-    @Resource private ActionRecordMapper actionRecordMapper;
-
-    @Resource private ActionRecord actionRecord;
+    @Resource private ActionRecordService actionRecordService;
 
     @Resource private ProductList productList;
 
@@ -186,13 +185,13 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
                         productList.setStatu(1);
                         productListMapper.insert(productList);
 
-                        actionRecord.setActionName("Create");
-                        actionRecord.setActionMethod("POST");
-                        actionRecord.setActionFrom("Product List from Import");
-                        actionRecord.setActionData(productList.toString());
-                        actionRecord.setActionSuccess("Success");
-                        actionRecord.setCreated(LocalDateTime.now());
-                        createdAction(actionRecord);
+                        actionRecordService.createdAction(
+                            "Create", 
+                            "POST", 
+                            "Product List", 
+                            productList.getProductCode() + " " + productList.getProductName(), 
+                            "Success"
+                        );
                     } else {
                         productList.setId(checkProduct.getId());
                         productList.setUpdated(LocalDateTime.now());
@@ -340,14 +339,22 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
                 }
             }
 
-            actionRecord.setActionName("Create");
-            actionRecord.setActionMethod("POST");
-            actionRecord.setActionFrom("Product List");
-            actionRecord.setActionData(productList.toString());
-            actionRecord.setActionSuccess("Success");
-            actionRecord.setCreated(LocalDateTime.now());
-        //   createdAction(actionRecord);
+            actionRecordService.createdAction(
+                    "Create", 
+                    "POST", 
+                    "Product List", 
+                    productList.getProductCode() + " " + productList.getProductName(), 
+                    "Success"
+            );
+
         } else {
+            actionRecordService.createdAction(
+                "Create", 
+                "POST", 
+                "Product List", 
+                productList.getProductCode() + " " + productList.getProductName(), 
+                "Failure"
+            );
             throw new RuntimeException("Exist in records!");
         } 
     }
@@ -363,14 +370,22 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
             productList.setStatu(0);
             productListMapper.updateById(productList);
 
-            actionRecord.setActionName("Remove");
-            actionRecord.setActionMethod("DELETE");
-            actionRecord.setActionFrom("Product List");
-            actionRecord.setActionData(productList.toString());
-            actionRecord.setActionSuccess("Success");
-            actionRecord.setCreated(LocalDateTime.now());
-            createdAction(actionRecord);
+            actionRecordService.createdAction(
+                "Remove", 
+                "DELETE", 
+                "Product List", 
+                productList.getProductCode() + " " + productList.getProductName(), 
+                "Success"
+            );
         } else {
+            actionRecordService.createdAction(
+                "Remove", 
+                "DELETE", 
+                "Product List", 
+                productList.getProductCode() + " " + productList.getProductName(), 
+                "Failure"
+            );
+
             throw new RuntimeException("No active data in records!");
         }
     }
@@ -394,14 +409,23 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
                 }
             } 
 
-            actionRecord.setActionName("Update");
-            actionRecord.setActionMethod("POST");
-            actionRecord.setActionFrom("Product List");
-            actionRecord.setActionData(productList.toString());
-            actionRecord.setActionSuccess("Success");
-            actionRecord.setCreated(LocalDateTime.now());
-            //  createdAction(actionRecord);
+            actionRecordService.createdAction(
+                "Update", 
+                "POST", 
+                "Product List", 
+                productList.getProductCode() + " " + productList.getProductName(), 
+                "Success"
+            );
         } else {
+
+            actionRecordService.createdAction(
+                "Update", 
+                "POST", 
+                "Product List", 
+                productList.getProductCode() + " " + productList.getProductName(), 
+                "Failure"
+            );
+
             throw new RuntimeException("No active data in records!");
         }
     }
@@ -433,10 +457,6 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
 
     public List<ProductListDto> listAll(LambdaQueryWrapper<ProductList> queryWrapper) {
         return productListMapper.listAll(queryWrapper);
-    }
-
-    public int createdAction(ActionRecord actionRecord) {
-        return actionRecordMapper.insert(actionRecord);
     }
 
     public String getNewCode() {
