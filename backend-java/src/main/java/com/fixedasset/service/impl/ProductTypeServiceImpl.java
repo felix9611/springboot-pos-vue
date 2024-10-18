@@ -8,6 +8,7 @@ import com.fixedasset.entity.Department;
 import com.fixedasset.entity.ProductType;
 import com.fixedasset.mapper.ActionRecordMapper;
 import com.fixedasset.mapper.ProductTypeMapper;
+import com.fixedasset.service.ActionRecordService;
 import com.fixedasset.service.ProductTypeService;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +21,7 @@ public class ProductTypeServiceImpl extends ServiceImpl<ProductTypeMapper, Produ
 
     @Resource private ProductTypeMapper productTypeMapper;
 
-    @Resource private ActionRecordMapper actionRecordMapper;
-
-    @Resource private ActionRecord actionRecord;
+    @Resource private ActionRecordService actionRecordService;
 
     @Resource private  ProductType productType;
 
@@ -36,14 +35,21 @@ public class ProductTypeServiceImpl extends ServiceImpl<ProductTypeMapper, Produ
             productType.setCreated(LocalDateTime.now());
             productTypeMapper.insert(productType);
 
-            actionRecord.setActionName("Create");
-            actionRecord.setActionMethod("POST");
-            actionRecord.setActionFrom("Product Type");
-            actionRecord.setActionData(productType.toString());
-            actionRecord.setActionSuccess("Success");
-            actionRecord.setCreated(LocalDateTime.now());
-            createdAction(actionRecord);
+            actionRecordService.createdAction(
+                "Create", 
+                "POST", 
+                "Product Type", 
+                productType.toString(), 
+                "Success"
+            );
         } else {
+            actionRecordService.createdAction(
+                "Create", 
+                "POST", 
+                "Product Type", 
+                productType.toString(), 
+                "Failure"
+            );
             throw new RuntimeException("Exist in records!");
         }
     }
@@ -64,14 +70,21 @@ public class ProductTypeServiceImpl extends ServiceImpl<ProductTypeMapper, Produ
             productType.setStatu(0);
             productTypeMapper.updateById(productType);
 
-            actionRecord.setActionName("Remove");
-            actionRecord.setActionMethod("DELETE");
-            actionRecord.setActionFrom("Product Type");
-            actionRecord.setActionData(productType.toString());
-            actionRecord.setActionSuccess("Success");
-            actionRecord.setCreated(LocalDateTime.now());
-            createdAction(actionRecord);
+            actionRecordService.createdAction(
+                "Remove", 
+                "DELETE", 
+                "Product Type", 
+                productType.toString(), 
+                "Success"
+            );
         } else {
+            actionRecordService.createdAction(
+                "Remove", 
+                "DELETE", 
+                "Product Type", 
+                productType.toString(), 
+                "Failure"
+            );
             throw new RuntimeException("No active data in records!");
         }
     }
@@ -84,15 +97,22 @@ public class ProductTypeServiceImpl extends ServiceImpl<ProductTypeMapper, Produ
         if (check != null) {
             productType.setUpdated(LocalDateTime.now());
             productTypeMapper.updateById(productType);
-    
-            actionRecord.setActionName("Update");
-            actionRecord.setActionMethod("POST");
-            actionRecord.setActionFrom("Product Type");
-            actionRecord.setActionData(productType.toString());
-            actionRecord.setActionSuccess("Success");
-            actionRecord.setCreated(LocalDateTime.now());
-            createdAction(actionRecord);
+
+            actionRecordService.createdAction(
+                "Update", 
+                "POST", 
+                "Product Type", 
+                productType.toString(), 
+                "Success"
+            );
         } else {
+            actionRecordService.createdAction(
+                "Update", 
+                "POST", 
+                "Product Type", 
+                productType.toString(), 
+                "Failure"
+            );
             throw new RuntimeException("No active data in records!");
         }
     }
@@ -101,10 +121,6 @@ public class ProductTypeServiceImpl extends ServiceImpl<ProductTypeMapper, Produ
         LambdaQueryWrapper<ProductType> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(ProductType::getStatu, 1);
         return productTypeMapper.selectList(queryWrapper);
-    }
-
-    public int createdAction(ActionRecord actionRecord) {
-        return actionRecordMapper.insert(actionRecord);
     }
 
 }
