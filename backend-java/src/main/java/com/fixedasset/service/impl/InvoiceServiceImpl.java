@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fixedasset.dto.InvoiceItemListDto;
 import com.fixedasset.dto.InvoiceListDto;
-import com.fixedasset.dto.ProductLocationChangeDto;
 import com.fixedasset.dto.charts.InvoiceSalesDataResult;
 import com.fixedasset.dto.charts.QueryCountShop;
 import com.fixedasset.dto.charts.QueryCountYearWeek;
@@ -18,18 +17,14 @@ import com.fixedasset.entity.InvRecord;
 import com.fixedasset.entity.Invoice;
 import com.fixedasset.entity.InvoiceItem;
 import com.fixedasset.entity.Payment;
-import com.fixedasset.entity.ProductList;
 import com.fixedasset.entity.ProductLocation;
-import com.fixedasset.mapper.InvoiceItemMapper;
 import com.fixedasset.mapper.InvoiceMapper;
 import com.fixedasset.service.InvRecordService;
 import com.fixedasset.service.InvoiceItemService;
 import com.fixedasset.service.InvoiceService;
 import com.fixedasset.service.PaymentService;
-import com.fixedasset.service.ProductListService;
 import com.fixedasset.service.ProductLocationService;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

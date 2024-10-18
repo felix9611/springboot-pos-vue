@@ -9,6 +9,7 @@ import com.fixedasset.entity.MemberClass;
 import com.fixedasset.mapper.ActionRecordMapper;
 import com.fixedasset.mapper.MemberClassMapper;
 import com.fixedasset.mapper.MemberMapper;
+import com.fixedasset.service.ActionRecordService;
 import com.fixedasset.service.MemberClassService;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +19,12 @@ import java.util.List;
 
 @Service
 public class MemberClassServiceImpl extends ServiceImpl<MemberClassMapper, MemberClass> implements MemberClassService {
-    @Resource private MemberClassMapper memberClassMapper;
 
-    @Resource private ActionRecordMapper actionRecordMapper;
+    @Resource private MemberClassMapper memberClassMapper;
 
     @Resource private MemberClass memberClass;
 
-    @Resource private ActionRecord actionRecord;
+    @Resource private ActionRecordService actionRecordService;
 
     public List<MemberClass> getAll() {
         LambdaQueryWrapper<MemberClass> queryWrapper = Wrappers.lambdaQuery();
@@ -33,49 +33,98 @@ public class MemberClassServiceImpl extends ServiceImpl<MemberClassMapper, Membe
     }
 
     public void saveData(MemberClass memberClass){
-        memberClass.setCreatedAt(LocalDateTime.now());
-        memberClass.setStatus(1);
-        memberClassMapper.insert(memberClass);
+        LambdaQueryWrapper<MemberClass> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(MemberClass::getName, memberClass.getName());
+        queryWrapper.eq(MemberClass::getStatus, 1);
 
-        actionRecord.setActionName("Create");
-        actionRecord.setActionMethod("POST");
-        actionRecord.setActionFrom("Member Class Manger");
-        actionRecord.setActionData(memberClass.toString());
-        actionRecord.setActionSuccess("Success");
-        actionRecord.setCreated(LocalDateTime.now());
-        createdAction(actionRecord);
+        MemberClass checkOne = memberClassMapper.selectOne(queryWrapper);
+
+        if (checkOne == null)  {
+            memberClass.setCreatedAt(LocalDateTime.now());
+            memberClass.setStatus(1);
+            memberClassMapper.insert(memberClass);
+            actionRecordService.createdAction(
+                "Save", 
+                "POST", 
+                "Member Class Manger", 
+                memberClass.toString(), 
+                "Success"
+            );
+        } else {
+
+            actionRecordService.createdAction(
+                "Save", 
+                "POST", 
+                "Member Class Manger", 
+                memberClass.toString(), 
+                "Failure"
+            );
+            
+            throw new RuntimeException("Exist in records! Please check again!");
+        }
+        
     }
 
     public void update(MemberClass memberClass){
-        memberClass.setUpdatedAt(LocalDateTime.now());
-        memberClassMapper.updateById(memberClass);
+        
+        LambdaQueryWrapper<MemberClass> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(MemberClass::getName, memberClass.getName());
+        queryWrapper.eq(MemberClass::getId, mapperClass.getName());
+        queryWrapper.eq(MemberClass::getStatus, 1);
 
-        actionRecord.setActionName("Update");
-        actionRecord.setActionMethod("POST");
-        actionRecord.setActionFrom("Member Class Manger");
-        actionRecord.setActionData(memberClass.toString());
-        actionRecord.setActionSuccess("Success");
-        actionRecord.setCreated(LocalDateTime.now());
-        createdAction(actionRecord);
+        MemberClass checkOne = memberClassMapper.selectOne(queryWrapper);
+
+        if (checkOne != null)  {
+            memberClass.setUpdatedAt(LocalDateTime.now());
+            memberClassMapper.updateById(memberClass);
+            actionRecordService.createdAction(
+                "Update", 
+                "POST", 
+                "Member Class Manger", 
+                memberClass.toString(), 
+                "Success"
+            );
+        } else {
+            actionRecordService.createdAction(
+                "Update", 
+                "POST", 
+                "Member Class Manger", 
+                memberClass.toString(), 
+                "Failure"
+            );
+            throw new RuntimeException("No active data in records!");
+        }
     }
 
     public void voidClass(Long id) {
-        memberClass.setId(id);
-        memberClass.setStatus(0);
+        LambdaQueryWrapper<MemberClass> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(MemberClass::getId, id);
+        queryWrapper.eq(MemberClass::getStatus, 1);
 
-        actionRecord.setActionName("Remove");
-        actionRecord.setActionMethod("DELETE");
-        actionRecord.setActionFrom("Member Class Manger");
-        actionRecord.setActionData(memberClass.toString());
-        actionRecord.setActionSuccess("Success");
-        actionRecord.setCreated(LocalDateTime.now());
-        createdAction(actionRecord);
+        MemberClass checkOne = memberClassMapper.selectOne(queryWrapper);
 
-        memberClassMapper.updateById(memberClass);
+        if (checkOne.getId().equals(id)) {
+            memberClass.setId(id);
+            memberClass.setStatus(0);
+            memberClassMapper.updateById(memberClass);
+
+            actionRecordService.createdAction(
+                "Remove", 
+                "DELETE", 
+                "Member Class Manger", 
+                memberClass.toString(), 
+                "Success"
+            );
+        } else {
+            actionRecordService.createdAction(
+                "Remove", 
+                "DELETE", 
+                "Member Class Manger", 
+                memberClass.toString(), 
+                "Failure"
+            );
+            throw new RuntimeException("No active data in records!");
+        }
     }
 
-
-    public int createdAction(ActionRecord actionRecord) {
-        return actionRecordMapper.insert(actionRecord);
-    }
 }
