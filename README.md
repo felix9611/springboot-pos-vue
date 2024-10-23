@@ -48,7 +48,7 @@ Example Image<br />
 
 How to run this project<br />
 ------------
-Backend using port 8350<br />
+Backend using port 8550<br />
 Frontend using port 8080<br />
 
 Backend<br />
