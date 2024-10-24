@@ -30,6 +30,7 @@ Core:<br />
 ・Vue 2.6.10<br />
 ・moment 2.29.1<br />
 ・MySQL v8.0<br />
+・Spring-Doc Open API  UI 1.6.15<br />
 <br />
 Component:<br />
 ------------
