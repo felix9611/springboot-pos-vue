@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -33,6 +34,7 @@ public class ActionRecord {
 
     @Schema(description = "Action Date Stamp")
     @TableField("action_data")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private String actionData;
 
     @Schema(description = "Action Status")
