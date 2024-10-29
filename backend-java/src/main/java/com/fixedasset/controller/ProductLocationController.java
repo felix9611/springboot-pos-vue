@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Tag(name = "Product Location")
 @RestController
@@ -94,4 +97,10 @@ public class ProductLocationController extends BaseController{
         return Result.succ(productLocationService.listAll(queryWrapper));
     }
 
+    @Operation(summary = "Query in stock list")
+    @GetMapping("/queryInStockQtys")
+    public Result queryInStockQtys() {
+        return Result.succ(productLocationService.queryInStockQtys());
+    }
+    
 }

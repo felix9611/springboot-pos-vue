@@ -26,6 +26,8 @@ import VueHtmlToPaper from 'vue-html-to-paper'
 
 import './index.css'
 
+import Plotly from 'plotly.js-dist-min'
+
 Vue.use(VueHtmlToPaper)
 Vue.prototype.$htmlToPaper = VueHtmlToPaper
 
@@ -36,6 +38,7 @@ Vue.config.productionTip = false
 Vue.use(VJsoneditor)
 Vue.use(VueI18n)
 Vue.use(ElementUI, { locale })
+Vue.use(Plotly)
 
 Vue.prototype.$axios = Axios
 

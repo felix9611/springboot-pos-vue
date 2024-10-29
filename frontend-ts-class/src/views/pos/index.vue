@@ -3,7 +3,7 @@
     <div class="grid lg:grid-cols-2 gap-3">
       <div> <!-- barcode scan or type-->
         <el-form :inline="true">
-          <el-form-item label="Place" prop="place" label-width="120px" v-if="userPlaceId === 0">
+          <el-form-item label="Place" prop="place" label-width="120px">
             <el-select v-model="placeId" placeholder="Select" filterable>
               <el-option
                 v-for="placeItems in placeList"
