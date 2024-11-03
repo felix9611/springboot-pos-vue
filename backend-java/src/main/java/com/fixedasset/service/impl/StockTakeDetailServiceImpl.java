@@ -1,7 +1,6 @@
 package com.fixedasset.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fixedasset.dto.StockTakeItemListDto;
@@ -9,7 +8,6 @@ import com.fixedasset.entity.StockTakeDetail;
 import com.fixedasset.mapper.StockTakeDetailMapper;
 import com.fixedasset.service.StockTakeDetailService;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
