@@ -80,7 +80,7 @@
       :data="detailForm.invoiceItems"
       tooltip-effect="dark"
       id="tab1">
-      <el-table-column 
+        <el-table-column 
           label="Product Code" 
           prop="productCode">
         </el-table-column>
@@ -121,6 +121,9 @@
       <el-button @click="refundFormOpen()">Refund</el-button>
     </div>
     <div v-if="detailForm.voidNum === 2" class="p-2">
+      <br>
+        <h2 class="px-6">Refund</h2>
+      <br>
       <el-form :model="refundForm" :disabled="true" class="grid lg:grid-cols-4 gap-3">
         <el-form-item label="Case No."  label-width="120px" class="lg:col-span-2">
           <el-input v-model="detailForm.caseNo" autocomplete="off"></el-input>
@@ -148,6 +151,31 @@
             <el-input v-model="detailForm.refundMethod" autocomplete="off"></el-input>
         </el-form-item>
         
+
+        <el-table
+          class="px-5 lg:col-span-4"
+          ref="multipleTable"
+          :data="detailForm.refundInvoiceItems"
+          tooltip-effect="dark"
+          id="tab1">
+          <el-table-column 
+            label="Product Code" 
+            prop="productCode">
+          </el-table-column>
+          <el-table-column 
+            label="Product Name" 
+            prop="productName">
+          </el-table-column>
+          <el-table-column 
+            label="Refund Amount" 
+            prop="refundAmount">
+          </el-table-column>
+          <el-table-column 
+            label="Items Status" 
+            prop="itemsStatus">
+          </el-table-column>
+
+        </el-table>
       </el-form>
     </div>
 

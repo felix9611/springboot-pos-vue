@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fixedasset.dto.RefundInvoiceItemList;
 import com.fixedasset.entity.Invoice;
 import com.fixedasset.entity.RefundInvoice;
 import com.fixedasset.entity.RefundInvoiceItem;
@@ -50,7 +51,7 @@ public class RefundInvoiceServiceImpl extends ServiceImpl<RefundInvoiceMapper, R
         queryWrapperItem.eq(RefundInvoiceItem::getRefundInvoiceId, getOne.getId());
         queryWrapperItem.eq(RefundInvoiceItem::getStatus, 1);
 
-        List<RefundInvoiceItem> refundInvoiceItems = refundInvoiceItemMapper.selectList(queryWrapperItem);
+        List<RefundInvoiceItemList> refundInvoiceItems = refundInvoiceItemMapper.listData(queryWrapperItem);
         getOne.setRefundInvoiceItems(refundInvoiceItems);
 
         return getOne;

@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fixedasset.dto.RefundInvoiceItemList;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -83,7 +84,7 @@ public class RefundInvoice {
 
     @Schema(description = "Only apply for response only, invoice items for return")
     @TableField(exist = false)
-    private List<RefundInvoiceItem> refundInvoiceItems;
+    private List<RefundInvoiceItemList> refundInvoiceItems;
 
     @Schema(description = "Only apply for request only, invoice items for return")
     @TableField(exist = false)
