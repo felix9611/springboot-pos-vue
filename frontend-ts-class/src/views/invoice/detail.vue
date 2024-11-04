@@ -185,11 +185,28 @@
       :visible.sync="refundDialog"
       width="1200px"
       :before-close="handleCloseDialog">
-        <el-form :model="refundForm" class="grid lg:grid-cols-2 gap-3">
+        <el-form :model="refundForm" class="grid lg:grid-cols-4 gap-3">
+          <el-form-item label="Refund"  label-width="120px" class="lg:col-span-1">
+            <el-checkbox v-model="detailForm.refund"></el-checkbox>
+          </el-form-item>
+          <el-form-item label="Items Return"  label-width="120px" class="lg:col-span-1">
+            <el-checkbox v-model="detailForm.itemsReturn"></el-checkbox>
+          </el-form-item>
+          <el-form-item label="Return Date"  label-width="120px" class="lg:col-span-1">
+            <el-date-picker
+              v-model="detailForm.returnDate"
+              type="datetime"
+              placeholder="Select date and time">
+            </el-date-picker>
+          </el-form-item>
+          
           <el-form-item label="Return Reason"  label-width="120px" class="lg:col-span-full">
             <el-input v-model="refundForm.returnReason" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="Refund Amount"  label-width="120px" class="lg:col-span-1">
+          <el-form-item label="Return Code"  label-width="120px" class="lg:col-span-1">
+            <el-input v-model="detailForm.returnCode"></el-input>
+          </el-form-item>
+          <el-form-item label="Refund Amount"  label-width="120px" class="lg:col-span-2">
             <el-input v-model="refundForm.refundAmount" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="Refund Method"  label-width="120px" class="lg:col-span-1">
