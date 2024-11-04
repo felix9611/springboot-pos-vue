@@ -117,6 +117,84 @@
           prop="taxAmount">
         </el-table-column>
     </el-table>
+    <div slot="footer" class="dialog-footer p-4" v-if="detailForm.voidNum === 0">
+      <el-button @click="refundFormOpen()">Refund</el-button>
+    </div>
+    <div v-if="detailForm.voidNum === 2" class="p-2">
+      <el-form :model="refundForm" :disabled="true" class="grid lg:grid-cols-2 gap-3">
+        <el-form-item label="Return Reason"  label-width="120px" class="lg:col-span-1">
+          <el-input v-model="refundForm.returnReason" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <el-dialog
+      class="rounded-lg"
+      title="Refund"
+      :visible.sync="refundDialog"
+      width="1200px"
+      :before-close="handleCloseDialog">
+        <el-form :model="refundForm" class="grid lg:grid-cols-2 gap-3">
+          <el-form-item label="Return Reason"  label-width="120px" class="lg:col-span-full">
+            <el-input v-model="refundForm.returnReason" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="Refund Amount"  label-width="120px" class="lg:col-span-1">
+            <el-input v-model="refundForm.refundAmount" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="Refund Method"  label-width="120px" class="lg:col-span-1">
+            <el-input v-model="refundForm.refundMethod" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-table
+            class="lg:col-span-full"
+            ref="multipleTable"
+            :data="refundForm.invoiceItems"
+            tooltip-effect="dark"
+            id="tab1">
+            <el-table-column 
+              label="Product Code" 
+              prop="productCode">
+            </el-table-column>
+            <el-table-column 
+              label="Product Name" 
+              prop="productName">
+            </el-table-column>
+            <el-table-column 
+              label="Price" 
+              prop="price">
+            </el-table-column>
+            <el-table-column 
+              label="Refund Item" 
+              prop="refundItem">
+              <template slot-scope="scope">
+                <el-form-item>
+                  <el-checkbox v-model="scope.row.refundItem"></el-checkbox>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <el-table-column 
+              label="Refund Amount" 
+              prop="refundAmount">
+              <template slot-scope="scope">
+                <el-form-item>
+                  <el-input v-model="scope.row.refundAmount" autocomplete="off"></el-input>
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <el-table-column 
+              label="Items Status" 
+              prop="itemsStatus">
+              <template slot-scope="scope">
+                <el-form-item>
+                  <el-input v-model="scope.row.itemsStatus" autocomplete="off"></el-input>
+                </el-form-item>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="refundProcess()"> Refund </el-button>
+        </div>
+    </el-dialog>
   </div>
 </template>
 <script lang="ts">
@@ -137,6 +215,11 @@ export default class InoviceDetail extends Vue {
   itemPay: any = []
   items: any = []
 
+  refundForm: any = {}
+  refundDialog: boolean = false
+
+  handleCloseDialog: boolean = false
+
   created() {
     this.getDetail()
   }
@@ -149,6 +232,17 @@ export default class InoviceDetail extends Vue {
         this.detailForm.voidAt = this.detailForm.voidAt ? moment(new Date(this.detailForm.voidAt)).format('DD-MM-YYYY HH:MM') : null
       }
     )
+
+    if (this.detailForm.voidNum === 2) {
+      axios.get(`/invoice/refund/${this.detailForm.id}`).then(
+        (res: any) => {
+          this.detailForm = {
+            ...this.detailForm,
+            ...res.data.data
+          }
+        }
+      )
+    }
   }
 
   back() {
@@ -196,6 +290,47 @@ export default class InoviceDetail extends Vue {
    // refs.myiframe.contentWindow.document = doc.output('datauri')
 
    //  document.getElementById('main-iframe').setAttribute('src', doc.output('bloburl'));
+  }
+
+  refundFormOpen() {
+    this.refundDialog = true
+    this.refundForm.invoiceItems = this.detailForm.invoiceItems
+  }
+
+  async refundProcess() {
+    
+    const newRefundInvoiceItems = this.refundForm.invoiceItems.map((item: any) => {
+      if (item.refundItem) {
+        return {
+          productId: item.productId,
+          refundAmount: Number(item.refundAmount),
+          itemsStatus: item.itemsStatus
+        }
+      }
+    })
+
+    const refundSubmit = {
+      invoiceId: this.detailForm.id,
+      itemsReturn: this.refundForm.itemsReturn,
+      returnDate: this.refundForm.returnDate,
+      returnCode: this.refundForm.returnCode,
+      returnReason: this.refundForm.returnReason,
+      refund: this.refundForm.refund,
+      refundAmount: this.refundForm.refundAmount,
+      refundMethod: this.refundForm.refundMethod,
+      newRefundInvoiceItems
+    }
+
+    await axios.post('/invoice/refund/create', refundSubmit).then((res: any) => {
+      this.$notify({
+        title: '',
+        showClose: true,
+        message: 'This invoice has been refunded',
+        type: 'success',
+      })
+      this.refundDialog = false
+      this.getDetail()
+    })
   }
 }
 </script>

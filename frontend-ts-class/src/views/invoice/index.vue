@@ -71,6 +71,7 @@
           <template slot-scope="scope">
             <el-tag size="small" v-if="scope.row.voidNum === 0" type="success">Active</el-tag>
             <el-tag size="small" v-if="scope.row.voidNum === 1" type="success">Void</el-tag>
+            <el-tag size="small" v-if="scope.row.voidNum === 2" type="success">Have Refund</el-tag>
           </template>
         </el-table-column>
         <el-table-column

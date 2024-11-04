@@ -67,7 +67,7 @@ public class RefundInvoiceServiceImpl extends ServiceImpl<RefundInvoiceMapper, R
         if (checkOne == null) { 
             LambdaQueryWrapper<Invoice> queryWrapperInvoice = Wrappers.lambdaQuery();
             queryWrapperInvoice.eq(Invoice::getId, newData.getInvoiceId());
-            queryWrapperInvoice.eq(Invoice::getVoidNum, 1).or().eq(Invoice::getVoidNum, 2);
+            queryWrapperInvoice.eq(Invoice::getVoidNum, 1);
 
             Invoice checkInvoice = invoiceService.getOne(queryWrapperInvoice);
 
@@ -112,7 +112,7 @@ public class RefundInvoiceServiceImpl extends ServiceImpl<RefundInvoiceMapper, R
 
             } else {              
 
-                throw new RuntimeException("Cannot refund again!");
+                throw new RuntimeException("Cannot refund!");
             }
 
         } else {
