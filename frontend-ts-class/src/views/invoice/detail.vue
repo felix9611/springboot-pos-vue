@@ -121,10 +121,33 @@
       <el-button @click="refundFormOpen()">Refund</el-button>
     </div>
     <div v-if="detailForm.voidNum === 2" class="p-2">
-      <el-form :model="refundForm" :disabled="true" class="grid lg:grid-cols-2 gap-3">
-        <el-form-item label="Return Reason"  label-width="120px" class="lg:col-span-1">
-          <el-input v-model="refundForm.returnReason" autocomplete="off"></el-input>
+      <el-form :model="refundForm" :disabled="true" class="grid lg:grid-cols-4 gap-3">
+        <el-form-item label="Case No."  label-width="120px" class="lg:col-span-2">
+          <el-input v-model="detailForm.caseNo" autocomplete="off"></el-input>
         </el-form-item>
+        <el-form-item label="Refund"  label-width="120px" class="lg:col-span-1">
+          <el-checkbox v-model="detailForm.refund"></el-checkbox>
+        </el-form-item>
+        <el-form-item label="Items Return"  label-width="120px" class="lg:col-span-1">
+          <el-checkbox v-model="detailForm.itemsReturn"></el-checkbox>
+        </el-form-item>
+        <el-form-item label="Return Date"  label-width="120px" class="lg:col-span-2">
+          <el-input v-model="detailForm.returnDate"></el-input>
+        </el-form-item>
+        <el-form-item label="Return Code"  label-width="120px" class="lg:col-span-2">
+          <el-input v-model="detailForm.returnCode"></el-input>
+        </el-form-item>
+        <el-form-item label="Return Reason"  label-width="120px" class="lg:col-span-2">
+          <el-input v-model="detailForm.returnReason" autocomplete="off"></el-input>
+        </el-form-item>
+        
+        <el-form-item label="Refund Amount"  label-width="120px" class="lg:col-span-1">
+          <el-input v-model="detailForm.refundAmount" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="Refund Method"  label-width="120px" class="lg:col-span-1">
+            <el-input v-model="detailForm.refundMethod" autocomplete="off"></el-input>
+        </el-form-item>
+        
       </el-form>
     </div>
 
@@ -230,19 +253,21 @@ export default class InoviceDetail extends Vue {
         this.detailForm = res.data.data
         this.detailForm.createdAt = moment(new Date(this.detailForm.createdAt)).format('DD-MM-YYYY HH:MM')
         this.detailForm.voidAt = this.detailForm.voidAt ? moment(new Date(this.detailForm.voidAt)).format('DD-MM-YYYY HH:MM') : null
+
+        if (this.detailForm.voidNum === 2) {
+          axios.get(`/invoice/refund/${this.detailForm.id}`).then(
+            (res: any) => {
+              this.detailForm = {
+                ...this.detailForm,
+                ...res.data.data
+              }
+            }
+          )
+        }
       }
     )
 
-    if (this.detailForm.voidNum === 2) {
-      axios.get(`/invoice/refund/${this.detailForm.id}`).then(
-        (res: any) => {
-          this.detailForm = {
-            ...this.detailForm,
-            ...res.data.data
-          }
-        }
-      )
-    }
+    
   }
 
   back() {

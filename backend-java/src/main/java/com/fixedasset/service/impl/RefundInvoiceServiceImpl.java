@@ -2,6 +2,7 @@ package com.fixedasset.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.annotation.Resource;
 
@@ -77,7 +78,7 @@ public class RefundInvoiceServiceImpl extends ServiceImpl<RefundInvoiceMapper, R
                 invoice.setVoidNum(2);
                 invoiceService.updateById(invoice);
 
-
+                newData.setCaseNo(getNewCode());
                 newData.setCreatedAt(LocalDateTime.now());
                 newData.setStatus(1);
 
@@ -216,5 +217,36 @@ public class RefundInvoiceServiceImpl extends ServiceImpl<RefundInvoiceMapper, R
 
             throw new RuntimeException("Cannot refund again!");
         }
+    }
+
+    public String getNewCode() {
+        LambdaQueryWrapper<RefundInvoice> lambdaQueryWrapper = Wrappers.lambdaQuery();
+
+        List<Object> codes = refundInvoiceMapper.selectObjs(lambdaQueryWrapper);
+        AtomicReference<Integer> maxCodes = new AtomicReference<>(0);
+
+        codes.forEach(o -> {
+            String code = String.valueOf(o);
+            if (code.length() >= 6) {
+                Integer one = Integer.parseInt(code.substring(code.length() - 5));
+                if (one > maxCodes.get()) {
+                    maxCodes.set(one);
+                }
+            }
+
+        });
+        return padRight(maxCodes.get() + 1, 6, "0");
+    }
+
+    public static String padRight(int oriStr, int len, String alexi) {
+        StringBuilder str = new StringBuilder();
+        int strlen = String.valueOf(oriStr).length();
+        if (strlen < len) {
+            for (int i = 0; i < len - strlen; i++) {
+                str.append(alexi);
+            }
+        }
+        str.append(oriStr);
+        return str.toString();
     }
 }
