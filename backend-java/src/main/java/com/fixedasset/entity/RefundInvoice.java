@@ -36,6 +36,7 @@ public class RefundInvoice {
     @TableField("items_return")
     private int itemsReturn;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @Schema(description = "Item return datetime")
     @TableField("return_date")
     private LocalDateTime returnDate;
