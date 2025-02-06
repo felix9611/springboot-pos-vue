@@ -19,6 +19,8 @@
 <!-- Add example images here if available -->
 <img src="https://github.com/felix9611/springboot-fixedasset-vue-2/blob/main/image/fixedasset-1.png" alt="Example Image 1">
 <img src="https://github.com/felix9611/springboot-fixedasset-vue-2/blob/main/image/fixedasset-2.png" alt="Example Image 2">
+<img src="https://github.com/felix9611/springboot-fixedasset-vue-2/blob/main/image/fixedasset-3.png" alt="Example Image 3">
+<img src="https://github.com/felix9611/springboot-fixedasset-vue-2/blob/main/image/fixedasset-4.png" alt="Example Image 4">
 
 <h2>🚀 Key Features</h2>
 <ul>
