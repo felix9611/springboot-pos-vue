@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fixedasset.common.lang.Result;
 import com.fixedasset.dto.InvoiceListDto;
+import com.fixedasset.entity.InvRecord;
 import com.fixedasset.entity.Invoice;
 import com.fixedasset.entity.InvoiceItem;
 import com.fixedasset.service.InvoiceItemService;
@@ -78,8 +79,12 @@ public class InvoiceController extends  BaseController{
             queryWrapper.eq(Invoice::getLocationId, invoice.getLocationId());
         }
 
-        if (!(invoice.getNumber() == null)) {
+        if (StringUtils.isNotBlank(invoice.getNumber())) {
             queryWrapper.like(Invoice::getNumber, invoice.getNumber());
+        }
+
+        if (!(invoice.getCreatedAtStart()==null) && !(invoice.getCreatedAtEnd()==null)) {
+            queryWrapper.between(Invoice::getCreatedAt, invoice.getCreatedAtStart(), invoice.getCreatedAtEnd());
         }
 
         Page<InvoiceListDto> iPage = invoiceService.listAll(page, queryWrapper);
@@ -87,7 +92,7 @@ public class InvoiceController extends  BaseController{
     }
 
     // Charts
-    @Operation(summary = "Count by per shhop / location")
+    @Operation(summary = "Count by per shop / location")
     @GetMapping("/queryCountShop")
     public Result queryCountShop() {
         return Result.succ(invoiceService.queryCountShop());

@@ -1,12 +1,14 @@
 package com.fixedasset.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fixedasset.common.lang.Result;
 import com.fixedasset.entity.MemberClass;
 import com.fixedasset.service.MemberClassService;
 
+import freemarker.template.utility.StringUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -59,6 +61,10 @@ public class MemberClassController {
     public Result listAll(@RequestBody MemberClass memberClass) {
         Page page = new Page(memberClass.getPage(), memberClass.getLimit());
         LambdaQueryWrapper<MemberClass> queryWrapper = Wrappers.lambdaQuery();
+
+        if (StringUtils.isNotBlank(memberClass.getSearch())) {
+            queryWrapper.like(MemberClass::getName, memberClass.getSearch());
+        }
 
         queryWrapper.eq(MemberClass::getStatus, 1);
         Page<MemberClass> iPage = memberClassService.page(page, queryWrapper);

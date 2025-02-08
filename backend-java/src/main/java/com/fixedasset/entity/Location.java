@@ -21,7 +21,7 @@ public class Location extends BaseEntity {
     @TableField("place_other_name")
     private String placeOtherName;
 
-    @Schema(description = "The location country code")
+    @Schema(description = "The location country")
     @TableField("country")
     private String country;
 
@@ -32,6 +32,18 @@ public class Location extends BaseEntity {
     @Schema(description = "The location zip code")
     @TableField("zip_code")
     private String zipCode;
+
+    @Schema(description = "The location address")
+    @TableField("email")
+    private String email;
+
+    @Schema(description = "The location phone number")
+    @TableField("phone")
+    private String phone;
+
+    @Schema(description = "The location zip code")
+    @TableField("fax")
+    private String fax;
 
     @Schema(description = "The remark")
     @TableField("remark")
@@ -44,4 +56,8 @@ public class Location extends BaseEntity {
     @Schema(description = "Only apply for paging in list api")
     @TableField(exist = false)
     private int limit = 10;
+
+    @Schema(description = "The search")
+    @TableField(exist = false)
+    private String search;
 }
