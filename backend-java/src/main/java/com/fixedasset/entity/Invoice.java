@@ -100,4 +100,12 @@ public class Invoice {
     @TableField(exist = false)
     private List<Payment> newPaymentItems;
 
+    @Schema(description = "The start createdAt for search")
+    @TableField(exist = false)
+    private LocalDateTime createdAtStart;
+
+    @Schema(description = "The end createdAt for search")
+    @TableField(exist = false)
+    private LocalDateTime createdAtEnd;
+
 }
