@@ -1,6 +1,7 @@
 package com.fixedasset.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fixedasset.common.lang.Result;
@@ -9,9 +10,7 @@ import com.fixedasset.service.DepartmentService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -80,7 +79,7 @@ public class DepartmentController {
         Page page = new Page(department.getPage(), department.getLimit());
         LambdaQueryWrapper<Department> queryWrapper = Wrappers.lambdaQuery();
 
-        if(!StringUtils.isEmpty(department.getName())){
+        if(StringUtils.isNotBlank(department.getName())){
             queryWrapper.like(Department::getDeptCode, department.getName())
                         .or()
                         .like(Department::getDeptName, department.getName());
