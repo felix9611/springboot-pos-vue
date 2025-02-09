@@ -122,4 +122,6 @@
         ORDER BY sum(ii.qty) DESC
         LIMIT 10;
     </select>
+
+    
 </mapper>
