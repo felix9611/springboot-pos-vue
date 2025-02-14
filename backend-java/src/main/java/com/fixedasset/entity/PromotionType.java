@@ -1,5 +1,7 @@
 package com.fixedasset.entity;
 
+import org.springframework.stereotype.Component;
+
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 
@@ -8,7 +10,7 @@ import lombok.Data;
 
 @Data
 @TableName("promotion_type")
-
+@Component
 public class PromotionType extends BaseEntity {
 
     @Schema(description = "The promotion id")
