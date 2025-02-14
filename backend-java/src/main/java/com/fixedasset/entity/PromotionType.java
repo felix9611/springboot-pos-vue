@@ -8,6 +8,7 @@ import lombok.Data;
 
 @Data
 @TableName("promotion_type")
+
 public class PromotionType extends BaseEntity {
 
     @Schema(description = "The promotion id")

@@ -1,5 +1,7 @@
 package com.fixedasset.entity;
 
+import org.springframework.stereotype.Component;
+
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -7,6 +9,7 @@ import lombok.Data;
 
 @Data
 @TableName("promotion_location")
+@Component
 public class PromotionLocation extends BaseEntity {
 
     @Schema(description = "The promotion id")
