@@ -3,6 +3,8 @@ package com.fixedasset.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fixedasset.dto.InvoiceItemListDto;
@@ -13,6 +15,7 @@ import lombok.Data;
 
 @Data
 @TableName("promotion")
+@Component
 public class Promotion extends BaseEntity {
     @Schema(description = "The promotion name")
     @TableField("promotion_name")
