@@ -1,17 +1,19 @@
 package com.fixedasset.entity;
 
-import java.time.LocalDateTime;
-
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 
-import cn.hutool.core.date.DateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
 @TableName("promotion_type")
-public class PromotionDepartment extends BaseEntity {
+public class PromotionType extends BaseEntity {
+
+    @Schema(description = "The promotion id")
+    @TableField("promotion_id")
+    private int promotionId;
+
     @Schema(description = "The type id")
     @TableField("type_id")
     private int typeId;

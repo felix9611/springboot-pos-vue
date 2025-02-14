@@ -12,6 +12,11 @@ import lombok.Data;
 @Data
 @TableName("promotion_department")
 public class PromotionDepartment extends BaseEntity {
+
+    @Schema(description = "The promotion id")
+    @TableField("promotion_id")
+    private int promotionId;
+
     @Schema(description = "The place id")
     @TableField("dept_id")
     private int deptId;

@@ -1,9 +1,11 @@
 package com.fixedasset.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fixedasset.dto.InvoiceItemListDto;
 
 import cn.hutool.core.date.DateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -87,4 +89,30 @@ public class Promotion extends BaseEntity {
     @Schema(description = "Find by Name or code")
     @TableField(exist = false)
     private String name;
+
+    @Schema(description = "Only apply for response only, promotion department items")
+    @TableField(exist = false)
+    private List<PromotionDepartment> promotionDepartmentItems;
+
+    @Schema(description = "Only apply for request only,, promotion department items")
+    @TableField(exist = false)
+    private List<PromotionDepartment> newPromotionDepartmentItems;
+
+    @Schema(description = "Only apply for response only, promotion type items")
+    @TableField(exist = false)
+    private List<PromotionType> promotionTypeItems;
+
+    @Schema(description = "Only apply for request only,, promotion type items")
+    @TableField(exist = false)
+    private List<PromotionType> newPromotionTypeItems;
+
+    @Schema(description = "Only apply for response only, promotion Location items")
+    @TableField(exist = false)
+    private List<PromotionLocation> promotionLocationItems;
+
+    @Schema(description = "Only apply for request only,, promotion Location items")
+    @TableField(exist = false)
+    private List<PromotionLocation> newPromotionLocationItems;
 }   
+
+
