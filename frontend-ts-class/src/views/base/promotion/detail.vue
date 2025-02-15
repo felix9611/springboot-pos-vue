@@ -490,7 +490,18 @@ export default class PromotionDetail extends Vue {
     }
 
     promotionLocationItemsRowRemove(data: any, index: number) {
-        if (!data.id === null) {
+        if (data && data.id) {
+            axios.delete(
+                `/base/promotion/location/void/${data.id}`
+            ).then(res => {
+                this.$notify({
+                    title: 'Msg',
+                    showClose: true,
+                    message: 'Action is successful ',
+                    type: 'success',
+                })
+                this.editForm.promotionLocationItems.splice(index, 1)
+            })
             
         } else {
             this.editForm.promotionLocationItems.splice(index, 1)
@@ -498,8 +509,18 @@ export default class PromotionDetail extends Vue {
     }
 
     promotionDepartmentItemsRowRemove(data: any, index: number) {
-        if (!data.id === null) {
-            
+        if (data && data.id) {
+            axios.delete(
+                `/base/promotion/department/void/${data.id}`
+            ).then(res => {
+                this.$notify({
+                    title: 'Msg',
+                    showClose: true,
+                    message: 'Action is successful ',
+                    type: 'success',
+                })
+                this.editForm.promotionDepartmentItems.splice(index, 1)
+            })
         } else {
             this.editForm.promotionDepartmentItems.splice(index, 1)
         }
@@ -507,7 +528,17 @@ export default class PromotionDetail extends Vue {
 
     promotionTypeItemsRowRemove(data: any, index: number) {
         if (!data.id === null) {
-            
+            axios.delete(
+                `/base/promotion/type/void/${data.id}`
+            ).then(res => {
+                this.$notify({
+                    title: 'Msg',
+                    showClose: true,
+                    message: 'Action is successful ',
+                    type: 'success',
+                })
+                this.editForm.promotionTypeItems.splice(index, 1)
+            })
         } else {
             this.editForm.promotionTypeItems.splice(index, 1)
         }

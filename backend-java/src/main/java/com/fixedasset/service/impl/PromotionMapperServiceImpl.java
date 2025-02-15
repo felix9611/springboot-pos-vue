@@ -260,4 +260,125 @@ public class PromotionMapperServiceImpl extends ServiceImpl<PromotionMapper, Pro
             throw new RuntimeException("Exist in records! Please check again!");
         }
     }
+
+    public void removePromotionType(Long id) {
+        LambdaQueryWrapper<PromotionType> lambdaQueryWrapper = Wrappers.lambdaQuery();
+
+        lambdaQueryWrapper.eq(PromotionType::getId, id);
+        lambdaQueryWrapper.eq(PromotionType::getStatu, 1);
+
+        PromotionType data = promotionTypeMapper.selectOne(lambdaQueryWrapper);
+
+        if (data.getId() != null) {
+            PromotionType promotionType = new PromotionType();
+
+            promotionType.setId(id);
+            promotionType.setStatu(0);
+            promotionType.setUpdated(LocalDateTime.now());
+
+            promotionTypeMapper.updateById(promotionType);
+
+            actionRecordService.createdAction(
+                    "Remove", 
+                    "DELETE", 
+                    "Promotion Manager for Promotion Type",
+                    promotionType.toString(), 
+                    "Success"
+            );
+
+
+        } else {
+            actionRecordService.createdAction(
+                "Remove", 
+                "DELETE", 
+                "Promotion Manager for Promotion Type", 
+                id.toString(),
+                "Failure"
+            );
+
+            throw new RuntimeException("No in records! Please check again!");
+        }
+
+        
+    }
+
+    public void removePromotionDepartment(Long id) {
+        LambdaQueryWrapper<PromotionDepartment> lambdaQueryWrapper = Wrappers.lambdaQuery();
+
+        lambdaQueryWrapper.eq(PromotionDepartment::getId, id);
+        lambdaQueryWrapper.eq(PromotionDepartment::getStatu, 1);
+
+        PromotionDepartment data = promotionDepartmentMapper.selectOne(lambdaQueryWrapper);
+
+        if (data.getId() != null) {
+            PromotionDepartment promotionDepartment = new PromotionDepartment();
+
+            promotionDepartment.setId(id);
+            promotionDepartment.setStatu(0);
+            promotionDepartment.setUpdated(LocalDateTime.now());
+
+            promotionDepartmentMapper.updateById(promotionDepartment);
+
+            actionRecordService.createdAction(
+                    "Remove", 
+                    "DELETE", 
+                    "Promotion Manager for Promotion Department",
+                    promotionDepartment.toString(), 
+                    "Success"
+            );
+
+
+        } else {
+            actionRecordService.createdAction(
+                "Remove", 
+                "DELETE", 
+                "Promotion Manager for Promotion Department", 
+                id.toString(),
+                "Failure"
+            );
+
+            throw new RuntimeException("No in records! Please check again!");
+        }
+        
+    }
+
+    public void removePromotionLocation(Long id) {
+        LambdaQueryWrapper<PromotionLocation> lambdaQueryWrapper = Wrappers.lambdaQuery();
+
+        lambdaQueryWrapper.eq(PromotionLocation::getId, id);
+        lambdaQueryWrapper.eq(PromotionLocation::getStatu, 1);
+
+        PromotionLocation data = promotionLocationMapper.selectOne(lambdaQueryWrapper);
+
+        if (data.getId() != null) {
+            PromotionLocation promotionLocation = new PromotionLocation();
+
+            promotionLocation.setId(id);
+            promotionLocation.setStatu(0);
+            promotionLocation.setUpdated(LocalDateTime.now());
+
+            promotionLocationMapper.updateById(promotionLocation);
+
+            actionRecordService.createdAction(
+                    "Remove", 
+                    "DELETE", 
+                    "Promotion Manager for Promotion Location",
+                    promotionLocation.toString(), 
+                    "Success"
+            );
+
+
+        } else {
+            actionRecordService.createdAction(
+                "Remove", 
+                "DELETE", 
+                "Promotion Manager for Promotion Location", 
+                id.toString(),
+                "Failure"
+            );
+
+            throw new RuntimeException("No in records! Please check again!");
+        }
+        
+    }
 }

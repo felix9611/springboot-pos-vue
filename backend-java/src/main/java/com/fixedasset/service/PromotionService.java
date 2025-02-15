@@ -8,4 +8,7 @@ public interface PromotionService extends IService<Promotion>{
     void create(Promotion newData);
     void update(Promotion data);
     void voidData(Long id);
+    void removePromotionType(Long id);
+    void removePromotionDepartment(Long id);
+    void removePromotionLocation(Long id);
 }

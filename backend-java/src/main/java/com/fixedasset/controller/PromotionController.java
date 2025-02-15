@@ -33,8 +33,29 @@ public class PromotionController extends BaseController {
 
     @Operation(summary = "Void by id")
     @DeleteMapping("/void/{id}")
-    public Result voidOne(@PathVariable("id")Long id) {
+    public Result voidOne(@PathVariable("id") Long id) {
         promotionService.voidData(id);
+        return Result.succ("");
+    }
+
+    @Operation(summary = "Promotion Location Void by id")
+    @DeleteMapping("/location/void/{id}")
+    public Result voidOnePromotionLocation(@PathVariable("id")Long id) {
+        promotionService.removePromotionLocation(id);
+        return Result.succ("");
+    }
+
+    @Operation(summary = "Promotion Type Void by id")
+    @DeleteMapping("/type/void/{id}")
+    public Result voidOnePromotionType(@PathVariable("id")Long id) {
+        promotionService.removePromotionType(id);
+        return Result.succ("");
+    }
+
+    @Operation(summary = "Promotion Department Void by id")
+    @DeleteMapping("/department/void/{id}")
+    public Result voidOnePromotionDepartment(@PathVariable("id")Long id) {
+        promotionService.removePromotionDepartment(id);
         return Result.succ("");
     }
 
