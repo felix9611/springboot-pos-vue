@@ -4,20 +4,20 @@
             <el-form :inline="true">
                 <el-form-item>
                     <el-input
-                            v-model="searchForm.search"
-                            placeholder="Shop search"
+                            v-model="searchForm.name"
+                            placeholder="Search"
                             clearable
                     >
                     </el-input>
                 </el-form-item>
 
-                <el-form-item>
+            <!--   <el-form-item>
                     <el-button @click="downloadTemplateExcel()">Download Template Excel</el-button>
                 </el-form-item>
 
                 <el-form-item>
                     <el-button @click="clickUploadDialog">Upload Excel</el-button>
-                </el-form-item>
+                </el-form-item>--> 
 
                 <el-form-item>
                     <el-button @click="allList()">Find</el-button>
@@ -38,21 +38,20 @@
                 @selection-change="handleSelectionChange">
             <el-table-column
                 sortable
-                prop="placeCode"
-                label="Shop Code"
-                width="150">
+                prop="promotionCode"
+              label="Promotion Code">
             </el-table-column>
             <el-table-column
-              prop="placeName"
-              label="Shop Name">
+              prop="promotionName"
+              label="Promotion Name">
             </el-table-column>
             <el-table-column
-              prop="country"
-              label="Country">
+              prop="periodStart"
+              label="Period Start">
             </el-table-column>
             <el-table-column
-              prop="phone"
-              label="Phone">
+              prop="periodEnd"
+              label="Period End">
             </el-table-column>
             <el-table-column
                     prop="created"
@@ -92,53 +91,6 @@
 
 
         <el-dialog
-                :visible.sync="dialogVisible"
-                width="700px"
-                :before-close="handleClose">
-
-            <el-form :model="editForm" :rules="editFormRules" ref="editForm">
-
-                <el-form-item label="Place Code"  prop="placeCode" label-width="100px">
-                    <el-input v-model="editForm.placeCode" autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="Place Name"  prop="placeName" label-width="100px">
-                    <el-input v-model="editForm.placeName" autocomplete="off"></el-input>
-                </el-form-item>
-
-                <el-form-item label="Other Name"  prop="deptOtherName" label-width="100px">
-                    <el-input type="textarea" v-model="editForm.placeOtherName"></el-input>
-                </el-form-item>
-
-                <el-form-item label="Country"  prop="country" label-width="100px">
-                    <el-input type="textarea" v-model="editForm.country"></el-input>
-                </el-form-item>
-
-                <el-form-item label="Address"  prop="address" label-width="100px">
-                    <el-input type="textarea" v-model="editForm.address"></el-input>
-                </el-form-item>
-                <el-form-item label="ZIP Code"  prop="zipCode" label-width="100px">
-                    <el-input v-model="editForm.zipCode" autocomplete="off"></el-input>
-                </el-form-item>
-
-                <el-form-item label="Phone"  prop="phone" label-width="100px">
-                    <el-input v-model="editForm.phone"></el-input>
-                </el-form-item>
-
-                <el-form-item label="Tax"  prop="tax" label-width="100px">
-                    <el-input v-model="editForm.tax"></el-input>
-                </el-form-item>
-
-                <el-form-item label="Remark"  prop="deptOtherName" label-width="100px">
-                    <el-input type="textarea" v-model="editForm.remark"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="submitForm('editForm')">{{ editForm.id? 'Update' : 'Create' }}</el-button>
-                <el-button @click="resetForm('editForm')">Cancel</el-button>
-            </div>
-        </el-dialog>
-
-        <el-dialog
                 title="Upload Excel"
                 :visible.sync="uploaderDialog"
                 width="700px"
@@ -161,6 +113,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import axios from '@/axios'
 import { downloadTempExcelFile, formatJson, readExcel } from '@/utils/importExcel'
 import moment from 'moment'
+import { formatData } from '@/views/product/excelHeaders'
 
 @Component
 export default class Location extends Vue {
@@ -259,11 +212,16 @@ export default class Location extends Vue {
                 this.total = res.data.data.total
 
                 this.tableData.forEach((re: any) => {
+                    const newPeriodStart =  re.periodStart ? moment(new Date(re.periodStart)).format('DD-MM-YYYY HH:MM') : null
+                    const newPeriodEnd =  re.periodStart ? moment(new Date(re.periodEnd)).format('DD-MM-YYYY HH:MM') : null
+
                     const newCreated =  re.created ? moment(new Date(re.created)).format('DD-MM-YYYY HH:MM') : null
                     const newUpdated =  re.updated ? moment(new Date(re.updated)).format('DD-MM-YYYY HH:MM') : null
 
                     re['created'] = newCreated
                     re['updated'] = newUpdated
+                    re['periodStart'] = newPeriodStart
+                    re['periodEnd'] = newPeriodEnd
                     return re
                 })
             }
@@ -313,40 +271,13 @@ export default class Location extends Vue {
     handleClose() {
         this.resetForm('editForm')
     }
-    
-    submitForm(formName: string) {
-        const refs: any = this.$refs[formName]
-        refs.validate((valid: any) => {
-            if (valid) {
-                axios.post('/base/location/' + (this.editForm.id ? 'update' : 'create'), this.editForm)
-                    .then(res => {
-                        this.allList() 
-                        this.$notify({
-                            title: '',
-                            showClose: true,
-                            message: 'Action is successful ',
-                            type: 'success',
-                        });
 
-                        this.dialogVisible = false
-                        this.handleClose()
-                    })
-            } else {
-                return false;
-            }
-        });
-    }
-
-     editHandle(id: number) {
-        axios.get('/base/location/' + id).then(res => {
-            console.log(res.data.data)
-            this.editForm = res.data.data
-            this.dialogVisible = true
-         })
+    editHandle(id: number) {
+        this.$router.push({ path: `/promotion/detail/${id}` })
     }
 
     delItem(id: number) {
-        axios.delete('/base/location/remove/'+ id).then(res => {
+        axios.delete('/base/promotion/void/'+ id).then(res => {
             this.allList() 
             this.$notify({
                 title: '',

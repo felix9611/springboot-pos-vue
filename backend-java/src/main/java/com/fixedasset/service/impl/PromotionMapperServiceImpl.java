@@ -89,20 +89,11 @@ public class PromotionMapperServiceImpl extends ServiceImpl<PromotionMapper, Pro
         Promotion data = promotionMapper.selectOne(lambdaQueryWrapper);
 
         if (data.getId().equals(id)) {
-            actionRecordService.createdAction(
-                "Remove", 
-                "DELETE", 
-               "Promotion Manager",
-                id.toString(), 
-                "Failure"
-            );
-        } else {
-
             promotion.setId(id);
             promotion.setStatu(0);
             promotion.setUpdated(LocalDateTime.now());
 
-            promotionMapper.updateById(data);
+            promotionMapper.updateById(promotion);
             
             actionRecordService.createdAction(
                 "Remove", 
@@ -110,6 +101,16 @@ public class PromotionMapperServiceImpl extends ServiceImpl<PromotionMapper, Pro
                 "Promotion Manager", 
                 promotion.toString(), 
                 "Success"
+            );
+            
+        } else {
+
+            actionRecordService.createdAction(
+                "Remove", 
+                "DELETE", 
+               "Promotion Manager",
+                id.toString(), 
+                "Failure"
             );
         }
 
@@ -128,16 +129,17 @@ public class PromotionMapperServiceImpl extends ServiceImpl<PromotionMapper, Pro
 
             if (promotionLocations.size() > 0) {
                 for (PromotionLocation promotionLocation : promotionLocations) {
-                    if (promotionLocation.getId() == null) {
+                    if (promotionLocation.getId() != null) {
+                        promotionLocation.setUpdated(LocalDateTime.now());
+                        promotionLocationMapper.updateById(promotionLocation);
+
+                    } else {
                         promotionLocation.setCreated(LocalDateTime.now());
                         promotionLocation.setStatu(1);
                         promotionLocation.setPromotionId(Math.toIntExact(data.getId()));
 
                         promotionLocationMapper.insert(promotionLocation);
-
-                    } else {
-                        promotionLocation.setUpdated(LocalDateTime.now());
-                        promotionLocationMapper.updateById(promotionLocation);
+                        
                     }
                 }
             }
@@ -145,13 +147,15 @@ public class PromotionMapperServiceImpl extends ServiceImpl<PromotionMapper, Pro
             if (promotionDepartments.size() > 0) {
 
                 for (PromotionDepartment promotionDepartment : promotionDepartments) {
-                    if (promotionDepartment.getId() == null) {
+                    if (promotionDepartment.getId() != null) {
+                        promotionDepartment.setUpdated(LocalDateTime.now());
+                        promotionDepartmentMapper.updateById(promotionDepartment);
+
+                    } else {
                         promotionDepartment.setCreated(LocalDateTime.now());
                         promotionDepartment.setStatu(1);
                         promotionDepartment.setPromotionId(Math.toIntExact(data.getId()));
-                    } else {
-                        promotionDepartment.setUpdated(LocalDateTime.now());
-                        promotionDepartmentMapper.updateById(promotionDepartment);
+                        promotionDepartmentMapper.insert(promotionDepartment);
                     }
                 }
             }
@@ -159,15 +163,17 @@ public class PromotionMapperServiceImpl extends ServiceImpl<PromotionMapper, Pro
             if (promotionTypes.size() > 0) {
             
                 for (PromotionType promotionType : promotionTypes) {
-                    if (promotionType.getId() == null) {
+                    if (promotionType.getId() != null) {
+                        promotionType.setUpdated(LocalDateTime.now());
+                        promotionTypeMapper.updateById(promotionType);
+                    } else {
                         promotionType.setCreated(LocalDateTime.now());
                         promotionType.setStatu(1);
                         promotionType.setPromotionId(Math.toIntExact(data.getId()));
 
                         promotionTypeMapper.insert(promotionType);
-                    } else {
-                        promotionType.setUpdated(LocalDateTime.now());
-                        promotionTypeMapper.updateById(promotionType);
+
+                        
                     }
                 }
             }
@@ -193,8 +199,8 @@ public class PromotionMapperServiceImpl extends ServiceImpl<PromotionMapper, Pro
 
         if (data == null) {
 
-            promotion.setCreated(LocalDateTime.now());
-            promotion.setStatu(1);
+            newData.setCreated(LocalDateTime.now());
+            newData.setStatu(1);
             promotionMapper.insert(newData);
 
             List<PromotionLocation> promotionLocations = newData.getNewPromotionLocationItems();

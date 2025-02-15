@@ -31,22 +31,64 @@
                   </el-date-picker>
             </el-form-item>
             <el-form-item label="Online" prop="online" label-width="120px">
-                <el-checkbox v-model="editForm.online" />
+                <el-select v-model="editForm.online" placeholder="Select" filterable>
+                    <el-option
+                        v-for="list in yesOrNoLists"
+                        :key="list.value"
+                        :label="list.label"
+                        :value="list.value">
+                    </el-option>
+                </el-select>
             </el-form-item>
             <el-form-item label="In Store" prop="inStore" label-width="120px">
-                <el-checkbox v-model="editForm.inStore" />
+                <el-select v-model="editForm.inStore" placeholder="Select" filterable>
+                    <el-option
+                        v-for="list in yesOrNoLists"
+                        :key="list.value"
+                        :label="list.label"
+                        :value="list.value">
+                    </el-option>
+                </el-select>
             </el-form-item>
             <el-form-item label="Member Only" prop="member" label-width="120px">
-                <el-checkbox v-model="editForm.member" />
+                <el-select v-model="editForm.member" placeholder="Select" filterable>
+                    <el-option
+                        v-for="list in yesOrNoLists"
+                        :key="list.value"
+                        :label="list.label"
+                        :value="list.value">
+                    </el-option>
+                </el-select>
             </el-form-item>
             <el-form-item label="All to use one discount" prop="allOneDiscount" label-width="180px">
-                <el-checkbox v-model="editForm.allOneDiscount" />
+                <el-select v-model="editForm.allOneDiscount" placeholder="Select" filterable>
+                    <el-option
+                        v-for="list in yesOrNoLists"
+                        :key="list.value"
+                        :label="list.label"
+                        :value="list.value">
+                    </el-option>
+                </el-select>
             </el-form-item>
-            <el-form-item label="After Before Tax" prop="afterBeforeTax" label-width="180px">
-                <el-checkbox v-model="editForm.afterBeforeTax" />
+            <el-form-item label="After Before Tax" prop="afterBeforeTax" label-width="150px">
+                <el-select v-model="editForm.afterBeforeTax" placeholder="Select" filterable>
+                    <el-option
+                        v-for="list in afterOrBeforeTaxLists"
+                        :key="list.value"
+                        :label="list.label"
+                        :value="list.value">
+                    </el-option>
+                </el-select>
             </el-form-item>
             <el-form-item label="Coupon Requested" prop="couponRequest" label-width="180px">
-                <el-checkbox v-model="editForm.couponRequest" />
+                <el-select v-model="editForm.couponRequest" placeholder="Select" filterable>
+                    <el-option
+                        v-for="list in yesOrNoLists"
+                        :key="list.value"
+                        :label="list.label"
+                        :value="list.value">
+                    </el-option>
+                </el-select>
             </el-form-item>
             <el-form-item label="Discount"  prop="discount" label-width="130px">
               <el-input-number v-model="editForm.discount" :step="1" class="w-full" ></el-input-number>
@@ -67,7 +109,235 @@
             <el-form-item label="Remark"  prop="Remark" label-width="120px" class="lg:col-span-4">
                 <el-input type="textarea" v-model="editForm.remark" autocomplete="off"></el-input>
             </el-form-item>
+            <div class="lg:col-span-4">
+                <h2 class="px-6">Discount by store</h2>
+                <el-table
+                    class="px-5"
+                    ref="multipleTable"
+                    :data="editForm.promotionLocationItems"
+                    tooltip-effect="dark"
+                    id="tab1"
+                >
+                    <el-table-column 
+                        label="Store" 
+                        prop="place">
+                            <template slot-scope="scope">
+                                <el-select v-model="scope.row.placeId" placeholder="Select" filterable class="w-[100%]">
+                                    <el-option
+                                        v-for="placeItems in placeLists"
+                                        :key="placeItems.id"
+                                        :label="placeItems.placeName"
+                                        :value="placeItems.id">
+                                    </el-option>
+                                </el-select>
+                            </template>
+                    </el-table-column>        
+                    <el-table-column 
+                        label="Promotion Code" 
+                        prop="promotionCode">
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.promotionCode" autocomplete="off"></el-input>
+                            </template>
+                    </el-table-column>
+                    <el-table-column 
+                        label="Promotion Name" 
+                        prop="promotionName">
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.promotionName" autocomplete="off"></el-input>
+                            </template>
+                    </el-table-column>
+                    <el-table-column 
+                        label="Discount Amount" 
+                        prop="discountAmount">
+                            <template slot-scope="scope">
+                                <el-input-number v-model="scope.row.discountAmount" :step="1" class="w-full" ></el-input-number>
+                            </template>
+                    </el-table-column>
+                    <el-table-column 
+                        label="Discount Type" 
+                        prop="discountType">
+                            <template slot-scope="scope">
+                                <el-select v-model="editForm.discountType" placeholder="Select" filterable :disabled="scope.row.discountType">
+                                    <el-option
+                                        v-for="discount in discountList"
+                                        :key="discount.type"
+                                        :label="discount.type"
+                                        :value="discount.type">
+                                    </el-option>
+                                </el-select>
+                            </template>
+                    </el-table-column>
+                    <el-table-column
+                        label="Action" 
+                        prop="action"
+                    >
+                        <template slot-scope="scope">
+                            <el-button type="danger" @click.prevent="promotionLocationItemsRowRemove(scope.row, scope.$index)">Delete</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+            <div class="lg:col-span-1"></div>
+            <el-button @click.prevent="editForm.promotionLocationItems.push({ placeId: null, promotionCode: '', promotionName: '' })" class="lg:col-span-2">
+                + Add rows
+            </el-button>
+            <div class="lg:col-span-1"></div>
+
+            <div class="lg:col-span-4">
+                <h2 class="px-6">Discount by department</h2>
+                <el-table
+                    class="px-5"
+                    ref="multipleTable"
+                    :data="editForm.promotionDepartmentItems"
+                    tooltip-effect="dark"
+                    id="tab1"
+                >
+                    <el-table-column 
+                        label="Department" 
+                        prop="department">
+                            <template slot-scope="scope">
+                                <el-select v-model="scope.row.deptId" placeholder="Select" filterable class="w-[100%]">
+                                    <el-option
+                                        v-for="deptItems in deptLists"
+                                        :key="deptItems.id"
+                                        :label="deptItems.deptName"
+                                        :value="deptItems.id">
+                                    </el-option>
+                                </el-select>
+                            </template>
+                    </el-table-column>        
+                    <el-table-column 
+                        label="Promotion Code" 
+                        prop="promotionCode">
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.promotionCode" autocomplete="off"></el-input>
+                            </template>
+                    </el-table-column>
+                    <el-table-column 
+                        label="Promotion Name" 
+                        prop="promotionName">
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.promotionName" autocomplete="off"></el-input>
+                            </template>
+                    </el-table-column>
+                    <el-table-column 
+                        label="Discount Amount" 
+                        prop="discountAmount">
+                            <template slot-scope="scope">
+                                <el-input-number v-model="scope.row.discountAmount" :step="1" class="w-full" ></el-input-number>
+                            </template>
+                    </el-table-column>
+                    <el-table-column 
+                        label="Discount Type" 
+                        prop="discountType">
+                            <template slot-scope="scope">
+                                <el-select v-model="editForm.discountType" placeholder="Select" filterable :disabled="scope.row.discountType">
+                                    <el-option
+                                        v-for="discount in discountList"
+                                        :key="discount.type"
+                                        :label="discount.type"
+                                        :value="discount.type">
+                                    </el-option>
+                                </el-select>
+                            </template>
+                    </el-table-column>
+                    <el-table-column
+                        label="Action" 
+                        prop="action"
+                    >
+                        <template slot-scope="scope">
+                            <el-button type="danger" @click.prevent="promotionDepartmentItemsRowRemove(scope.row, scope.$index)">Delete</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+            <div class="lg:col-span-1"></div>
+            <el-button @click.prevent="editForm.promotionDepartmentItems.push({ deptId: null, promotionCode: '', promotionName: '' })" class="lg:col-span-2">
+                + Add rows
+            </el-button>
+            <div class="lg:col-span-1"></div>
+
+
+            <div class="lg:col-span-4">
+                <h2 class="px-6">Discount by product type</h2>
+                <el-table
+                    class="px-5"
+                    ref="multipleTable"
+                    :data="editForm.promotionTypeItems"
+                    tooltip-effect="dark"
+                    id="tab1"
+                >
+                    <el-table-column 
+                        label="Type" 
+                        prop="type">
+                            <template slot-scope="scope">
+                                <el-select v-model="scope.row.typeId" placeholder="Select" filterable class="w-[100%]">
+                                    <el-option
+                                        v-for="typeItems in typeLists"
+                                        :key="typeItems.id"
+                                        :label="typeItems.typeName"
+                                        :value="typeItems.id">
+                                    </el-option>
+                                </el-select>
+                            </template>
+                    </el-table-column>        
+                    <el-table-column 
+                        label="Promotion Code" 
+                        prop="promotionCode">
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.promotionCode" autocomplete="off"></el-input>
+                            </template>
+                    </el-table-column>
+                    <el-table-column 
+                        label="Promotion Name" 
+                        prop="promotionName">
+                            <template slot-scope="scope">
+                                <el-input v-model="scope.row.promotionName" autocomplete="off"></el-input>
+                            </template>
+                    </el-table-column>
+                    <el-table-column 
+                        label="Discount Amount" 
+                        prop="discountAmount">
+                            <template slot-scope="scope">
+                                <el-input-number v-model="scope.row.discountAmount" :step="1" class="w-full" ></el-input-number>
+                            </template>
+                    </el-table-column>
+                    <el-table-column 
+                        label="Discount Type" 
+                        prop="discountType">
+                            <template slot-scope="scope">
+                                <el-select v-model="editForm.discountType" placeholder="Select" filterable :disabled="scope.row.discountType">
+                                    <el-option
+                                        v-for="discount in discountList"
+                                        :key="discount.type"
+                                        :label="discount.type"
+                                        :value="discount.type">
+                                    </el-option>
+                                </el-select>
+                            </template>
+                    </el-table-column>
+                    <el-table-column
+                        label="Action" 
+                        prop="action"
+                    >
+                        <template slot-scope="scope">
+                            <el-button type="danger" @click.prevent="promotionTypeItemsRowRemove(scope.row, scope.$index)">Delete</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+            <div class="lg:col-span-1"></div>
+            <el-button @click.prevent="editForm.promotionTypeItems.push({ typeId: null, promotionCode: '', promotionName: '' })" class="lg:col-span-2">
+                + Add rows
+            </el-button>
+            <div class="lg:col-span-1"></div>
+
+            <div class="dialog-footer p-4">
+                <el-button type="primary" @click="submitForm('editForm')">{{ editForm.id? 'Update' : 'Create' }}</el-button>
+                <el-button @click="resetForm('editForm')">Cancel</el-button>
+            </div>
         </el-form>
+        
     </div>
 </template>
 <script lang="ts">
@@ -82,7 +352,12 @@ import { uploadImgToBase64 } from '@/utils/uploadImgToBase64'
 @Component
 export default class PromotionDetail extends Vue {
 
-    editForm: any = {}
+    editForm: any = {
+        promotionLocationItems: [],
+        promotionDepartmentItems: [],
+        promotionTypeItems: []
+
+    }
     editFormRules: any = []
     readonlyMode: boolean = false
     hideSaveBtn: boolean = false
@@ -92,12 +367,150 @@ export default class PromotionDetail extends Vue {
         { type: '$' },
     ]
 
+    afterOrBeforeTaxLists = [
+        {
+            label: 'After Tax',
+            value: 1
+        },
+        {
+            label: 'Before Tax',
+            value: 0
+        }
+    ]
+
+    yesOrNoLists = [
+    {
+            label: 'Yes',
+            value: 1
+        },
+        {
+            label: 'No',
+            value: 0
+        }
+    ]
+
+    created() {
+        this.loadPlaceList()
+        this.loadDeptList()
+        this.loadTypeList()
+        if (this.$route.params.id) {
+            this.editForm.id = Number(this.$route.params.id)
+            this.editHandle()      
+        }
+    }
+
     startEdit() {
         this.readonlyMode = false
     }
 
     back() {
         this.$router.push({ path: '/promotion' })
+    }
+
+    editHandle(){
+        axios.get(`/base/promotion/${this.$route.params.id}`).then(
+            (res: any) => {
+                this.readonlyMode = true
+                this.editForm = res.data.data
+            }
+        )
+    }
+
+    submitForm(formName: string) {
+
+        if (this.editForm.id) {
+            axios.post('/base/promotion/update', this.editForm)
+            .then((res: any) => {
+                this.$notify({
+                    title: 'Msg',
+                    showClose: true,
+                    message: 'Action is successful ',
+                    type: 'success',
+                })
+                this.back()
+            })
+        } else {
+                const finalForm: any = this.editForm
+
+                finalForm.newPromotionTypeItems = this.editForm.promotionTypeItems
+                finalForm.newPromotionLocationItems = this.editForm.promotionLocationItems
+                finalForm.newPromotionDepartmentItems = this.editForm.promotionDepartmentItems
+
+                axios.post('/base/promotion/create', finalForm).then((res: any) => {
+                    this.$notify({
+                        title: 'Msg',
+                        showClose: true,
+                        message: 'Action is successful ',
+                        type: 'success',
+                    })
+                    this.back()
+                })
+        }
+
+    }
+
+    resetForm(formName: string) {
+        this.editForm = {
+            promotionLocationItems: [],
+            promotionDepartmentItems: [],
+            promotionTypeItems: []
+        }
+
+        this.editHandle()
+    }
+
+    placeLists: any = []
+    loadPlaceList() {
+        axios.get(
+            '/base/location/getAll'
+        ).then(
+        (res: any) => {
+            this.placeLists = res.data.data
+        })
+    }
+
+    deptLists: any = []
+    loadDeptList() {
+        axios.get(
+            '/base/department/getAll'
+        ).then(
+        (res: any) => {
+            this.deptLists = res.data.data
+        })
+    }
+
+    typeLists: any = []
+    loadTypeList() {
+        axios.get(
+            '/product/type/getAll'
+        ).then(
+        (res: any) => {
+            this.typeLists = res.data.data
+        })
+    }
+
+    promotionLocationItemsRowRemove(data: any, index: number) {
+        if (!data.id === null) {
+            
+        } else {
+            this.editForm.promotionLocationItems.splice(index, 1)
+        }
+    }
+
+    promotionDepartmentItemsRowRemove(data: any, index: number) {
+        if (!data.id === null) {
+            
+        } else {
+            this.editForm.promotionDepartmentItems.splice(index, 1)
+        }
+    }
+
+    promotionTypeItemsRowRemove(data: any, index: number) {
+        if (!data.id === null) {
+            
+        } else {
+            this.editForm.promotionTypeItems.splice(index, 1)
+        }
     }
 }
 </script>

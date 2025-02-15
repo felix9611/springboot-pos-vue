@@ -39,19 +39,19 @@ public class Promotion extends BaseEntity {
 
     @Schema(description = "Online")
     @TableField("online")
-    private Boolean online;
+    private int online;
 
     @Schema(description = "In Store")
     @TableField("inStore")
-    private Boolean inStore;
+    private int inStore;
 
     @Schema(description = "Member")
     @TableField("member")
-    private Boolean member;
+    private int member;
 
     @Schema(description = "After Before Tax")
     @TableField("after_before_tax")
-    private Boolean afterBeforeTax;
+    private int afterBeforeTax;
 
     @Schema(description = "Manager staff id")
     @TableField("manager")
@@ -71,7 +71,7 @@ public class Promotion extends BaseEntity {
 
     @Schema(description = "Coupon Requested or not")
     @TableField("coupon_request")
-    private Boolean couponRequest;
+    private int couponRequest;
 
     @Schema(description = "Coupon Main Code")
     @TableField("coupon_main_code")
