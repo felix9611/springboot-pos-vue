@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fixedasset.mapper.PromotionDepartmentMapper">
+    <select id="listPromotionDepartmentDetail" resultType="com.fixedasset.entity.PromotionDepartment">
+        SELECT PL.dept_name AS deptCode, PL.dept_code AS deptName, PRL.* FROM promotion_department AS PRL 
+        LEFT JOIN department AS PL ON PL.id = PRL.dept_id 
+        WHERE promotion_id = #{promotionId}
+    </select>
+</mapper>

@@ -39,4 +39,12 @@ public class PromotionDepartment extends BaseEntity {
     @Schema(description = "Discount type")
     @TableField("discount_type")
     private String discountType;
+
+    @Schema(description = "The department code")
+    @TableField(exist = false)
+    private String deptIdCode;
+
+    @Schema(description = "The epartment name")
+    @TableField(exist = false)
+    private String deptIdName;
 }   

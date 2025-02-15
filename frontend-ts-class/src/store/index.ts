@@ -11,10 +11,16 @@ export default new Vuex.Store({
     permList: [],
     hasRoutes: false,
     routers: [],
-    userProfile: {}
+    userProfile: {},
+    todayPromotions: []
   },
   mutations: {
-
+    setTodayPromotions(state: any, todayPromotions: any) {
+      state.todayPromotions = todayPromotions
+    },
+    resetTodayPromotionsState: (state: any) => {
+      state.todayPromotions = []
+    },
     SET_TOKEN: (state: any, token: any) => {
       state.token = token
       localStorage.setItem('token', token)
