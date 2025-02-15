@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
+import javassist.tools.framedump;
 import lombok.Data;
 
 @Data
@@ -35,4 +36,12 @@ public class PromotionLocation extends BaseEntity {
     @Schema(description = "Discount type")
     @TableField("discount_type")
     private String discountType;
+
+    @Schema(description = "The location code")
+    @TableField(exist = false)
+    private String placeCode;
+
+    @Schema(description = "The location name")
+    @TableField(exist = false)
+    private String placeName;
 }   

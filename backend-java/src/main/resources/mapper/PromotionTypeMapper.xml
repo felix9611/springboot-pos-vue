@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fixedasset.mapper.PromotionTypeMapper">
+    <select id="listPromotionTypeDetail" resultType="com.fixedasset.entity.PromotionType">
+        SELECT PT.type_name AS typeCode, PT.type_name AS typeCode, PRT.* FROM pos_springboot_vue_3.promotion_type AS PRT 
+        LEFT JOIN product_type AS PT ON PT.id = PRT.type_id 
+        WHERE promotion_id = #{promotionId}
+    </select>
+</mapper>

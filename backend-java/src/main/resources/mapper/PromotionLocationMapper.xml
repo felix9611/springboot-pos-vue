@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fixedasset.mapper.PromotionLocationMapper">
+    <select id="listPromotionLocationDetail" resultType="com.fixedasset.entity.PromotionLocation">
+        SELECT PL.place_name AS placeCode, PL.place_code AS placeName, PRL.* FROM promotion_location AS PRL 
+        LEFT JOIN location AS PL ON PL.id = PRL.place_id 
+        WHERE promotion_id = #{promotionId}
+    </select>
+</mapper>

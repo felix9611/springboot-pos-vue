@@ -22,6 +22,7 @@ import vHead from './Header.vue';
 import vSidebar from './Sidebar.vue';
 import vTags from './Tags.vue';
 import bus from './bus'
+import axios from '@/axios'
 
 @Component({
     components: {
@@ -34,8 +35,15 @@ export default class Home extends Vue {
     tagsList: any = []
     collapse: any = false
 
+    loadTodayPromote() {
+        axios.get('/base/promotion/today-promotion').then(res => {
+            const datas = res.data.data
+            this.$store.commit('setTodayPromotions', datas)
+        })
+    }
 
     created() {
+        this.loadTodayPromote()
         bus.$on('collapse-content', (msg: any) => {
             this.collapse = msg;
         })
@@ -49,5 +57,7 @@ export default class Home extends Vue {
             this.tagsList = arr
         })
     }
+
+
 }
 </script>

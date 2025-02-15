@@ -36,4 +36,12 @@ public class PromotionType extends BaseEntity {
     @Schema(description = "Discount type")
     @TableField("discount_type")
     private String discountType;
+
+    @Schema(description = "For response only")
+    @TableField(exist = false)
+    private String typeCode;
+
+    @Schema(description = "For response only")
+    @TableField(exist = false)
+    private String typeName;
 }   

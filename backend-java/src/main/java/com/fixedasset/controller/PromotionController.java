@@ -98,4 +98,10 @@ public class PromotionController extends BaseController {
         promotionService.update(promotion);
         return Result.succ(promotion);
     }
+
+    @Operation(summary = "List Today Promotion")
+    @GetMapping("/today-promotion")
+    public Result todayPromotion() {
+        return Result.succ(promotionService.todayPromotion());
+    }
 }
