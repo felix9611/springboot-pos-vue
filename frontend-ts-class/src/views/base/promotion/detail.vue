@@ -427,7 +427,7 @@ export default class PromotionDetail extends Vue {
                     message: 'Action is successful ',
                     type: 'success',
                 })
-                this.back()
+                this.editHandle()      
             })
         } else {
                 const finalForm: any = this.editForm
@@ -443,7 +443,7 @@ export default class PromotionDetail extends Vue {
                         message: 'Action is successful ',
                         type: 'success',
                     })
-                    this.back()
+                    this.editHandle()
                 })
         }
 
