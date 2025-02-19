@@ -21,6 +21,13 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
 
     @Resource private ActionRecordService actionRecordService;
 
+    public Department getOneById(Long id) {
+        LambdaQueryWrapper<Department> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(Department::getId, id);
+        queryWrapper.eq(Department::getStatu, 1);
+        return departmentMapper.selectOne(queryWrapper);
+    }
+
     public void createNew(Department department) {
         LambdaQueryWrapper<Department> queryWrapper = Wrappers.lambdaQuery();
         if (StringUtils.isNotBlank(department.getDeptCode())) {
@@ -61,10 +68,8 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
     }
 
     public void removeOne(Department department) {
-        LambdaQueryWrapper<Department> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(Department::getId, department.getId());
-        queryWrapper.eq(Department::getStatu, 1);
-        Department checkOne = departmentMapper.selectOne(queryWrapper);
+
+        Department checkOne = getOneById(department.getId());
         if (checkOne.getId().equals(department.getId())) {
 
             actionRecordService.createdAction(
@@ -126,11 +131,9 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
 
     public Department getData(Department department) {
         LambdaQueryWrapper<Department> queryWrapper = Wrappers.lambdaQuery();
-        if (StringUtils.isNotBlank(department.getDeptCode())) {
-            queryWrapper.eq(Department::getDeptCode, department.getDeptCode());
-        }
-        if (StringUtils.isNotBlank(department.getDeptName())) {
-            queryWrapper.eq(Department::getDeptName, department.getDeptName());
+
+        if (StringUtils.isNotBlank(department.getName())) {
+            queryWrapper.eq(Department::getDeptName, department.getName()).or().eq(Department::getDeptCode, department.getName());
         }
         queryWrapper.eq(Department::getStatu, 1);
         return departmentMapper.selectOne(queryWrapper);

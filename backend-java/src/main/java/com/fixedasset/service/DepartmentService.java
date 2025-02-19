@@ -13,6 +13,8 @@ public interface DepartmentService extends IService<Department> {
 
     void update(Department department);
 
+    Department getOneById(Long id);
+
     List<Department> getAll();
 
     public Department getData(Department department);

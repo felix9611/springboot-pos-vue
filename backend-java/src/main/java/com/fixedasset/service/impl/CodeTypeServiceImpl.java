@@ -41,6 +41,15 @@ public class CodeTypeServiceImpl extends ServiceImpl<CodeTypeMapper, CodeType> i
         }
     }
 
+    public CodeType getById(Long id) {
+        LambdaQueryWrapper<CodeType> queryWrapper = Wrappers.lambdaQuery();
+
+        queryWrapper.eq(CodeType::getId, id);
+        queryWrapper.eq(CodeType::getStatu, 1);
+
+        return codeTypeMapper.selectOne(queryWrapper);
+    }
+
     public void createOne(CodeType codeType) {
         LambdaQueryWrapper<CodeType> queryWrapper = Wrappers.lambdaQuery();
 
@@ -78,10 +87,7 @@ public class CodeTypeServiceImpl extends ServiceImpl<CodeTypeMapper, CodeType> i
     }
 
     public void updateOne(CodeType codeType) {
-        LambdaQueryWrapper<CodeType> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(CodeType::getStatu, 1);
-        queryWrapper.eq(CodeType::getId, codeType.getId());
-        CodeType checkOne = codeTypeMapper.selectOne(queryWrapper);
+        CodeType checkOne = getById(codeType.getId());
         if (checkOne.getId().equals(codeType.getId())) {
             codeType.setUpdated(LocalDateTime.now());
             codeTypeMapper.updateById(codeType);

@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fixedasset.entity.Invoice;
-import com.fixedasset.entity.Payment;
 import com.fixedasset.entity.Promotion;
 import com.fixedasset.entity.PromotionDepartment;
 import com.fixedasset.entity.PromotionLocation;
@@ -117,7 +115,7 @@ public class PromotionMapperServiceImpl extends ServiceImpl<PromotionMapper, Pro
     }
 
     public void update(Promotion data) {
-        Promotion oldData = promotionMapper.selectById(data.getId());
+        Promotion oldData = getById(data.getId());
 
         if (oldData.getStatu() == 1) {
             data.setUpdated(LocalDateTime.now());

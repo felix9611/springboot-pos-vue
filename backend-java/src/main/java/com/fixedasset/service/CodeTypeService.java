@@ -15,4 +15,6 @@ public interface CodeTypeService extends IService<CodeType> {
     void remove(Long id);
 
     void batchImport(List<CodeType> codeTypes);
+
+    CodeType getById(Long id);
 }
