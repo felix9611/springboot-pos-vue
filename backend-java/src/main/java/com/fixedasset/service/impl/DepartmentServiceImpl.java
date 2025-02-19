@@ -95,10 +95,7 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
     }
 
     public void update(Department department) {
-        LambdaQueryWrapper<Department> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(Department::getId, department.getId());
-        queryWrapper.eq(Department::getStatu, 1);
-        Department checkOne = departmentMapper.selectOne(queryWrapper);
+        Department checkOne = getOneById(department.getId());
 
         if (checkOne.getId().equals(department.getId())) {
 

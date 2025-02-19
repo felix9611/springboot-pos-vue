@@ -112,11 +112,7 @@ public class CodeTypeServiceImpl extends ServiceImpl<CodeTypeMapper, CodeType> i
     }
 
     public void remove(Long id) {
-        LambdaQueryWrapper<CodeType> queryWrapper = Wrappers.lambdaQuery();
-
-        queryWrapper.eq(CodeType::getId, id);
-        queryWrapper.eq(CodeType::getStatu, 1);
-        CodeType checkOne = codeTypeMapper.selectOne(queryWrapper);
+        CodeType checkOne = getById(id);
         if (checkOne.getId().equals(id)) {
             codeType.setId(id);
             codeType.setStatu(0);

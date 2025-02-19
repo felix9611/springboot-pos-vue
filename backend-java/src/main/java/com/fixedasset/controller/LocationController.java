@@ -71,7 +71,7 @@ public class LocationController extends BaseController {
     @Operation(summary = "Get one by id")
     @GetMapping("/{id}")
     public Result getOne(@PathVariable("id") Long id) {
-        return Result.succ(locationService.getById(id));
+        return Result.succ(locationService.getOneById(id));
     }
 
     @Operation(summary = "Page and list")

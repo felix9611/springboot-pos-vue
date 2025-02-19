@@ -17,4 +17,6 @@ public interface LocationService extends IService<Location> {
     Location getData(Location location);
 
     void batchImport(List<Location> locations);
+
+    Location getOneById(Long id);
 }

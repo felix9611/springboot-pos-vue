@@ -42,11 +42,7 @@ public class TaxableCountryServiceImpl extends ServiceImpl<TaxableCountryMapper,
     }
 
     public void voidData(Long id) {
-        LambdaQueryWrapper<TaxableCountry> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(TaxableCountry::getStatu, 1);
-        queryWrapper.eq(TaxableCountry::getId, id);
-
-        TaxableCountry checkOne = taxableCountryMapper.selectOne(queryWrapper);
+        TaxableCountry checkOne = findOne(taxableCountry.getId());
         if (checkOne.getId().equals(id)) {
 
             taxableCountry.setId(id);
@@ -117,11 +113,7 @@ public class TaxableCountryServiceImpl extends ServiceImpl<TaxableCountryMapper,
     }
 
     public TaxableCountry update(TaxableCountry taxableCountry) {
-        LambdaQueryWrapper<TaxableCountry> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(TaxableCountry::getStatu, 1);
-        queryWrapper.eq(TaxableCountry::getId, taxableCountry.getId());
-
-        TaxableCountry checkOne = taxableCountryMapper.selectOne(queryWrapper);
+        TaxableCountry checkOne = findOne(taxableCountry.getId());
         if (checkOne.getId().equals(taxableCountry.getId())) {
             taxableCountry.setUpdated(LocalDateTime.now());
             taxableCountryMapper.updateById(taxableCountry);
@@ -149,7 +141,10 @@ public class TaxableCountryServiceImpl extends ServiceImpl<TaxableCountryMapper,
     }
 
     public TaxableCountry findOne(Long id) {
-        return this.getById(id);
+        LambdaQueryWrapper<TaxableCountry> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(TaxableCountry::getStatu, 1);
+        queryWrapper.eq(TaxableCountry::getId, id);
+        return taxableCountryMapper.selectOne(queryWrapper);
     }
 
     public List<TaxableCountry> getAll() {
