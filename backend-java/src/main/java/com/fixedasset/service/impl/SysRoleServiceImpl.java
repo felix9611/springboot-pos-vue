@@ -43,7 +43,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     public String voidById(Long id) {
         SysRole checkOne = getOneById(id);
 
-        if (checkOne.getId().equals(id)) {
+        if (checkOne != null) {
             sysRole.setId(id);
             sysRole.setStatu(0);
             sysRole.setUpdated(LocalDateTime.now());
@@ -103,7 +103,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     public SysRole updateRole(SysRole data) {
         SysRole checkOne = getOneById(data.getId());
 
-        if (checkOne.getId().equals(data.getId())) {
+        if (checkOne != null) {
             sysRole.setUpdated(LocalDateTime.now());
             sysRoleMapper.updateById(data);
 

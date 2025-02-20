@@ -79,14 +79,9 @@ public class PromotionMapperServiceImpl extends ServiceImpl<PromotionMapper, Pro
     }
 
     public void voidData(Long id) {
-        LambdaQueryWrapper<Promotion> lambdaQueryWrapper = Wrappers.lambdaQuery();
+        Promotion checkOne = getById(id);
 
-        lambdaQueryWrapper.eq(Promotion::getId, id);
-        lambdaQueryWrapper.eq(Promotion::getStatu, 1);
-
-        Promotion data = promotionMapper.selectOne(lambdaQueryWrapper);
-
-        if (data.getId().equals(id)) {
+        if (checkOne != null) {
             promotion.setId(id);
             promotion.setStatu(0);
             promotion.setUpdated(LocalDateTime.now());
@@ -115,9 +110,9 @@ public class PromotionMapperServiceImpl extends ServiceImpl<PromotionMapper, Pro
     }
 
     public void update(Promotion data) {
-        Promotion oldData = getById(data.getId());
+        Promotion checkOne = getById(data.getId());
 
-        if (oldData.getStatu() == 1) {
+        if (checkOne != null) {
             data.setUpdated(LocalDateTime.now());
             promotionMapper.updateById(data);
 

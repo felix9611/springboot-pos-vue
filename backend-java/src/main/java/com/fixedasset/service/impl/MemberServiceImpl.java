@@ -81,7 +81,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
 
     public void voidMember(Long id) {
         Member checkOne = getOneMember(id);
-        if (checkOne.getId().equals(member.getId())) {
+        if (checkOne != null) {
             member.setId(id);
             member.setStatus(0);
             memberMapper.updateById(member);
@@ -92,7 +92,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
 
     public void updateData(Member member) {
         Member checkOne = getOneMember(member.getId());
-        if (checkOne.getId().equals(member.getId())) {
+        if (checkOne != null) {
             
             member.setUpdatedAt(LocalDateTime.now());
             memberMapper.updateById(member);

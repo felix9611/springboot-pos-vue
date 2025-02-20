@@ -70,7 +70,7 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
     public void removeOne(Department department) {
 
         Department checkOne = getOneById(department.getId());
-        if (checkOne.getId().equals(department.getId())) {
+        if (checkOne != null) {
 
             actionRecordService.createdAction(
                     "Void", 
@@ -97,7 +97,7 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
     public void update(Department department) {
         Department checkOne = getOneById(department.getId());
 
-        if (checkOne.getId().equals(department.getId())) {
+        if (checkOne != null) {
 
             departmentMapper.updateById(department);
 

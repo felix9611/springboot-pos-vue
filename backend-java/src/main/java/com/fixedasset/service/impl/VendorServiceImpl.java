@@ -72,7 +72,7 @@ public class VendorServiceImpl extends ServiceImpl<VendorMapper, Vendor> impleme
 
     public void updateOne(Vendor vendor){
         Vendor checkOne = getOneById(vendor.getId());
-        if (checkOne.getId().equals(vendor.getId())) {
+        if (checkOne != null) {
             vendor.setUpdated(LocalDateTime.now());
             vendorMapper.updateById(vendor);
 
@@ -97,7 +97,7 @@ public class VendorServiceImpl extends ServiceImpl<VendorMapper, Vendor> impleme
 
     public void removeOne(Vendor vendor) {
         Vendor checkOne = getOneById(vendor.getId());
-        if (checkOne.getId().equals(vendor.getId())) {
+        if (checkOne != null) {
 
             vendorMapper.updateById(vendor);
 

@@ -79,7 +79,7 @@ public class LocationServiceImpl extends ServiceImpl<LocationMapper, Location> i
     public void update(Location location) {
         Location checkOne =  getOneById(location.getId());
 
-        if (checkOne.getId().equals(location.getId())) {
+        if (checkOne != null) {
             location.setUpdated(LocalDateTime.now());
             locationMapper.updateById(location);
 
@@ -107,7 +107,7 @@ public class LocationServiceImpl extends ServiceImpl<LocationMapper, Location> i
     public void remove(Location location) {
 
         Location checkOne =  getOneById(location.getId());
-        if (checkOne.getId().equals(location.getId())) {
+        if (checkOne != null) {
 
             locationMapper.updateById(location);
 

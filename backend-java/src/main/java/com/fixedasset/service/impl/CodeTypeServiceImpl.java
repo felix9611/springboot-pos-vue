@@ -88,7 +88,7 @@ public class CodeTypeServiceImpl extends ServiceImpl<CodeTypeMapper, CodeType> i
 
     public void updateOne(CodeType codeType) {
         CodeType checkOne = getById(codeType.getId());
-        if (checkOne.getId().equals(codeType.getId())) {
+        if (checkOne != null) {
             codeType.setUpdated(LocalDateTime.now());
             codeTypeMapper.updateById(codeType);
 
@@ -113,7 +113,7 @@ public class CodeTypeServiceImpl extends ServiceImpl<CodeTypeMapper, CodeType> i
 
     public void remove(Long id) {
         CodeType checkOne = getById(id);
-        if (checkOne.getId().equals(id)) {
+        if (checkOne != null) {
             codeType.setId(id);
             codeType.setStatu(0);
             codeTypeMapper.updateById(codeType);
