@@ -42,7 +42,7 @@ public class TaxableCountryServiceImpl extends ServiceImpl<TaxableCountryMapper,
     }
 
     public void voidData(Long id) {
-        TaxableCountry checkOne = findOne(taxableCountry.getId());
+        TaxableCountry checkOne = findOne(id);
         if (checkOne.getId().equals(id)) {
 
             taxableCountry.setId(id);
