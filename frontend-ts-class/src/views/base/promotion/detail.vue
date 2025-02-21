@@ -103,6 +103,16 @@
                 </el-option>
                 </el-select>
             </el-form-item>
+            <el-form-item label="Promotion Type"  prop="discount" label-width="130px">
+                <el-select v-model="editForm.promotionType" placeholder="Select" filterable>
+                <el-option
+                    v-for="promotionType in promotionTypeLists"
+                    :key="promotionType.id"
+                    :label="promotionType.catelogName"
+                    :value="promotionType.id">
+                </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="Coupon Main Code"  prop="couponMainCode" label-width="150px" :disabled="editForm.couponRequest === false || editForm.couponRequest === null">
                 <el-input v-model="editForm.couponMainCode" autocomplete="off"></el-input>
             </el-form-item>
@@ -393,6 +403,7 @@ export default class PromotionDetail extends Vue {
         this.loadPlaceList()
         this.loadDeptList()
         this.loadTypeList()
+        this.loadPromotionTypeList()
         if (this.$route.params.id) {
             this.editForm.id = Number(this.$route.params.id)
             this.editHandle()      
@@ -486,6 +497,16 @@ export default class PromotionDetail extends Vue {
         ).then(
         (res: any) => {
             this.typeLists = res.data.data
+        })
+    }
+
+    promotionTypeLists: any = []
+    loadPromotionTypeList() {
+        axios.get(
+            '/base/promotion-catelog/getAll'
+        ).then(
+        (res: any) => {
+            this.promotionTypeLists = res.data.data
         })
     }
 

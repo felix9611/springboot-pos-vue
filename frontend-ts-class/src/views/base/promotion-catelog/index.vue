@@ -194,14 +194,14 @@ export default class Department extends Vue {
     }
 
     downloadTemplateExcel() {
-        downloadTempExcelFile(this.testEcelHeader1, 'departments_template.xlsx')
+        downloadTempExcelFile(this.testEcelHeader1, 'promotion-catelogs_template.xlsx')
     }
 
     async uploadFile(file: any) {
         const data = await readExcel(file)
         const reData = formatJson(this.testEcelHeader1, this.testEcelHeader2, data)
 
-        axios.post('/base/department/batch-create', reData).then((res: any) => {
+        axios.post('/base/promotion-catelog/batch-create', reData).then((res: any) => {
             if (res) {
                 this.$notify({
                     title: 'Msg',
