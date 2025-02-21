@@ -2,17 +2,12 @@ package com.fixedasset.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 import javax.annotation.Resource;
-
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fixedasset.entity.Promotion;
 import com.fixedasset.entity.PromotionCatelogType;
 import com.fixedasset.mapper.PromotionCatelogTypeMapper;
 import com.fixedasset.service.ActionRecordService;
@@ -80,8 +75,59 @@ public class PromotionCatelogTypeServiceImpl extends ServiceImpl<PromotionCatelo
 
     }
 
-    
+    public void create(PromotionCatelogType promotionCatelogType) {
+        LambdaQueryWrapper<PromotionCatelogType> lambdaQueryWrapper = Wrappers.lambdaQuery();
+        lambdaQueryWrapper.eq(PromotionCatelogType::getCatelogCode, promotionCatelogType.getCatelogCode());
+        lambdaQueryWrapper.eq(PromotionCatelogType::getCatelogName, promotionCatelogType.getCatelogName());
+        lambdaQueryWrapper.eq(PromotionCatelogType::getStatu, 1);
+        PromotionCatelogType oldData = promotionCatelogTypeMapper.selectOne(lambdaQueryWrapper);
+        if (oldData == null) {
+            promotionCatelogType.setStatu(1);
+            promotionCatelogType.setCreated(LocalDateTime.now());
+            promotionCatelogTypeMapper.insert(promotionCatelogType);
+
+            actionRecordService.createdAction(
+                "Create", 
+                "POST", 
+                "Product Catelog Type",
+                promotionCatelogType.toString(), 
+                "Success"
+            );
+        } else {
+            actionRecordService.createdAction(
+                "Create", 
+                "POST", 
+                "Product Catelog Type",
+                promotionCatelogType.toString(), 
+                "Failure"
+            );
+            throw new RuntimeException("Exist in records!");
+        }
+
+    }
+
     public void update(PromotionCatelogType promotionCatelogType) {
         PromotionCatelogType oldData = getById(promotionCatelogType.getId());
+        if (oldData != null) {
+            promotionCatelogType.setUpdated(LocalDateTime.now());
+            promotionCatelogTypeMapper.updateById(promotionCatelogType);
+
+            actionRecordService.createdAction(
+                "Update", 
+                "POST", 
+                "Product Catelog Type", 
+                promotionCatelogType.toString(), 
+                "Success"
+            );
+        } else {
+            actionRecordService.createdAction(
+                "Update", 
+                "POST", 
+                "Product Catelog Type", 
+                promotionCatelogType.toString(),  
+                "Failure"
+            );
+            throw new RuntimeException("No active data in records!");
+        }
     }
 }
