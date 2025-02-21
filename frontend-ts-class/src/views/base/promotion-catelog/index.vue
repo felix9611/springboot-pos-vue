@@ -5,19 +5,19 @@
                 <el-form-item>
                     <el-input
                             v-model="searchForm.name"
-                            placeholder="Department Name/Code"
+                            placeholder="Name/Code"
                             clearable
                     >
                     </el-input>
                 </el-form-item>
 
-                <el-form-item>
+              <!--  <el-form-item>
                     <el-button @click="downloadTemplateExcel()">Download Template Excel</el-button>
                 </el-form-item>
 
                 <el-form-item>
                     <el-button @click="clickUploadDialog">Upload Excel</el-button>
-                </el-form-item>
+                </el-form-item>-->
 
                 <el-form-item>
                     <el-button @click="deptAllList">Find</el-button>
