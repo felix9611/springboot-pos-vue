@@ -68,7 +68,7 @@ public class Promotion extends BaseEntity {
 
     @Schema(description = "All to use one discount")
     @TableField("all_one_discount")
-    private String allOneDiscount;
+    private int allOneDiscount;
 
     @Schema(description = "Coupon Requested or not")
     @TableField("coupon_request")

@@ -107,9 +107,9 @@
                 <el-select v-model="editForm.promotionType" placeholder="Select" filterable>
                 <el-option
                     v-for="promotionType in promotionTypeLists"
-                    :key="promotionType.id"
+                    :key="promotionType.catelogCode"
                     :label="promotionType.catelogName"
-                    :value="promotionType.id">
+                    :value="promotionType.catelogCode">
                 </el-option>
                 </el-select>
             </el-form-item>

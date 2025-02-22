@@ -136,6 +136,10 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         SysMenu checkOne = this.getOne(queryWrapper);
 
         if (checkOne == null) {
+            if (sysMenu.getParentId() == null) {
+                sysMenu.setParentId(0L);
+            }
+
             sysMenu.setCreated(LocalDateTime.now());
             sysMenu.setStatu(1);
 
