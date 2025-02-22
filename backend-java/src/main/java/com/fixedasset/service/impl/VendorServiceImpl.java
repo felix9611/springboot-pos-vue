@@ -27,6 +27,13 @@ public class VendorServiceImpl extends ServiceImpl<VendorMapper, Vendor> impleme
         }
     }
 
+    public Vendor getOneById(Long id){
+        LambdaQueryWrapper<Vendor> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(Vendor::getId, id);
+        queryWrapper.eq(Vendor::getStatu, 1);
+        return vendorMapper.selectOne(queryWrapper);
+    }
+
     public void createOne(Vendor vendor){
         LambdaQueryWrapper<Vendor> queryWrapper = Wrappers.lambdaQuery();
         if(StringUtils.isNotBlank(vendor.getVendorCode())){ 
@@ -64,11 +71,8 @@ public class VendorServiceImpl extends ServiceImpl<VendorMapper, Vendor> impleme
     }
 
     public void updateOne(Vendor vendor){
-        LambdaQueryWrapper<Vendor> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(Vendor::getId, vendor.getId());
-        queryWrapper.eq(Vendor::getStatu, 1);
-        Vendor checkOne = vendorMapper.selectOne(queryWrapper);
-        if (checkOne.getId().equals(vendor.getId())) {
+        Vendor checkOne = getOneById(vendor.getId());
+        if (checkOne != null) {
             vendor.setUpdated(LocalDateTime.now());
             vendorMapper.updateById(vendor);
 
@@ -92,11 +96,8 @@ public class VendorServiceImpl extends ServiceImpl<VendorMapper, Vendor> impleme
     }
 
     public void removeOne(Vendor vendor) {
-        LambdaQueryWrapper<Vendor> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(Vendor::getId, vendor.getId());
-        queryWrapper.eq(Vendor::getStatu, 1);
-        Vendor checkOne = vendorMapper.selectOne(queryWrapper);
-        if (checkOne.getId().equals(vendor.getId())) {
+        Vendor checkOne = getOneById(vendor.getId());
+        if (checkOne != null) {
 
             vendorMapper.updateById(vendor);
 

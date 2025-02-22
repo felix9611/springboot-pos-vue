@@ -62,7 +62,7 @@ public class VendorController extends BaseController {
     @Operation(summary = "Get one by id")
     @GetMapping("/{id}")
     public Result getOne(@PathVariable("id") Long id) {
-        return Result.succ(vendorService.getById(id));
+        return Result.succ(vendorService.getOneById(id));
     }
 
     @Operation(summary = "Find one by vendor code or name")

@@ -80,11 +80,8 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     }
 
     public void voidMember(Long id) {
-        LambdaQueryWrapper<Member> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(Member::getId, id);
-        queryWrapper.eq(Member::getStatus, 1);
-        Member checkOne = memberMapper.selectOne(queryWrapper);
-        if (checkOne.getId().equals(member.getId())) {
+        Member checkOne = getOneMember(id);
+        if (checkOne != null) {
             member.setId(id);
             member.setStatus(0);
             memberMapper.updateById(member);
@@ -94,11 +91,8 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     }
 
     public void updateData(Member member) {
-        LambdaQueryWrapper<Member> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(Member::getId, member.getId());
-        queryWrapper.eq(Member::getStatus, 1);
-        Member checkOne = memberMapper.selectOne(queryWrapper);
-        if (checkOne.getId().equals(member.getId())) {
+        Member checkOne = getOneMember(member.getId());
+        if (checkOne != null) {
             
             member.setUpdatedAt(LocalDateTime.now());
             memberMapper.updateById(member);

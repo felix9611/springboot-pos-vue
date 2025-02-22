@@ -7,9 +7,6 @@ import org.springframework.stereotype.Component;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fixedasset.dto.InvoiceItemListDto;
-
-import cn.hutool.core.date.DateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -24,6 +21,10 @@ public class Promotion extends BaseEntity {
     @Schema(description = "The promotion code")
     @TableField("promotion_code")
     private String promotionCode;
+
+    @Schema(description = "The promotion code")
+    @TableField("promotion_type")
+    private String promotionType;
 
     @Schema(description = "The description")
     @TableField("description")

@@ -365,7 +365,7 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
         queryWrapper.eq(ProductList::getStatu, 1);
         ProductList checkOne = productListMapper.selectOne(queryWrapper);
 
-        if (checkOne.getId().equals(id)) {
+        if (checkOne != null) {
             productList.setId(id);
             productList.setStatu(0);
             productListMapper.updateById(productList);
@@ -396,7 +396,7 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
         queryWrapper.eq(ProductList::getStatu, 1);
         ProductList checkOne = productListMapper.selectOne(queryWrapper);
 
-        if (checkOne.getProductCode().equals(productList.getProductCode())) {
+        if (checkOne != null) {
             productList.setUpdated(LocalDateTime.now());
             productListMapper.updateById(productList);
 

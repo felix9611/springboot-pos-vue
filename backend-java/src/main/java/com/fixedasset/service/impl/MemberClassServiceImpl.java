@@ -103,7 +103,7 @@ public class MemberClassServiceImpl extends ServiceImpl<MemberClassMapper, Membe
 
         MemberClass checkOne = memberClassMapper.selectOne(queryWrapper);
 
-        if (checkOne.getId().equals(id)) {
+        if (checkOne != null) {
             memberClass.setId(id);
             memberClass.setStatus(0);
             memberClassMapper.updateById(memberClass);

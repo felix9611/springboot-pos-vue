@@ -62,7 +62,7 @@ public class StockTakeFormServiceImpl extends ServiceImpl<StockTakeFormMapper, S
         queryWrapper.eq(StockTakeForm::getId, id);
         StockTakeForm checkOne = stockTakeFormMapper.selectOne(queryWrapper);
 
-        if (checkOne.equals(id)) {
+        if (checkOne != null) {
             stockTakeForm.setId(id);
             stockTakeForm.setEndTime(LocalDateTime.now());
             stockTakeForm.setStatus(0);

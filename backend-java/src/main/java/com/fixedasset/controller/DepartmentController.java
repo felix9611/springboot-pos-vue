@@ -64,7 +64,7 @@ public class DepartmentController {
     @Operation(summary = "Get one by id")
     @GetMapping("/{id}")
     public Result getOne(@PathVariable("id") Long id) {
-        return Result.succ(departmentService.getById(id));
+        return Result.succ(departmentService.getOneById(id));
     }
 
     @Operation(summary = "Get all departments")

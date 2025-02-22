@@ -25,6 +25,14 @@ public class ProductTypeServiceImpl extends ServiceImpl<ProductTypeMapper, Produ
 
     @Resource private  ProductType productType;
 
+    public ProductType getOneById(Long id) {
+        LambdaQueryWrapper<ProductType> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(ProductType::getId, id);
+        queryWrapper.eq(ProductType::getStatu, 1);
+
+        return productTypeMapper.selectOne(queryWrapper);
+    }
+
     public void createOne(ProductType productType) {
         LambdaQueryWrapper<ProductType> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(ProductType::getTypeCode, productType.getTypeCode());
@@ -61,10 +69,7 @@ public class ProductTypeServiceImpl extends ServiceImpl<ProductTypeMapper, Produ
     }
 
     public void voidOne(Long id) {
-        LambdaQueryWrapper<ProductType> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(ProductType::getId, id);
-        queryWrapper.eq(ProductType::getStatu, 1);
-        ProductType check = productTypeMapper.selectOne(queryWrapper);
+        ProductType check = getOneById(id);
         if (check != null) {
             productType.setId(id);
             productType.setStatu(0);
@@ -90,10 +95,7 @@ public class ProductTypeServiceImpl extends ServiceImpl<ProductTypeMapper, Produ
     }
 
     public void updateOne(ProductType productType) {
-        LambdaQueryWrapper<ProductType> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(ProductType::getId, productType.getId());
-        queryWrapper.eq(ProductType::getStatu, 1);
-        ProductType check = productTypeMapper.selectOne(queryWrapper);
+        ProductType check = getOneById(productType.getId());
         if (check != null) {
             productType.setUpdated(LocalDateTime.now());
             productTypeMapper.updateById(productType);

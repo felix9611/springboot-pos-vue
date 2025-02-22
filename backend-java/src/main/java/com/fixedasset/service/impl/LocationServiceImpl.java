@@ -4,9 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fixedasset.entity.ActionRecord;
 import com.fixedasset.entity.Location;
-import com.fixedasset.mapper.ActionRecordMapper;
 import com.fixedasset.mapper.LocationMapper;
 import com.fixedasset.service.ActionRecordService;
 import com.fixedasset.service.LocationService;
@@ -22,6 +20,13 @@ public class LocationServiceImpl extends ServiceImpl<LocationMapper, Location> i
     @Resource LocationMapper locationMapper;
 
     @Resource private ActionRecordService actionRecordService;
+
+    public Location getOneById(Long id) {
+        LambdaQueryWrapper<Location> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(Location::getId, id);
+        queryWrapper.eq(Location::getStatu, 1);
+        return locationMapper.selectOne(queryWrapper);
+    }
 
     public List<Location> getAll() {
         LambdaQueryWrapper<Location> queryWrapper = Wrappers.lambdaQuery();
@@ -72,12 +77,9 @@ public class LocationServiceImpl extends ServiceImpl<LocationMapper, Location> i
     }
 
     public void update(Location location) {
-        LambdaQueryWrapper<Location> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(Location::getId, location.getId());
-        queryWrapper.eq(Location::getStatu, 1);
-        Location checkOne = locationMapper.selectOne(queryWrapper);
+        Location checkOne =  getOneById(location.getId());
 
-        if (checkOne.getId().equals(location.getId())) {
+        if (checkOne != null) {
             location.setUpdated(LocalDateTime.now());
             locationMapper.updateById(location);
 
@@ -103,11 +105,9 @@ public class LocationServiceImpl extends ServiceImpl<LocationMapper, Location> i
     }
 
     public void remove(Location location) {
-        LambdaQueryWrapper<Location> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(Location::getId, location.getId());
-        queryWrapper.eq(Location::getStatu, 1);
-        Location checkOne = locationMapper.selectOne(queryWrapper);
-        if (checkOne.getId().equals(location.getId())) {
+
+        Location checkOne =  getOneById(location.getId());
+        if (checkOne != null) {
 
             locationMapper.updateById(location);
 

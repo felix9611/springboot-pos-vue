@@ -33,14 +33,17 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         return sysRoles;
     }
 
-    public String voidById(Long id) {
+    public SysRole getOneById(Long id) {
         LambdaQueryWrapper<SysRole> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SysRole::getId, id);
         queryWrapper.eq(SysRole::getStatu, 1);
+        return sysRoleMapper.selectOne(queryWrapper);
+    }
 
-        SysRole checkOne = this.getOne(queryWrapper);
+    public String voidById(Long id) {
+        SysRole checkOne = getOneById(id);
 
-        if (checkOne.getId().equals(id)) {
+        if (checkOne != null) {
             sysRole.setId(id);
             sysRole.setStatu(0);
             sysRole.setUpdated(LocalDateTime.now());
@@ -98,13 +101,9 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     }
 
     public SysRole updateRole(SysRole data) {
-        LambdaQueryWrapper<SysRole> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(SysRole::getId, data.getId());
-        queryWrapper.eq(SysRole::getStatu, 1);
+        SysRole checkOne = getOneById(data.getId());
 
-        SysRole checkOne = this.getOne(queryWrapper);
-
-        if (checkOne.getId().equals(data.getId())) {
+        if (checkOne != null) {
             sysRole.setUpdated(LocalDateTime.now());
             sysRoleMapper.updateById(data);
 
