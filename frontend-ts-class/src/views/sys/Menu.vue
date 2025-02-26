@@ -176,9 +176,6 @@ export default class Menu extends Vue {
     voidDialogVisible: boolean = false
     dialogVisible: boolean = false
     editFormRules =  {
-        parentId: [
-            { required: true, message: 'Please select upper menu', trigger: 'blur' }
-        ],
         name: [
             {required: true, message: 'Please type name', trigger: 'blur'}
         ],
