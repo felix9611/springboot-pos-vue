@@ -9,7 +9,6 @@ import com.fixedasset.dto.ProductLocationListDto;
 import com.fixedasset.entity.InvRecord;
 import com.fixedasset.entity.ProductList;
 import com.fixedasset.entity.ProductLocation;
-import com.fixedasset.entity.ProductType;
 import com.fixedasset.mapper.ProductLocationMapper;
 import com.fixedasset.service.InvRecordService;
 import com.fixedasset.service.ProductLocationService;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Service
@@ -45,16 +45,96 @@ public class ProductLocationServiceImpl extends ServiceImpl<ProductLocationMappe
     }
 
     public void changePlace(ProductLocationChangeDto productLocationChangeDto) {
-        productLocationMapper.updatePlaceQty(productLocationChangeDto.getQty(), 0, productLocationChangeDto.getProductId(), productLocationChangeDto.getOldPlace());
 
-        invRecord.setQty(productLocationChangeDto.getOtherQty());
-        invRecord.setProductId(productLocationChangeDto.getProductId());
-        invRecord.setLocFrom(productLocationChangeDto.getOldPlace());
-        invRecord.setLocTo(productLocationChangeDto.getNewPlace());
-        invRecord.setCost(productLocationChangeDto.getCost());
-        invRecord.setTimeAt(LocalDateTime.now());
-        invRecordService.saveRecord(invRecord);
+        LambdaQueryWrapper<ProductLocation> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(ProductLocation::getLocationId, productLocationChangeDto.getOldPlace());
+        queryWrapper.eq(ProductLocation::getProductId, productLocationChangeDto.getProductId());
+        
+        ProductLocation oldData = productLocationMapper.selectOne(queryWrapper);
 
+
+        if (oldData == null) {
+            throw new RuntimeException("No Exist in records!");
+        } else {
+            ProductLocation updateOldDataModel = new ProductLocation(); 
+            updateOldDataModel.setId(oldData.getId()); 
+            updateOldDataModel.setLocationId(oldData.getLocationId());
+            updateOldDataModel.setProductId(oldData.getProductId());
+            updateOldDataModel.setQty(oldData.getQty() - productLocationChangeDto.getQty());
+            updateOldDataModel.setTotalPrice(oldData.getTotalPrice() - productLocationChangeDto.getCost());
+
+            productLocationMapper.updateById(updateOldDataModel);
+
+            LambdaQueryWrapper<ProductLocation> queryWrapperPlaceOldData = Wrappers.lambdaQuery();
+            queryWrapperPlaceOldData.eq(ProductLocation::getLocationId, productLocationChangeDto.getNewPlace());
+            queryWrapperPlaceOldData.eq(ProductLocation::getProductId, productLocationChangeDto.getProductId());
+        
+            ProductLocation newPlaceOldData = productLocationMapper.selectOne(queryWrapperPlaceOldData);
+            if (newPlaceOldData != null) {
+
+                Double oldTotalPrice = newPlaceOldData.getTotalPrice();
+
+                int newQty = newPlaceOldData.getQty() + productLocationChangeDto.getQty();
+
+                productLocationMapper.updatePlaceQty(newQty, oldTotalPrice,  productLocationChangeDto.getProductId(), productLocationChangeDto.getNewPlace());
+
+                invRecord.setQty(productLocationChangeDto.getQty());
+                invRecord.setProductId(productLocationChangeDto.getProductId());
+                invRecord.setLocFrom(productLocationChangeDto.getOldPlace());
+                invRecord.setLocTo(productLocationChangeDto.getNewPlace());
+                invRecord.setCost(0);
+                invRecord.setTimeAt(LocalDateTime.now());
+                invRecordService.saveRecord(invRecord);
+
+                
+            } else {
+                ProductLocation newProductLocation = new ProductLocation();
+                newProductLocation.setLocationId(productLocationChangeDto.getNewPlace());
+                newProductLocation.setProductId(productLocationChangeDto.getProductId());
+                newProductLocation.setQty(productLocationChangeDto.getQty());
+                newProductLocation.setTotalPrice(0); 
+                productLocationMapper.insert(newProductLocation);
+
+                invRecord.setQty(productLocationChangeDto.getQty());
+                invRecord.setProductId(productLocationChangeDto.getProductId());
+                invRecord.setLocFrom(productLocationChangeDto.getOldPlace());
+                invRecord.setLocTo(productLocationChangeDto.getNewPlace());
+                invRecord.setCost(0);
+                invRecord.setTimeAt(LocalDateTime.now());
+                invRecordService.saveRecord(invRecord);
+            }
+        }
+
+   }
+
+    public void updateQty(ProductLocation productLocation) {
+        LambdaQueryWrapper<ProductLocation> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(ProductLocation::getLocationId, productLocation.getLocationId());
+        queryWrapper.eq(ProductLocation::getProductId, productLocation.getProductId());
+        
+        ProductLocation oldRecord = productLocationMapper.selectOne(queryWrapper);
+
+        if (oldRecord == null) {
+            throw new RuntimeException("No Exist in records!");
+        } else {
+            Double oldTotalPrice = oldRecord.getTotalPrice();
+
+            if (oldRecord.getTotalPrice() > 0 && productLocation.getTotalPrice() > 0) {
+                oldTotalPrice = oldRecord.getTotalPrice() + productLocation.getTotalPrice();
+            }
+
+            int newQty = oldRecord.getQty() + productLocation.getQty();
+
+            productLocationMapper.updatePlaceQty(newQty, oldTotalPrice,  productLocation.getProductId(), productLocation.getLocationId());
+
+            invRecord.setQty(productLocation.getQty());
+            invRecord.setProductId(productLocation.getProductId());
+            invRecord.setLocFrom(productLocation.getLocationId());
+            invRecord.setLocTo(0);
+            invRecord.setCost(productLocation.getTotalPrice());
+            invRecord.setTimeAt(LocalDateTime.now());
+            invRecordService.saveRecord(invRecord);
+        }
     }
 
     public void changeQty(ProductLocation productLocation) {
@@ -64,18 +144,27 @@ public class ProductLocationServiceImpl extends ServiceImpl<ProductLocationMappe
         
         ProductLocation oldRecord = productLocationMapper.selectOne(queryWrapper);
 
-        //  double newTotalPrice = oldRecord.getTotalPrice() - productLocation.getTotalPrice();
+        if (oldRecord == null) {
+            throw new RuntimeException("No Exist in records!");
+        } else {
+            Double oldTotalPrice = oldRecord.getTotalPrice();
 
-        productLocationMapper.updatePlaceQty(productLocation.getQty(), oldRecord.getTotalPrice(),  productLocation.getProductId(), productLocation.getLocationId());
+            if (oldRecord.getTotalPrice() > 0 && productLocation.getTotalPrice() > 0) {
+                oldTotalPrice = oldRecord.getTotalPrice() - productLocation.getTotalPrice();
+            }
 
-        invRecord.setQty(productLocation.getOtherQty());
-        invRecord.setProductId(productLocation.getProductId());
-        invRecord.setLocFrom(-productLocation.getLocationId());
-        invRecord.setLocTo(0);
-        invRecord.setCost(productLocation.getTotalPrice());
-        invRecord.setTimeAt(LocalDateTime.now());
-        invRecordService.saveRecord(invRecord);
+            int newQty = oldRecord.getQty() - productLocation.getQty();
 
+            productLocationMapper.updatePlaceQty(newQty, oldTotalPrice,  productLocation.getProductId(), productLocation.getLocationId());
+
+            invRecord.setQty(productLocation.getQty());
+            invRecord.setProductId(productLocation.getProductId());
+            invRecord.setLocFrom(-productLocation.getLocationId());
+            invRecord.setLocTo(0);
+            invRecord.setCost(productLocation.getTotalPrice());
+            invRecord.setTimeAt(LocalDateTime.now());
+            invRecordService.saveRecord(invRecord);
+        }
     }
 
     public ProductLocation findOne(ProductLocation productLocation) {
@@ -98,3 +187,4 @@ public class ProductLocationServiceImpl extends ServiceImpl<ProductLocationMappe
     }
 
 }
+
