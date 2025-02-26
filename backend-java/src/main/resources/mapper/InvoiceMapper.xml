@@ -123,7 +123,8 @@
         FROM pos_springboot_vue_3.invoice_item AS iitem ${ew.customSqlSegment}
         LEFT JOIN invoice AS inv ON inv.id = iitem.invoice_id
         LEFT JOIN product_list AS pl ON pl.id = iitem.product_id 
-        GROUP BY concat(year(created_at), '-', MONTHNAME(created_at));
+        GROUP BY concat(year(created_at), '-', MONTHNAME(created_at)) 
+        ORDER BY concat(year(created_at), '-', MONTHNAME(created_at));
     </select>
 
     <select id="queryCountYearWeek" resultType="com.fixedasset.dto.charts.QueryCountYearWeek">
@@ -132,7 +133,8 @@
             sum(ii.qty) as count 
         FROM invoice 
         LEFT JOIN invoice_item as ii on invoice.id  = ii.invoice_id  ${ew.customSqlSegment} 
-        GROUP BY concat(year(invoice.created_at), '-', MONTHNAME(invoice.created_at));
+        GROUP BY concat(year(invoice.created_at), '-', MONTHNAME(invoice.created_at)) 
+        ORDER BY concat(year(invoice.created_at), '-', MONTHNAME(invoice.created_at));
     </select>
     
     
