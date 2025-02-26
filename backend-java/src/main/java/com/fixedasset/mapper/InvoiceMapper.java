@@ -28,13 +28,8 @@ public interface InvoiceMapper extends BaseMapper<Invoice> {
 
     String selectOne = listQuery + " where inv.id = ${id}";
 
-    String queryTotalYearWeek = "SELECT concat(year(created_at), '-', week(created_at)) as yearWeek, sum(total_amount) as total FROM invoice ${ew.customSqlSegment} group by yearWeek;";
-    // String wrapperSqlTotalYearWeek = "SELECT * from ( " + queryTotalYearWeek + " q ${ew.customSqlSegment}";
-    @Select(queryTotalYearWeek)
     List<QueryTotalYearWeek> queryTotalYearWeek(@Param("ew") Wrapper<Invoice> queryWrapper);
 
-    String queryCountYearWeek = "SELECT concat(year(created_at), '-', week(created_at)) as yearWeek, count(*) as count FROM invoice ${ew.customSqlSegment} group by yearWeek;";
-    @Select(queryCountYearWeek)
     List<QueryCountYearWeek> queryCountYearWeek(@Param("ew") Wrapper<Invoice> queryWrapper);
 
     String queryTotalShop = "SELECT loc.place_name as placeName, sum(total_amount) as total " +
