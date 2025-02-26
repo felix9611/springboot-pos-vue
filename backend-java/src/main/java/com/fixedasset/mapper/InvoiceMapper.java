@@ -31,10 +31,7 @@ public interface InvoiceMapper extends BaseMapper<Invoice> {
     List<QueryTotalYearWeek> queryTotalYearWeek(@Param("ew") Wrapper<Invoice> queryWrapper);
 
     List<QueryCountYearWeek> queryCountYearWeek(@Param("ew") Wrapper<Invoice> queryWrapper);
-
-    String queryTotalShop = "SELECT loc.place_name as placeName, sum(total_amount) as total " +
-            "FROM invoice as inv left join location as loc on inv.location_id = loc.id  group by location_id;";
-   // @Select(queryTotalShop)
+    
     List<QueryTotalShop> queryTotalShop();
 
     List<QueryCountShop> queryCountShop();
