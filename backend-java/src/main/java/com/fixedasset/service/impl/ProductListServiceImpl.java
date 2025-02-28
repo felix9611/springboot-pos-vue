@@ -438,6 +438,7 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
         return one;
     }
 
+    @SuppressWarnings("unused")
     public ProductList findOneById(Long id) {
         LambdaQueryWrapper<ProductList> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(ProductList::getId, id);
@@ -447,8 +448,12 @@ public class ProductListServiceImpl extends ServiceImpl<ProductListMapper, Produ
         productListFile.setProductId(Math.toIntExact(id));
         List<ProductListFile> files = productListFileService.getByAssetId(productListFile);
         one.setProductListFiles(files);
-
-        return one;
+        if (one == null) {
+            throw new RuntimeException("No this product in the system!");
+        } else {
+            return one;
+        }
+        
     }
 
     public Page<ProductListDto> newPage(Page page, LambdaQueryWrapper<ProductList> queryWrapper) {
