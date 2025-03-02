@@ -383,9 +383,6 @@ public class PromotionMapperServiceImpl extends ServiceImpl<PromotionMapper, Pro
                 List<PromotionType> listPromotionTypeDetail = promotionTypeMapper.listPromotionTypeDetail(promotion.getId().intValue());
                 promotion.setPromotionTypeItems(listPromotionTypeDetail);
 
-                List<PromotionLocation> listPromotionLocationDetail = promotionLocationMapper.listPromotionLocationDetail(promotion.getId().intValue());
-                promotion.setPromotionLocationItems(listPromotionLocationDetail);
-
                 List<PromotionDepartment> listPromotionDepartmentDetail = promotionDepartmentMapper.listPromotionDepartmentDetail(promotion.getId().intValue());
                 promotion.setPromotionDepartmentItems(listPromotionDepartmentDetail);
             }
