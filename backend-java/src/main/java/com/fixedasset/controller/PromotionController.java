@@ -58,13 +58,13 @@ public class PromotionController extends BaseController {
     }
 
     @Operation(summary = "Get by id")
-    @GetMapping("/{id}")
+    @GetMapping("/get-one/{id}")
     public Result getOne(@PathVariable("id")Long id) {
         return Result.succ(promotionService.getById(id));
     }
     
     @Operation(summary = "List all vaild promotion for online store")
-    @GetMapping("/store/vaild-promotion/list")
+    @GetMapping("/store/list")
     public Result listAllVaild() {
         return Result.succ(promotionService.todayPromotionOneStore());
     }

@@ -63,8 +63,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         "/favicon.ico",
         "/swagger-ui.html","/swagger-ui/**",
         "/v3/api-docs/**",
-        "/product/list/all-online",
-        "/store/vaild-promotion/list"
+        "/base/promotion/store/list",
+        "/product/list/all-online"
+        
     };
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
