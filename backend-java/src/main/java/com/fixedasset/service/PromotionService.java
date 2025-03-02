@@ -14,4 +14,5 @@ public interface PromotionService extends IService<Promotion>{
     void removePromotionDepartment(Long id);
     void removePromotionLocation(Long id);
     List<Promotion> todayPromotion();
+    List<Promotion> todayPromotionOneStore();
 }

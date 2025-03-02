@@ -66,7 +66,7 @@ public class PromotionController extends BaseController {
     @Operation(summary = "List all vaild promotion for online store")
     @GetMapping("/store/vaild-promotion/list")
     public Result listAllVaild() {
-        return Result.succ(promotionService.todayPromotion());
+        return Result.succ(promotionService.todayPromotionOneStore());
     }
 
     @Operation(summary = "Page and list")
