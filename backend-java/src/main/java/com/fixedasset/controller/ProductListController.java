@@ -100,6 +100,35 @@ public class ProductListController extends BaseController{
         return Result.succ(iPage);
     }
 
+    @Operation(summary = "List all products for online store")
+    @PostMapping("/list/all-online")
+    public Result listAllOnlineSrore(@RequestBody ProductList productList) {
+        Page page = new Page(productList.getPage(), productList.getLimit());
+        LambdaQueryWrapper<ProductList> queryWrapper = Wrappers.lambdaQuery();
+
+        if (StringUtils.isNotBlank(productList.getProductCode())) {
+            queryWrapper.like(ProductList::getProductCode, productList.getProductCode());
+        }
+
+        if (StringUtils.isNotBlank(productList.getProductName())) {
+            queryWrapper.like(ProductList::getProductName, productList.getProductName());
+        }
+
+        if (!(productList.getTypeId() == 0)) {
+            queryWrapper.eq(ProductList::getTypeId, productList.getTypeId());
+        }
+
+        if (!(productList.getDeptId() == 0)) {
+            queryWrapper.eq(ProductList::getDeptId, productList.getDeptId());
+        }
+
+        queryWrapper.eq(ProductList::getStatu, 1);
+        queryWrapper.orderByDesc(ProductList::getId);
+
+        Page<ProductListDto> iPage = productListService.newPage(page, queryWrapper);
+        return Result.succ(iPage);
+    }
+
     @Operation(summary = "List all products")
     @PostMapping("/list/all")
     public Result listAll(@RequestBody ProductList productList) {
