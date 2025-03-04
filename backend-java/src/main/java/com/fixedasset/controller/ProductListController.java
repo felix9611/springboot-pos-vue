@@ -93,11 +93,11 @@ public class ProductListController extends BaseController{
             queryWrapper.eq(ProductList::getDeptId, productList.getDeptId());
         }
 
-        if (productList.getTypeIds().size() > 0) {
+        if (!productList.getTypeIds().isEmpty()) {
             queryWrapper.in(ProductList::getTypeId, productList.getTypeIds());
         }
 
-        if (productList.getDeptIds().size() > 0) {
+        if (!productList.getDeptIds().isEmpty()) {
             queryWrapper.in(ProductList::getDeptId, productList.getDeptIds());
         }
 

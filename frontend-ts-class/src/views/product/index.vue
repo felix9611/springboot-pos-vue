@@ -12,12 +12,23 @@
                 </el-form-item>
 
                 <el-form-item prop="type">
-                  <el-select v-model="searchForm.typeId" placeholder="Select Type" filterable class="w-full">
+                  <el-select v-model="searchForm.typeIds" placeholder="Select Type" filterable class="w-full" multiple>
                     <el-option
                       v-for="typeItems in typeItem"
                       :key="typeItems.id"
                       :label="typeItems.typeName"
                       :value="typeItems.id">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+
+                <el-form-item prop="department">
+                  <el-select v-model="searchForm.deptIds" placeholder="Select Department" filterable class="w-full" multiple>
+                    <el-option
+                      v-for="deptItems in deptItem"
+                      :key="deptItems.id"
+                      :label="deptItems.deptName"
+                      :value="deptItems.id">
                     </el-option>
                   </el-select>
                 </el-form-item>
@@ -233,10 +244,12 @@ export default class ProductList extends Vue {
   qrTagContent: string = ''
   fileBase64Data: any = []
   typeItem: any = []
+  deptItem: any = []
 
   created() {
     this.productList()
     this.getAllType()
+    this.getAllDepartment()
   }
 
   getAllType() {
@@ -245,6 +258,15 @@ export default class ProductList extends Vue {
         ).then(
             (res: any) => {
             this.typeItem = res.data.data
+        })
+  }
+
+  getAllDepartment() {
+        axios.get(
+            '/base/department/getAll'
+        ).then(
+            (res: any) => {
+            this.deptItem = res.data.data
         })
   }
 
