@@ -78,6 +78,10 @@ public class ProductList extends BaseEntity {
     @TableField("tax_amount")
     private Double taxAmount;
 
+    @Schema(description = "Only apply for request of list api")
+    @TableField(exist = false)
+    private List<Integer> typeIds;
+
     @Schema(description = "Only apply for paging in list api")
     @TableField(exist = false)
     private int page = 1;

@@ -64,7 +64,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         "/swagger-ui.html","/swagger-ui/**",
         "/v3/api-docs/**",
         "/base/promotion/store/list",
-        "/product/list/all-online"
+        "/product/list/all-online",
+        "/base/location/getAll"
         
     };
     protected void configure(HttpSecurity http) throws Exception {

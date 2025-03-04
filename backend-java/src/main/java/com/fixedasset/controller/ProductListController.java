@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fixedasset.common.lang.Result;
 import com.fixedasset.dto.ProductListDto;
 import com.fixedasset.dto.ProductListUploadDto;
+import com.fixedasset.dto.ProductLocationUploadDto;
 import com.fixedasset.entity.Member;
 import com.fixedasset.entity.ProductList;
 import com.fixedasset.entity.ProductListFile;
@@ -122,10 +123,27 @@ public class ProductListController extends BaseController{
             queryWrapper.eq(ProductList::getDeptId, productList.getDeptId());
         }
 
+        if (productList.getTypeIds().size() > 0) {
+            queryWrapper.in(ProductList::getTypeId, productList.getTypeIds());
+        }
+
         queryWrapper.eq(ProductList::getStatu, 1);
         queryWrapper.orderByDesc(ProductList::getId);
 
         Page<ProductListDto> iPage = productListService.newPage(page, queryWrapper);
+
+        List<ProductListDto> productListResult = iPage.getRecords();
+        for (ProductListDto product : productListResult) {
+            ProductListFile productListFile = new ProductListFile();
+            productListFile.setProductId(Math.toIntExact(product.getId()));
+
+            List<ProductListFile> productListFiles = productListFileService.getByAssetId(productListFile);
+
+            product.setProductListFiles(productListFiles);
+
+        }
+
+
         return Result.succ(iPage);
     }
 
@@ -148,6 +166,10 @@ public class ProductListController extends BaseController{
 
         if (!(productList.getDeptId() == 0)) {
             queryWrapper.eq(ProductList::getDeptId, productList.getDeptId());
+        }
+
+        if (productList.getTypeIds().size() > 0) {
+            queryWrapper.in(ProductList::getTypeId, productList.getTypeIds());
         }
 
         queryWrapper.eq(ProductList::getStatu, 1);
