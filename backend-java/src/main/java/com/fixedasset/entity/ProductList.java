@@ -78,6 +78,14 @@ public class ProductList extends BaseEntity {
     @TableField("tax_amount")
     private Double taxAmount;
 
+    @Schema(description = "Type data Id array, only for list api for seraching")
+    @TableField(exist = false)
+    private List<Integer> typeIds;
+
+    @Schema(description = "The DEPARTMENT data Id array, only for list api for seraching")
+    @TableField(exist = false)
+    private List<Integer> deptIds;
+
     @Schema(description = "Only apply for paging in list api")
     @TableField(exist = false)
     private int page = 1;

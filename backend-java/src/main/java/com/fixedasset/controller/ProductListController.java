@@ -93,6 +93,14 @@ public class ProductListController extends BaseController{
             queryWrapper.eq(ProductList::getDeptId, productList.getDeptId());
         }
 
+        if (productList.getTypeIds().size() > 0) {
+            queryWrapper.in(ProductList::getTypeId, productList.getTypeIds());
+        }
+
+        if (productList.getDeptIds().size() > 0) {
+            queryWrapper.in(ProductList::getDeptId, productList.getDeptIds());
+        }
+
         queryWrapper.eq(ProductList::getStatu, 1);
         queryWrapper.orderByDesc(ProductList::getId);
 
