@@ -375,6 +375,23 @@ public class PromotionMapperServiceImpl extends ServiceImpl<PromotionMapper, Pro
         
     }
 
+    public List<Promotion> todayPromotionOneStore() {
+        List<Promotion> promotions = promotionMapper.listTodayPromotionOnline();
+
+        if (promotions.size() > 0) {
+            for (Promotion promotion : promotions) {
+                List<PromotionType> listPromotionTypeDetail = promotionTypeMapper.listPromotionTypeDetail(promotion.getId().intValue());
+                promotion.setPromotionTypeItems(listPromotionTypeDetail);
+
+                List<PromotionDepartment> listPromotionDepartmentDetail = promotionDepartmentMapper.listPromotionDepartmentDetail(promotion.getId().intValue());
+                promotion.setPromotionDepartmentItems(listPromotionDepartmentDetail);
+            }
+            return promotions;
+        }
+
+
+        return promotions;
+    }
 
     public List<Promotion> todayPromotion() {
         List<Promotion> promotions = promotionMapper.listTodayPromotion();

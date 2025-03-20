@@ -4,18 +4,22 @@
     <select id="page" resultType="com.fixedasset.dto.ProductListDto">
         SELECT * from (
             Select pl.*, 
+            dept.dept_name AS deptName, dept.dept_code AS deptCode,
             type.type_code as typeCode , type.type_name as typeName 
             from product_list as pl 
             left join product_type as type on pl.type_id = type.id
+            left join department as dept on pl.dept_id = dept.id 
         ) AS q ${ew.customSqlSegment}
     </select>
 
     <select id="listAll" resultType="com.fixedasset.dto.ProductListDto">
         SELECT * from (
             Select pl.*, 
+            dept.dept_name AS deptName, dept.dept_code AS deptCode,
             type.type_code as typeCode , type.type_name as typeName 
             from product_list as pl 
-            left join product_type as type on pl.type_id = type.id
+            left join product_type as type on pl.type_id = type.id 
+            left join department as dept on pl.dept_id = dept.id 
         ) AS q ${ew.customSqlSegment}
     </select>
 </mapper>

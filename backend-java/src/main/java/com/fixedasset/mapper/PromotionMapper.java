@@ -11,4 +11,7 @@ public interface PromotionMapper extends BaseMapper<Promotion> {
 
     @Select("SELECT * FROM promotion WHERE (period_start >= CURDATE() OR period_start < CURDATE() + INTERVAL 1 DAY) AND STATU = 1;")
     List<Promotion> listTodayPromotion();
+
+    @Select("SELECT * FROM promotion WHERE (period_start >= CURDATE() OR period_start < CURDATE() + INTERVAL 1 DAY) AND online = 1 AND STATU = 1;")
+    List<Promotion> listTodayPromotionOnline();
 }

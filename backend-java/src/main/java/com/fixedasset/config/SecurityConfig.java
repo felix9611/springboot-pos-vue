@@ -62,7 +62,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         "/captcha",
         "/favicon.ico",
         "/swagger-ui.html","/swagger-ui/**",
-                "/v3/api-docs/**"
+        "/v3/api-docs/**",
+        "/base/promotion/store/list",
+        "/product/list/all-online",
+        "/base/location/getAll"
+        
     };
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()

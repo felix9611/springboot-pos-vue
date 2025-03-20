@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fixedasset.common.lang.Result;
 import com.fixedasset.dto.ProductListDto;
 import com.fixedasset.dto.ProductListUploadDto;
+import com.fixedasset.dto.ProductLocationUploadDto;
 import com.fixedasset.entity.Member;
 import com.fixedasset.entity.ProductList;
 import com.fixedasset.entity.ProductListFile;
@@ -108,6 +109,52 @@ public class ProductListController extends BaseController{
         return Result.succ(iPage);
     }
 
+    @Operation(summary = "List all products for online store")
+    @PostMapping("/list/all-online")
+    public Result listAllOnlineSrore(@RequestBody ProductList productList) {
+        Page page = new Page(productList.getPage(), productList.getLimit());
+        LambdaQueryWrapper<ProductList> queryWrapper = Wrappers.lambdaQuery();
+
+        if (StringUtils.isNotBlank(productList.getProductCode())) {
+            queryWrapper.like(ProductList::getProductCode, productList.getProductCode());
+        }
+
+        if (StringUtils.isNotBlank(productList.getProductName())) {
+            queryWrapper.like(ProductList::getProductName, productList.getProductName());
+        }
+
+        if (!(productList.getTypeId() == 0)) {
+            queryWrapper.eq(ProductList::getTypeId, productList.getTypeId());
+        }
+
+        if (!(productList.getDeptId() == 0)) {
+            queryWrapper.eq(ProductList::getDeptId, productList.getDeptId());
+        }
+
+        if (productList.getTypeIds().size() > 0) {
+            queryWrapper.in(ProductList::getTypeId, productList.getTypeIds());
+        }
+
+        queryWrapper.eq(ProductList::getStatu, 1);
+        queryWrapper.orderByDesc(ProductList::getId);
+
+        Page<ProductListDto> iPage = productListService.newPage(page, queryWrapper);
+
+        List<ProductListDto> productListResult = iPage.getRecords();
+        for (ProductListDto product : productListResult) {
+            ProductListFile productListFile = new ProductListFile();
+            productListFile.setProductId(Math.toIntExact(product.getId()));
+
+            List<ProductListFile> productListFiles = productListFileService.getByAssetId(productListFile);
+
+            product.setProductListFiles(productListFiles);
+
+        }
+
+
+        return Result.succ(iPage);
+    }
+
     @Operation(summary = "List all products")
     @PostMapping("/list/all")
     public Result listAll(@RequestBody ProductList productList) {
@@ -127,6 +174,10 @@ public class ProductListController extends BaseController{
 
         if (!(productList.getDeptId() == 0)) {
             queryWrapper.eq(ProductList::getDeptId, productList.getDeptId());
+        }
+
+        if (productList.getTypeIds().size() > 0) {
+            queryWrapper.in(ProductList::getTypeId, productList.getTypeIds());
         }
 
         queryWrapper.eq(ProductList::getStatu, 1);
